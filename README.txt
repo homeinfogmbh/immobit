@@ -1,8 +1,8 @@
-#####################################
-#									#
-#	Immobit™ online exposé agent	#
-#									#
-#####################################
+#################################################
+#												#
+#	Immobit™ online real estate exposé agent	#
+#												#
+#################################################
 
 LICENSE
 	Copyright (C) 2014:	HOMEINFO - Digitale Informationssysteme GmbH
