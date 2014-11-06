@@ -1,15 +1,16 @@
-'''
-Created on 09.10.2014
+"""
+Database models definitions
+"""
+from his.api import HISServiceDatabase
+from peewee import Model
 
-@author: neumannr
-'''
-from peewee import MySQLDatabase, Model
-
-db = MySQLDatabase()
+__date__ = '09.10.2014'
+__author__ = 'Richard Neumann <r.neumannr@homeinfo.de>'
 
 class ImmobitModel(Model):
     """
     A generic model / table inside the ImmoBit database
     """
     class Meta:
-        database = db
+        database = HISServiceDatabase('immobit')
+        schema = database.database

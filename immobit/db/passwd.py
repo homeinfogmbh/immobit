@@ -6,7 +6,7 @@ __date__ = '09.10.2014'
 
 __all__ = ['Group', 'User', 'UserGroup', 'RealEstate']
 
-from ..abc import ImmobitModel
+from .abc import ImmobitModel
 from peewee import ForeignKeyField, TextField
 
 class Group(ImmobitModel):
