@@ -15,7 +15,7 @@
         </xs:annotation>
         <xs:sequence>
             <xs:choice>
-                   <xs:element name="stats" type="Stats" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="stats" type="Stats" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="realestate" type="RealEstate" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="openimmo" type="OpenImmo"/>
                 <xs:element name="portal" type="Portal" minOccurs="0" maxOccurs="unbounded"/>
@@ -46,7 +46,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="id" type="xs:string"/>
+            <xs:element name="id" type="xs:integer"/>
             <xs:element name="city" type="xs:string"/>
             <xs:element name="zip" type="xs:string"/>
             <xs:element name="street" type="xs:string"/>
@@ -82,7 +82,7 @@
 
 
     <!-- An FTP portal -->
-    <xs:complexType name="User">
+    <xs:complexType name="FTPPortal">
         <xs:annotation>
             <xs:documentation xml:lang="en">
                 An FTP portal
@@ -102,7 +102,7 @@
 
 
     <!-- A Rest portal -->
-    <xs:complexType name="User">
+    <xs:complexType name="RestPortal">
         <xs:annotation>
             <xs:documentation xml:lang="en">
                 A Rest portal
@@ -122,20 +122,56 @@
     </xs:complexType>
 
 
-    <!-- Data export -->
-    <xs:complexType name="DataExport">
+    <!-- Data transfer -->
+    <xs:complexType name="DataTransfer">
         <xs:annotation>
             <xs:documentation xml:lang="en">
-                Data export
+                Data transfer
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element name="id" type="xs:integer"/>
-               <xs:element name="cid" type="xs:integer"/>
-               <!-- The HOMEINFO customer ID -->
-               <xs:element name="name" type="xs:string"/>
-               <xs:element name="service" type="Service" minOccurs="0" maxOccurs="unbounded"/>
-               <!-- Services the company has actually bought -->
+            <xs:element name="type" type="DataType"/>
+            <xs:element name="data" type="xs:base64Binary"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <!-- Data transfer types -->
+    <xs:simpleType name="DataType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                A set of available data transfer types
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="IS24CSV">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        Old IS24 CSV format, zipped
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="OpenImmo">
+                <xs:annotation>
+                    <xs:documentation xml:lang="en">
+                        OpenImmo (XML) format, zipped
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <!-- real estate search query -->
+    <xs:complexType name="SearchQuery">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                A real estate search query
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="category" type="xs:string" maxOccurs="unbounded"/>
+            <xs:element name="pattern" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
  
