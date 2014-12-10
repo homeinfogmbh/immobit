@@ -158,10 +158,24 @@
             <xs:element name="data" type="xs:base64Binary"/>
             <xs:element name="sha256" type="xs:string"/>
             <xs:element name="mime" type="xs:string"/>
-            <xs:element name="title" type="xs:string"/>
-            <xs:element name="path" type="xs:string"/>
-            <xs:element name="name" type="xs:string"/>
         </xs:sequence>
+    </xs:complexType>
+
+
+    <!-- A picture -->
+    <xs:complexType name="Picture">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">
+                A picture
+            </xs:documentation>
+        </xs:annotation>          
+        <xs:choice>
+            <xs:element name="thumbnail" type="File"/>
+            <xs:element name="full" type="File"/>
+        </xs:choice>
+        <xs:attribute name="title" type="xs:string"/>
+        <xs:attribute name="basename" type="xs:string"/>
+        <xs:attribute name="dirname" type="xs:string"/>  
     </xs:complexType>
 
 
