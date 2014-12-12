@@ -124,61 +124,6 @@
     </xs:complexType>
 
 
-    <!-- Media transfer wrapper -->
-    <xs:complexType name="Media">
-        <xs:annotation>
-            <xs:documentation xml:lang="en">
-                Media data
-            </xs:documentation>
-        </xs:annotation>
-    </xs:complexType>
-
-
-    <!-- A media thumbnail -->
-    <xs:complexType name="Thumbnail">
-        <xs:annotation>
-            <xs:documentation xml:lang="en">
-                Media thumbnail preview
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="File"/>
-        </xs:complexContent>
-    </xs:complexType>
-
-
-    <!-- A (media) file -->
-    <xs:complexType name="File">
-        <xs:annotation>
-            <xs:documentation xml:lang="en">
-                File data
-            </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="data" type="xs:base64Binary"/>
-            <xs:element name="sha256" type="xs:string"/>
-            <xs:element name="mime" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
-
-
-    <!-- A picture -->
-    <xs:complexType name="Picture">
-        <xs:annotation>
-            <xs:documentation xml:lang="en">
-                A picture
-            </xs:documentation>
-        </xs:annotation>          
-        <xs:choice>
-            <xs:element name="thumbnail" type="File"/>
-            <xs:element name="full" type="File"/>
-        </xs:choice>
-        <xs:attribute name="title" type="xs:string"/>
-        <xs:attribute name="basename" type="xs:string"/>
-        <xs:attribute name="dirname" type="xs:string"/>  
-    </xs:complexType>
-
-
     <!-- Data transfer -->
     <xs:complexType name="DataTransfer">
         <xs:annotation>
