@@ -2,13 +2,13 @@
 Database models definitions
 """
 from homeinfo.his.api.db import HISServiceDatabase
-from peewee import Model
+from homeinfo.db import HIModel
 
 __date__ = '09.10.2014'
 __author__ = 'Richard Neumann <r.neumannr@homeinfo.de>'
 
 
-class ImmobitModel(Model):
+class ImmobitModel(HIModel):
     """
     A generic model / table inside the ImmoBit database
     """
