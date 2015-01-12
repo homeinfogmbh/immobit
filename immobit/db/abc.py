@@ -1,7 +1,7 @@
 """
 Database models definitions
 """
-from homeinfo.his.api import HISServiceDatabase
+from homeinfo.his.api.db import HISServiceDatabase
 from peewee import Model
 
 __date__ = '09.10.2014'
