@@ -2,7 +2,7 @@
 Database models definitions
 """
 from homeinfo.his.api.db import HISServiceDatabase
-from homeinfo.db import HIModel
+from homeinfolib import HIModel
 
 __date__ = '09.10.2014'
 __author__ = 'Richard Neumann <r.neumannr@homeinfo.de>'
