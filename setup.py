@@ -5,7 +5,7 @@ from distutils.core import setup
 setup(name='homeinfo.his.immobit',
       version='0.0.1-indev',
       author='Richard Neumann',
-      author_email='mail@richard-neumann.de',
+      author_email='r.neumann@homeinfo.de',
       requires=['homeinfo.his'],
       package_dir={'homeinfo.his': ''},
       packages=['homeinfo.his.immobit'],
