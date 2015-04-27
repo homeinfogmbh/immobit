@@ -2,7 +2,7 @@
 
 from distutils.core import setup
 
-setup(name='homeinfo.his.immobit',
+setup(name='homeinfo-his-immobit',
       version='0.0.1-indev',
       author='Richard Neumann',
       author_email='r.neumann@homeinfo.de',
