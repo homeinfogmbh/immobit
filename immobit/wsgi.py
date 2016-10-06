@@ -12,6 +12,11 @@ from openimmo.openimmo import Umfang
 
 from openimmodb3.orm import Immobilie
 
+from .errors import FileTooLarge, InvalidOpenimmoData, InvalidDOM, \
+    NoSuchRealEstate, RealEstatedAdded, CannotAddRealEstate, \
+    RealEstateExists, NoRealEstateSpecified, CannotDeleteRealEstate, \
+    RealEstateUpdated, RealEstateDeleted
+
 
 __all__ = ['Immobit']
 
