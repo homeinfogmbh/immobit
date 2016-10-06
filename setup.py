@@ -1,15 +1,23 @@
 #! /usr/bin/env python3
 
 from distutils.core import setup
+from homeinfo.lib.misc import GitInfo
+
+version, author, author_email, *_ = GitInfo()
 
 setup(
-    name='homeinfo-his-immobit',
-    version='0.0.1-indev',
-    author='Richard Neumann',
-    author_email='r.neumann@homeinfo.de',
-    requires=['homeinfo.his'],
-    package_dir={'homeinfo.his': ''},
-    packages=['homeinfo.his.immobit'],
-    license=open('LICENSE.txt').read(),
-    description='An online real estate exposé tool',
-    long_description=open('README.txt').read())
+    name='his.immobit',
+    version=version,
+    author=author,
+    author_email=author_email,
+    requires=['his'],
+    package_dir={'his.mods': ''},
+    packages=['his.mods.fs'],
+    description='Immobit')
+
+
+from his.mods.fs.orm import Inode
+from his.mods.fs.wsgi import FS
+
+Inode.create_table(fail_silently=True)
+FS.install()
