@@ -1,7 +1,8 @@
 """WSGI interface"""
 
-from pyxb.exceptions_ import PyXBException
+from traceback import format_exc
 
+from pyxb.exceptions_ import PyXBException
 from peewee import DoesNotExist
 
 from homeinfo.crm import Customer
@@ -11,6 +12,8 @@ from openimmo import openimmo, factories
 from openimmo.openimmo import Umfang
 
 from openimmodb3.orm import Immobilie
+
+from his.api.handlers import AuthorizedService
 
 from .errors import FileTooLarge, InvalidOpenimmoData, InvalidDOM, \
     NoSuchRealEstate, RealEstatedAdded, CannotAddRealEstate, \

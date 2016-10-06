@@ -1,12 +1,7 @@
 """Error message definitions"""
 
-from peewee import DoesNotExist
-
-from homeinfo.crm import Customer
-
 from his.api.locale import Language
 from his.api.errors import HISMessage
-from his.api.handlers import AuthorizedService
 
 
 __all__ = [
