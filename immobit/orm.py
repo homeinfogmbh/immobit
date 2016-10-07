@@ -1,5 +1,7 @@
 """ORM models"""
 
+from datetime import datetime
+
 from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
     DateTimeField
 

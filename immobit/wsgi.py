@@ -5,11 +5,9 @@ from traceback import format_exc
 from pyxb.exceptions_ import PyXBException
 from peewee import DoesNotExist
 
-from homeinfo.crm import Customer
 from homeinfo.lib.wsgi import XML
 
 from openimmo import openimmo, factories
-from openimmo.openimmo import Umfang
 
 from openimmodb3.orm import Immobilie
 
