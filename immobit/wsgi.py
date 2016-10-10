@@ -13,10 +13,10 @@ from openimmodb3.orm import Immobilie
 
 from his.api.handlers import AuthorizedService
 
-from .errors import FileTooLarge, InvalidOpenimmoData, InvalidDOM, \
-    NoSuchRealEstate, RealEstatedAdded, CannotAddRealEstate, \
-    RealEstateExists, NoRealEstateSpecified, CannotDeleteRealEstate, \
-    RealEstateUpdated, RealEstateDeleted
+from .errors import InvalidOpenimmoData, InvalidDOM, NoSuchRealEstate, \
+    RealEstatedAdded, CannotAddRealEstate, RealEstateExists, \
+    NoRealEstateSpecified, CannotDeleteRealEstate, RealEstateUpdated, \
+    RealEstateDeleted
 
 
 __all__ = ['Immobit']
@@ -105,14 +105,9 @@ class Immobit(AuthorizedService):
     def dom(self):
         """Returns the posted openimmo-compliant DOM"""
         try:
-            data = self.file.read()
-        except MemoryError:
-            raise FileTooLarge() from None
-        else:
-            try:
-                return openimmo.CreateFromDocument(data)
-            except PyXBException:
-                raise InvalidOpenimmoData(format_exc()) from None
+            return openimmo.CreateFromDocument(self.data)
+        except PyXBException:
+            raise InvalidOpenimmoData(format_exc()) from None
 
     def post(self):
         """Posts real estate data"""

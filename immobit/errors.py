@@ -5,7 +5,6 @@ from his.api.errors import HISMessage
 
 
 __all__ = [
-    'FileTooLarge',
     'InvalidOpenimmoData',
     'InvalidDOM',
     'NoSuchRealEstate',
@@ -16,15 +15,6 @@ __all__ = [
     'CannotDeleteRealEstate',
     'RealEstateUpdated',
     'RealEstateDeleted']
-
-
-class FileTooLarge(HISMessage):
-    """Indicates that the posted file was too lange to process"""
-
-    STATUS = 500
-    LOCALE = {
-        Language.DE_DE: 'Datei zu groß.',
-        Language.EN_US: 'File is too large.'}
 
 
 class InvalidOpenimmoData(HISMessage):
