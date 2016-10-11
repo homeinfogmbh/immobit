@@ -95,7 +95,7 @@ class Immobit(AuthorizedService):
     def filters(self):
         """Returns filters"""
         try:
-            filter_str = self.query_dict['filter']
+            filter_str = self.params['filter']
         except KeyError:
             return []
         else:
