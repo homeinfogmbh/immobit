@@ -1,6 +1,7 @@
 """WSGI interface"""
 
 from datetime import date
+from json import parse
 from traceback import format_exc
 
 from peewee import DoesNotExist
