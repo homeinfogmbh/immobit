@@ -1,11 +1,11 @@
-#################################################
-#												#
-#	Immobit™ online real estate exposé agent	#
-#												#
-#################################################
+##################################
+#                                #
+#  Real estates service for HIS  #
+#                                #
+##################################
 
 LICENSE
-	Copyright (C) 2014:	HOMEINFO - Digitale Informationssysteme GmbH
-	All rights reserved.
-	
-	Contact:	Richard Neumann <mail@richard-neumann.de>
+    Copyright (C) 2014: HOMEINFO - Digitale Informationssysteme GmbH
+    All rights reserved.
+
+    Contact: Richard Neumann <mail@richard-neumann.de>
