@@ -1,5 +1,6 @@
 """WSGI interface"""
 
+from datetime import date
 from traceback import format_exc
 
 from peewee import DoesNotExist
@@ -39,29 +40,21 @@ class Immobit(AuthorizedService):
         'objektkategorie': {
             'nutzungsart': {
                 'WOHNEN': True,
-                'GEWERBE': False
-            },
+                'GEWERBE': False},
             'vermarktungsart': {
                 'KAUF': False,
-                'MIETE_PACHT': True
-            },
+                'MIETE_PACHT': True},
             'objektart': {
                 'wohnung': [
-                    {'wohnungtyp': 'ETAGE'}
-                ]
-            }
-        },
+                    {'wohnungtyp': 'ETAGE'}]}},
         'kontaktperson': {
             'email_direkt': 'foo@bar.com',
             'name': 'Mustermann',
-            'vorname': 'Max'
-        },
+            'vorname': 'Max'},
         'verwaltung_techn': {
             'objektnr_extern': '12fn101-g34',
             'openimmo_obid': 'KM0123456789',
-            'stand_vom': date.today()
-        }
-    }
+            'stand_vom': date.today()}}
 
     @property
     def filters(self):
