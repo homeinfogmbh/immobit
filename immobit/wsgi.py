@@ -54,7 +54,7 @@ class Immobit(AuthorizedService):
         'verwaltung_techn': {
             'objektnr_extern': '12fn101-g34',
             'openimmo_obid': 'KM0123456789',
-            'stand_vom': date.today()}}
+            'stand_vom': str(date.today())}}
 
     @property
     def filters(self):
