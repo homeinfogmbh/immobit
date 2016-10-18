@@ -6,7 +6,7 @@ from homeinfo.lib.misc import GitInfo
 version, author, author_email, *_ = GitInfo()
 
 setup(
-    name='his.immobit',
+    name='his.realestates',
     version=version,
     author=author,
     author_email=author_email,
