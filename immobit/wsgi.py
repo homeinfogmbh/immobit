@@ -2,24 +2,29 @@
 
 from traceback import format_exc
 
-from pyxb.exceptions_ import PyXBException
 from peewee import DoesNotExist
 
-from homeinfo.lib.wsgi import XML
-
-from openimmo import openimmo, factories
-
-from openimmodb3.orm import Immobilie
+from homeinfo.lib.wsgi import JSON
 
 from his.api.handlers import AuthorizedService
 
-from .errors import InvalidOpenimmoData, InvalidDOM, NoSuchRealEstate, \
+from .errors import NoSuchRealEstate, \
     RealEstatedAdded, CannotAddRealEstate, RealEstateExists, \
     NoRealEstateSpecified, CannotDeleteRealEstate, RealEstateUpdated, \
     RealEstateDeleted
 
 
 __all__ = ['Immobit']
+
+
+class DebugError(JSON):
+    """Error for debugging"""
+
+    def __init__(self, msg, status=400):
+        dictionary = {
+            'msg': msg,
+            'stacktrace': format_exc()}
+        super().__init__(dictionary, status=status)
 
 
 class Immobit(AuthorizedService):
@@ -30,66 +35,33 @@ class Immobit(AuthorizedService):
     DESCRIPTION = 'Immobiliendatenverwaltung'
     PROMOTE = True
 
-    def _add(self, dom):
-        """Adds a new real estate"""
-        try:
-            ident = Immobilie.add(self.customer, dom)
-        except Exception:
-            self.logger.error(format_exc())
-            raise CannotAddRealEstate() from None
-        else:
-            if ident:
-                return RealEstatedAdded()
-            else:
-                raise CannotAddRealEstate() from None
-
-    def _anbieter(self):
-        """Returns all real estates for the respective customer"""
-        anbieter = factories.anbieter(repr(self.customer), str(self.customer))
-
-        for immobilie in Immobilie.by_cid(self.customer):
-            anbieter.immobilie.append(immobilie.dom)
-
-        return XML(anbieter)
-
-    def _immobilie(self, objektnr_extern):
-        """Returns the respective real estate of the respective customer"""
-        try:
-            immobilie = Immobilie.get(
-                (Immobilie.customer == self.customer) &
-                (Immobilie.objektnr_extern == objektnr_extern))
-        except DoesNotExist:
-            raise NoSuchRealEstate(objektnr_extern) from None
-        else:
-            return XML(immobilie)
-
-    def _update(self, immobilie, dom):
-        """Updates the respective real estate"""
-        immobilie.openimmo_obid = dom.openimmo_obid
-        immobilie.objektnr_intern = dom.immobilie.objektnr_intern
-        immobilie.objektnr_extern = dom.immobilie.objektnr_extern
-        immobilie.data = dom.toxml(encoding='utf-8')  # New!
-        immobilie.save()
-        return RealEstateUpdated()
-
-    def _delete(self, objektnr_extern):
-        """Deletes the respective real estate"""
-        try:
-            immobilie = Immobilie.get(
-                (Immobilie.customer == self.customer) &
-                (Immobilie.objektnr_extern == self.resource))
-        except DoesNotExist:
-            raise NoSuchRealEstate(self.resource) from None
-        else:
-            try:
-                result = immobilie.remove(portals=True)
-            except Exception:
-                result = False
-
-            if result:
-                return RealEstateDeleted()
-            else:
-                raise CannotDeleteRealEstate() from None
+    _stub_real_estate = {
+        'objektkategorie': {
+            'nutzungsart': {
+                'WOHNEN': True,
+                'GEWERBE': False
+            },
+            'vermarktungsart': {
+                'KAUF': False,
+                'MIETE_PACHT': True
+            },
+            'objektart': {
+                'wohnung': [
+                    {'wohnungtyp': 'ETAGE'}
+                ]
+            }
+        },
+        'kontaktperson': {
+            'email_direkt': 'foo@bar.com',
+            'name': 'Mustermann',
+            'vorname': 'Max'
+        },
+        'verwaltung_techn': {
+            'objektnr_extern': '12fn101-g34',
+            'openimmo_obid': 'KM0123456789',
+            'stand_vom': date.today()
+        }
+    }
 
     @property
     def filters(self):
@@ -99,60 +71,39 @@ class Immobit(AuthorizedService):
         except KeyError:
             return []
         else:
-            return [f for f in filter_str.split(',') if f]
-
-    @property
-    def dom(self):
-        """Returns the posted openimmo-compliant DOM"""
-        try:
-            return openimmo.CreateFromDocument(self.data)
-        except PyXBException:
-            raise InvalidOpenimmoData(format_exc()) from None
+            return [f for f in filter_str.split(',') if f.strip()]
 
     def post(self):
         """Posts real estate data"""
-        dom = self.dom
-
-        # Verify DOM as openimmo.immobilie
-        if isinstance(dom, openimmo.immobilie().__class__):
-            try:
-                Immobilie.get(Immobilie.objektnr_extern == dom.objektnr_extern)
-            except DoesNotExist:
-                return self._add(dom)
-            else:
-                raise RealEstateExists()
+        # XXX: Stub!
+        try:
+            text = self.data.decode('utf-8')
+        except UnicodeDecodeError:
+            raise DebugError('Could not decode posted data to unicode.')
         else:
-            raise InvalidDOM()
+            try:
+                dictionary = parse(text)
+            except ValueError:
+                raise DebugError('Could not create dictionary from text.')
+            else:
+                return JSON(dictionary)
 
     def get(self):
         """Handles GET requests"""
+        # Stub!
         if self.resource is None:
-            return self._anbieter()
+            dictionary = {
+                repr(self.session.account.customer): self._stub_real_estate}
+            return JSON(dictionary)
         else:
-            return self._immobilie(self.resource)
+            self._stub_real_estate['verwaltung_techn']['objektnr_extern'] = \
+                self.resource
+            return JSON(self._stub_real_estate)
 
     def put(self):
         """Updates real estates"""
-        if self.resource is None:
-            raise NoRealEstateSpecified()
-        else:
-            try:
-                immobilie = Immobilie.get(
-                    (Immobilie.customer == self.customer) &
-                    (Immobilie.objektnr_extern == self.resource))
-            except DoesNotExist:
-                raise NoSuchRealEstate(self.resource) from None
-            else:
-                dom = self.dom
-
-                if isinstance(dom, openimmo.immobilie().__class__):
-                    return self._update(immobilie, dom)
-                else:
-                    raise InvalidDOM()
+        raise NotImplementedError()
 
     def delete(self):
         """Removes real estates"""
-        if self.resource is None:
-            raise NoRealEstateSpecified()
-        else:
-            return self._delete(self.resource)
+        raise NotImplementedError()
