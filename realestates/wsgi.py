@@ -1,7 +1,7 @@
 """WSGI interface"""
 
 from datetime import date
-from json import parse
+from json import loads
 from traceback import format_exc
 
 from peewee import DoesNotExist
@@ -88,7 +88,7 @@ class RealEstates(AuthorizedService):
             raise DebugError('Could not decode posted data to unicode.')
         else:
             try:
-                dictionary = parse(text)
+                dictionary = loads(text)
             except ValueError:
                 raise DebugError('Could not create dictionary from text.')
             else:
