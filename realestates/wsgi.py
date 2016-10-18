@@ -66,8 +66,20 @@ class RealEstates(AuthorizedService):
         else:
             return [f for f in filter_str.split(',') if f.strip()]
 
+    def get(self):
+        """Returns available real estates"""
+        # Stub!
+        if self.resource is None:
+            dictionary = {
+                repr(self.session.account.customer): self._stub_real_estate}
+            return JSON(dictionary)
+        else:
+            self._stub_real_estate['verwaltung_techn']['objektnr_extern'] = \
+                self.resource
+            return JSON(self._stub_real_estate)
+
     def post(self):
-        """Posts real estate data"""
+        """Adds new real estates"""
         # XXX: Stub!
         try:
             text = self.data.decode('utf-8')
@@ -81,22 +93,18 @@ class RealEstates(AuthorizedService):
             else:
                 return JSON(dictionary)
 
-    def get(self):
-        """Handles GET requests"""
-        # Stub!
-        if self.resource is None:
-            dictionary = {
-                repr(self.session.account.customer): self._stub_real_estate}
-            return JSON(dictionary)
-        else:
-            self._stub_real_estate['verwaltung_techn']['objektnr_extern'] = \
-                self.resource
-            return JSON(self._stub_real_estate)
-
-    def put(self):
-        """Updates real estates"""
-        raise NotImplementedError()
-
     def delete(self):
         """Removes real estates"""
         raise NotImplementedError()
+
+    def put(self):
+        """Overrides real estates"""
+        raise NotImplementedError()
+
+    def patch(self):
+        """Partially updates real estates"""
+        raise NotImplementedError()
+
+    def options(self):
+        """Returns options information"""
+        return OK()
