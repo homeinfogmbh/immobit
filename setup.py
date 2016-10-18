@@ -12,5 +12,5 @@ setup(
     author_email=author_email,
     requires=['his'],
     package_dir={'his.mods': ''},
-    packages=['his.mods.immobit'],
+    packages=['his.mods.realestates'],
     description='Immobit')

@@ -15,7 +15,7 @@ from .errors import NoSuchRealEstate, \
     RealEstateDeleted
 
 
-__all__ = ['Immobit']
+__all__ = ['RealEstates']
 
 
 class DebugError(JSON):
@@ -28,10 +28,10 @@ class DebugError(JSON):
         super().__init__(dictionary, status=status)
 
 
-class Immobit(AuthorizedService):
+class RealEstates(AuthorizedService):
     """Handles requests for ImmoBit"""
 
-    NODE = 'immobit'
+    NODE = 'realestates'
     NAME = 'ImmoBit'
     DESCRIPTION = 'Immobiliendatenverwaltung'
     PROMOTE = True
