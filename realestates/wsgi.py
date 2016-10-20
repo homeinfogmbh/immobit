@@ -72,7 +72,7 @@ class RealEstates(AuthorizedService):
         # Stub!
         if self.resource is None:
             dictionary = {
-                repr(self.session.account.customer): self._stub_real_estate}
+                'immobilie': [self._stub_real_estate]}
             return JSON(dictionary)
         else:
             self._stub_real_estate['verwaltung_techn']['objektnr_extern'] = \
