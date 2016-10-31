@@ -89,8 +89,8 @@ class RealEstates(AuthorizedService):
         try:
             dictionary = loads(self.data)
         except Exception:
-            with NamedTemporaryFile(delete=False) as tmp:
-                tmp.write(text)
+            with NamedTemporaryFile('wb', delete=False) as tmp:
+                tmp.write(self.data)
 
             raise DebugError(
                 'Could not create dictionary from text.', file=tmp.name)
