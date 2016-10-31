@@ -3,18 +3,18 @@
 from datetime import date
 from json import loads
 from traceback import format_exc
+from tempfile import NamedTemporaryFile
 
-from peewee import DoesNotExist
+# from peewee import DoesNotExist
 
-from homeinfo.lib.wsgi import JSON
+from homeinfo.lib.wsgi import JSON, OK
 
 from his.api.handlers import AuthorizedService
 
-from .errors import NoSuchRealEstate, \
-    RealEstatedAdded, CannotAddRealEstate, RealEstateExists, \
-    NoRealEstateSpecified, CannotDeleteRealEstate, RealEstateUpdated, \
-    RealEstateDeleted
-
+# from .errors import NoSuchRealEstate, \
+#    RealEstatedAdded, CannotAddRealEstate, RealEstateExists, \
+#    NoRealEstateSpecified, CannotDeleteRealEstate, RealEstateUpdated, \
+#    RealEstateDeleted
 
 __all__ = ['RealEstates']
 
@@ -22,10 +22,14 @@ __all__ = ['RealEstates']
 class DebugError(JSON):
     """Error for debugging"""
 
-    def __init__(self, msg, status=400):
+    def __init__(self, msg, file=None, status=400):
         dictionary = {
             'msg': msg,
             'stacktrace': format_exc()}
+
+        if file is not None:
+            dictionary['file'] = file
+
         super().__init__(dictionary, status=status)
 
 
@@ -90,7 +94,11 @@ class RealEstates(AuthorizedService):
             try:
                 dictionary = loads(text)
             except ValueError:
-                raise DebugError('Could not create dictionary from text.')
+                with NamedTemporaryFile(delete=False) as tmp:
+                    tmp.write(text)
+
+                raise DebugError(
+                    'Could not create dictionary from text.', file=tmp.name)
             else:
                 return JSON(dictionary)
 
