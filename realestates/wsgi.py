@@ -87,15 +87,20 @@ class RealEstates(AuthorizedService):
         """Adds new real estates"""
         # XXX: Stub!
         try:
-            dictionary = loads(self.data)
-        except Exception:
-            with NamedTemporaryFile('wb', delete=False) as tmp:
-                tmp.write(self.data)
-
-            raise DebugError(
-                'Could not create dictionary from text.', file=tmp.name)
+            text = self.data.decode('utf-8')
+        except UnicodeDecodeError:
+            raise DebugError('Could not decode posted data to unicode.')
         else:
-            return JSON(dictionary)
+            try:
+                dictionary = loads(text)
+            except ValueError:
+                with NamedTemporaryFile(delete=False) as tmp:
+                    tmp.write(text)
+
+                raise DebugError(
+                    'Could not create dictionary from text.', file=tmp.name)
+            else:
+                return JSON(dictionary)
 
     def delete(self):
         """Removes real estates"""
