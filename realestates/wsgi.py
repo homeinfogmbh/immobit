@@ -78,7 +78,7 @@ class RealEstates(AuthorizedService):
         if self.resource is None:
             real_estates = []
 
-            for immobilie in Immobilie.get(
+            for immobilie in Immobilie.select().where(
                     Immobilie._customer == self.customer):
                 real_estates.append(immobilie.to_dict())
 
@@ -88,7 +88,7 @@ class RealEstates(AuthorizedService):
                 immobilie = Immobilie.fetch(self.customer, self.resource)
             except DoesNotExist:
                 raise Error('No such real estate: {}'.format(
-                    self.resource)) from None
+                    self.resource), status=400) from None
             else:
                 try:
                     return JSON(immobilie.to_dict())
