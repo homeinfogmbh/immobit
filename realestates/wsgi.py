@@ -5,9 +5,10 @@ from json import loads
 from traceback import format_exc
 from tempfile import NamedTemporaryFile
 
-from openimmodb import Immobilie
+from peewee import DoesNotExist
 
-from homeinfo.lib.wsgi import JSON, OK
+from openimmodb import Immobilie
+from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK
 
 from his.api.handlers import AuthorizedService
 
@@ -83,8 +84,16 @@ class RealEstates(AuthorizedService):
 
             return JSON({'immobilie': real_estates})
         else:
-            immobilie = Immobilie.fetch(self.customer, self.resource)
-            return JSON(immobilie.to_dict())
+            try:
+                immobilie = Immobilie.fetch(self.customer, self.resource)
+            except DoesNotExist:
+                raise Error('No such real estate: {}'.format(
+                    self.resource)) from None
+            else:
+                try:
+                    return JSON(immobilie.to_dict())
+                except Exception:
+                    raise InternalServerError(format_exc()) from None
 
     def post(self):
         """Adds new real estates"""
@@ -107,16 +116,18 @@ class RealEstates(AuthorizedService):
                     records = list(Immobilie.from_dict(
                         dictionary, customer=self.customer))
                 except Exception:
-                    self.logger.error('Error while generating records')
-                    print(format_exc(), flush=True)
+                    raise InternalServerError(
+                        'Error while generating records:\n{}'.format(
+                            format_exc()))
                 else:
                     for record in records:
                         try:
                             record.save()
                         except Exception:
-                            self.logger.error(
-                                'Could not save record: {}'.format(record))
-                            print(format_exc(), flush=True)
+                            msg = ('Could not save record: '
+                                   '{record}\n{st}').format(
+                                record=record, st=format_exc())
+                            raise InternalServerError(msg) from None
 
     def delete(self):
         """Removes real estates"""
