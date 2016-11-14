@@ -97,7 +97,6 @@ class RealEstates(AuthorizedService):
 
     def post(self):
         """Adds new real estates"""
-        # XXX: Stub!
         try:
             text = self.data.decode('utf-8')
         except UnicodeDecodeError:
@@ -109,8 +108,8 @@ class RealEstates(AuthorizedService):
                 with NamedTemporaryFile(delete=False) as tmp:
                     tmp.write(text)
 
-                raise DebugError(
-                    'Could not create dictionary from text.', file=tmp.name)
+                raise Error('Could not create dictionary from: {}'.format(
+                    text))
             else:
                 try:
                     records = list(Immobilie.from_dict(
@@ -131,15 +130,43 @@ class RealEstates(AuthorizedService):
 
     def delete(self):
         """Removes real estates"""
-        raise NotImplementedError()
+        if self.resource is None:
+            raise Error('No real estate specified', status=400) from None
+        else:
+            try:
+                immobilie = Immobilie.fetch(self.customer, self.resource)
+            except DoesNotExist:
+                raise Error('No such real estate: {}'.format(
+                    self.resource), status=400) from None
+            else:
+                try:
+                    immobilie.remove()
+                except Exception:
+                    raise InternalServerError(
+                        'Could not delete real estate:\n{}'.format(
+                            format_exc())) from None
 
     def put(self):
         """Overrides real estates"""
-        raise NotImplementedError()
+        return self.patch()
 
     def patch(self):
         """Partially updates real estates"""
-        raise NotImplementedError()
+        if self.resource is None:
+            raise Error('No real estate specified', status=400) from None
+        else:
+            try:
+                immobilie = Immobilie.fetch(self.customer, self.resource)
+            except DoesNotExist:
+                raise Error('No such real estate: {}'.format(
+                    self.resource), status=400) from None
+            else:
+                try:
+                    immobilie.patch(self.data)
+                except Exception:
+                    raise InternalServerError(
+                        'Could not patch real estate:\n{}'.format(
+                            format_exc())) from None
 
     def options(self):
         """Returns options information"""
