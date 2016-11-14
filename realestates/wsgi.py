@@ -5,7 +5,7 @@ from json import loads
 from traceback import format_exc
 from tempfile import NamedTemporaryFile
 
-# from peewee import DoesNotExist
+from openimmodb import Immobilie
 
 from homeinfo.lib.wsgi import JSON, OK
 
@@ -75,13 +75,16 @@ class RealEstates(AuthorizedService):
         """Returns available real estates"""
         # Stub!
         if self.resource is None:
-            dictionary = {
-                'immobilie': [self._stub_real_estate]}
-            return JSON(dictionary)
+            real_estates = []
+
+            for immobilie in Immobilie.get(
+                    Immobilie._customer == self.customer):
+                real_estates.append(immobilie.to_dict())
+
+            return JSON({'immobilie': real_estates})
         else:
-            self._stub_real_estate['verwaltung_techn']['objektnr_extern'] = \
-                self.resource
-            return JSON(self._stub_real_estate)
+            immobilie = Immobilie.fetch(self.customer, self.resource)
+            return JSON(immobilie.to_dict())
 
     def post(self):
         """Adds new real estates"""
@@ -100,7 +103,20 @@ class RealEstates(AuthorizedService):
                 raise DebugError(
                     'Could not create dictionary from text.', file=tmp.name)
             else:
-                return JSON(dictionary)
+                try:
+                    records = list(Immobilie.from_dict(
+                        dictionary, customer=self.customer))
+                except Exception:
+                    self.logger.error('Error while generating records')
+                    print(format_exc(), flush=True)
+                else:
+                    for record in records:
+                        try:
+                            record.save()
+                        except Exception:
+                            self.logger.error(
+                                'Could not save record: {}'.format(record))
+                            print(format_exc(), flush=True)
 
     def delete(self):
         """Removes real estates"""
