@@ -131,8 +131,8 @@ class RealEstates(AuthorizedService):
                                    '{record}\n{st}').format(
                                 record=record, st=format_exc())
                             raise InternalServerError(msg) from None
-                        else:
-                            return OK()
+
+                    return OK()
 
     def delete(self):
         """Removes real estates"""
