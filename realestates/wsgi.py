@@ -102,6 +102,10 @@ class RealEstates(AuthorizedService):
         except UnicodeDecodeError:
             raise DebugError('Could not decode posted data to unicode.')
         else:
+            # XXX: Debug
+            self.logger.info('Received Text:')
+            print(text, flush=True)
+
             try:
                 dictionary = loads(text)
             except ValueError:
@@ -127,6 +131,8 @@ class RealEstates(AuthorizedService):
                                    '{record}\n{st}').format(
                                 record=record, st=format_exc())
                             raise InternalServerError(msg) from None
+                        else:
+                            return OK()
 
     def delete(self):
         """Removes real estates"""
