@@ -131,6 +131,10 @@ class RealEstates(AuthorizedService):
                                    '{record}\n{st}').format(
                                 record=record, st=format_exc())
                             raise InternalServerError(msg) from None
+                        else:
+                            # XXX: Debug
+                            self.logger.info('Record: {id}@{typ}'.format(
+                                id=record.id, typ=record))
 
                     return OK()
 
