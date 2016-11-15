@@ -4,6 +4,7 @@ from datetime import date
 from json import loads
 from traceback import format_exc
 from tempfile import NamedTemporaryFile
+from contextlib import suppress
 
 from peewee import DoesNotExist
 
