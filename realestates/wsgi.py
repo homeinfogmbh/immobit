@@ -130,7 +130,7 @@ class RealEstates(AuthorizedService):
                             with suppress(AttributeError):
                                 self.logger.info(
                                     'Record._immobilie: {}'.format(
-                                        record._immobilie))
+                                        record._immobilie.id))
 
                             record.save()
                         except Exception:
