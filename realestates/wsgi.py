@@ -125,6 +125,12 @@ class RealEstates(AuthorizedService):
                 else:
                     for record in records:
                         try:
+                            # XXX: Debug
+                            with suppress(AttributeError):
+                                self.logger.info(
+                                    'Record._immobilie: {}'.format(
+                                        record._immobilie))
+
                             record.save()
                         except Exception:
                             msg = ('Could not save record: '
