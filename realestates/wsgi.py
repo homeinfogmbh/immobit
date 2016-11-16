@@ -16,20 +16,6 @@ from .orm import TransactionLog
 __all__ = ['RealEstates']
 
 
-class DebugError(JSON):
-    """Error for debugging"""
-
-    def __init__(self, msg, file=None, status=400):
-        dictionary = {
-            'msg': msg,
-            'stacktrace': format_exc()}
-
-        if file is not None:
-            dictionary['file'] = file
-
-        super().__init__(dictionary, status=status)
-
-
 class RealEstates(AuthorizedService):
     """Handles requests for ImmoBit"""
 
@@ -123,10 +109,6 @@ class RealEstates(AuthorizedService):
         if self.resource is None:
             raise Error('No real estate specified', status=400) from None
         else:
-            # XXX: debug
-            self.logger.info('Resource:', self.resource, type(self.resource))
-            print(self.environ, flush=True)
-
             try:
                 immobilie = Immobilie.fetch(self.customer, self.resource)
             except DoesNotExist:
