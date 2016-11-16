@@ -116,7 +116,8 @@ class RealEstates(AuthorizedService):
                 if transaction:
                     return OK('Transaction succeeded')
                 else:
-                    return Error('Transaction failed')
+                    return Error('Transaction failed:\n{}'.format(
+                        transaction.traceback))
 
     def delete(self):
         """Removes real estates"""
