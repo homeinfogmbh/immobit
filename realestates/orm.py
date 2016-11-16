@@ -31,6 +31,9 @@ class ImmoBitModel(Model):
 class TransactionLog(ImmoBitModel):
     """Stores real estate transactions"""
 
+    class Meta:
+        db_table = 'transaction_log'
+
     account = ForeignKeyField(Account, db_column='account')
     objektnr_extern = CharField(255)
     action = CharField(6)  # CREATE, UPDATE, DELETE
