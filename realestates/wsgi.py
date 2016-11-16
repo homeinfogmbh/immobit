@@ -111,8 +111,9 @@ class RealEstates(AuthorizedService):
                 try:
                     with Transaction(logger=self.logger) as transaction:
                         transaction.add(self.customer, dict=dictionary)
-                except IncompleteDataError:
-                    raise Error('Incomplete data', status=400) from None
+                except IncompleteDataError as e:
+                    raise Error('Incomplete data: {}'.format(
+                        e.element), status=400) from None
                 except RealEstateExists:
                     raise Error('Real estate exists', status=400) from None
                 except ConsistencyError:
