@@ -125,7 +125,7 @@ class RealEstates(AuthorizedService):
         else:
             # XXX: debug
             self.logger.info('Resource:', self.resource, type(self.resource))
-            print(self.environ.get('PATH_INFO'), flush=True)
+            print(self.environ, flush=True)
 
             try:
                 immobilie = Immobilie.fetch(self.customer, self.resource)
