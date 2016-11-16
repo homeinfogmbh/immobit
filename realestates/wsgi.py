@@ -112,7 +112,7 @@ class RealEstates(AuthorizedService):
                 raise Error('Could not create dictionary from text')
             else:
                 try:
-                    with Transaction() as transaction:
+                    with Transaction(logger=self.logger) as transaction:
                         transaction.add(self.customer, dict=dictionary)
                 except IncompleteDataError:
                     raise Error('Incomplete data', status=400) from None
