@@ -102,9 +102,15 @@ class RealEstates(AuthorizedService):
                 raise Error(
                     'Invalid JSON:\n{}'.format(text), status=400) from None
             else:
+                try:
+                    objektnr_extern = dictionary['verwaltung_techn'][
+                        'objektnr_extern']
+                except (KeyError, TypeError):
+                    objektnr_extern = None
+
                 with TransactionLog(
                         account=self.account,
-                        objektnr_extern=dictionary.get('objektnr_extern'),
+                        objektnr_extern=objektnr_extern,
                         action='CREATE') as log:
                     if self._add_real_estate(dictionary):
                         log.success = True
