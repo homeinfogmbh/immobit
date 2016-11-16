@@ -123,6 +123,9 @@ class RealEstates(AuthorizedService):
         if self.resource is None:
             raise Error('No real estate specified', status=400) from None
         else:
+            # XXX: debug
+            self.logger.info('Resource:', self.resource, type(self.resource))
+
             try:
                 immobilie = Immobilie.fetch(self.customer, self.resource)
             except DoesNotExist:
