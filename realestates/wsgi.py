@@ -6,7 +6,8 @@ from traceback import format_exc
 
 from peewee import DoesNotExist
 
-from openimmodb import Transaction, Immobilie
+from openimmodb import OpenImmoDBError, IncompleteDataError, ConsistencyError,\
+    RealEstateExists, Transaction, Immobilie
 from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK
 
 from his.api.handlers import AuthorizedService
@@ -110,14 +111,24 @@ class RealEstates(AuthorizedService):
             except ValueError:
                 raise Error('Could not create dictionary from text')
             else:
-                with Transaction() as transaction:
-                    transaction.add(self.customer, dict=dictionary)
-
-                if transaction:
-                    return OK('Transaction succeeded')
+                try:
+                    with Transaction() as transaction:
+                        transaction.add(self.customer, dict=dictionary)
+                except IncompleteDataError:
+                    raise Error('Incomplete data', status=400) from None
+                except RealEstateExists:
+                    raise Error(
+                        'Real estate already exists', status=400) from None
+                except ConsistencyError:
+                    raise Error('Data inconsistent', status=400) from None
+                except OpenImmoDBError:
+                    raise Error('Unspecified database error:\n{}'.format(
+                        format_exc())) from None
                 else:
-                    return Error('Transaction failed:\n{}'.format(
-                        transaction.stacktrace), status=400)
+                    if transaction:
+                        return OK('Real estate added')
+                    else:
+                        return Error('Could not add real estate')
 
     def delete(self):
         """Removes real estates"""
