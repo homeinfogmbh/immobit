@@ -100,16 +100,13 @@ class RealEstates(AuthorizedService):
         try:
             text = self.data.decode('utf-8')
         except UnicodeDecodeError:
-            raise DebugError('Could not decode posted data to unicode.')
+            raise Error('Posted data is not UTF-8', status=400) from None
         else:
-            # XXX: Debug
-            self.logger.info('Received Text:')
-            print(text, flush=True)
-
             try:
                 dictionary = loads(text)
             except ValueError:
-                raise Error('Could not create dictionary from text')
+                raise Error(
+                    'Invalid JSON:\n{}'.format(text), status=400) from None
             else:
                 try:
                     with Transaction(logger=self.logger) as transaction:
@@ -127,7 +124,7 @@ class RealEstates(AuthorizedService):
                     if transaction:
                         return OK('Real estate added')
                     else:
-                        return Error('Could not add real estate')
+                        return Error('Could not add real estate', status=500)
 
     def delete(self):
         """Removes real estates"""
