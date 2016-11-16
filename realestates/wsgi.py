@@ -117,8 +117,7 @@ class RealEstates(AuthorizedService):
                 except IncompleteDataError:
                     raise Error('Incomplete data', status=400) from None
                 except RealEstateExists:
-                    raise Error(
-                        'Real estate already exists', status=400) from None
+                    raise Error('Real estate exists', status=400) from None
                 except ConsistencyError:
                     raise Error('Data inconsistent', status=400) from None
                 except OpenImmoDBError:
