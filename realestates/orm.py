@@ -5,6 +5,7 @@ from datetime import datetime
 from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
     DateTimeField, BooleanField
 
+from his.config import config
 from his.orm import Account
 
 from homeinfo.peewee import MySQLDatabase
@@ -18,9 +19,9 @@ class ImmoBitModel(Model):
     class Meta:
         database = MySQLDatabase(
             'his_fs',
-            host='localhost',
-            user='his',
-            passwd='Z"XO;$2K+>XEo}jK>6-+}|U@,|E/6_&W',
+            host=config.db['HOST'],
+            user=config.db['USER'],
+            passwd=config.db['PASSWD'],
             closing=True)
         schema = database.database
 
