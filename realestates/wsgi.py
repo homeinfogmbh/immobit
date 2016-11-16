@@ -42,26 +42,6 @@ class RealEstates(AuthorizedService):
     DESCRIPTION = 'Immobiliendatenverwaltung'
     PROMOTE = True
 
-    _stub_real_estate = {
-        'objektkategorie': {
-            'nutzungsart': {
-                'WOHNEN': True,
-                'GEWERBE': False},
-            'vermarktungsart': {
-                'KAUF': False,
-                'MIETE_PACHT': True},
-            'objektart': {
-                'wohnung': [
-                    {'wohnungtyp': 'ETAGE'}]}},
-        'kontaktperson': {
-            'email_direkt': 'foo@bar.com',
-            'name': 'Mustermann',
-            'vorname': 'Max'},
-        'verwaltung_techn': {
-            'objektnr_extern': '12fn101-g34',
-            'openimmo_obid': 'KM0123456789',
-            'stand_vom': str(date.today())}}
-
     @property
     def filters(self):
         """Returns filters"""
