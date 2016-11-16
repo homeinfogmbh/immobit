@@ -46,7 +46,7 @@ class TransactionLog(ImmoBitModel):
     def __exit__(self, *_):
         """Store transaction iff it is complete"""
         if self.account is not None:
-            if self.real_estate is not None:
+            if self.objektnr_extern is not None:
                 if self.action is not None:
                     self.end = datetime.now()
                     self.save()
