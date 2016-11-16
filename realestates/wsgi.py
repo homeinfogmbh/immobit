@@ -3,12 +3,10 @@
 from datetime import date
 from json import loads
 from traceback import format_exc
-from tempfile import NamedTemporaryFile
-from contextlib import suppress
 
 from peewee import DoesNotExist
 
-from openimmodb import Immobilie
+from openimmodb import Transaction, Immobilie
 from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK
 
 from his.api.handlers import AuthorizedService
@@ -110,40 +108,15 @@ class RealEstates(AuthorizedService):
             try:
                 dictionary = loads(text)
             except ValueError:
-                with NamedTemporaryFile(delete=False) as tmp:
-                    tmp.write(text)
-
-                raise Error('Could not create dictionary from: {}'.format(
-                    text))
+                raise Error('Could not create dictionary from text')
             else:
-                try:
-                    records = list(Immobilie.from_dict(
-                        dictionary, customer=self.customer))
-                except Exception:
-                    raise InternalServerError(
-                        'Error while generating records:\n{}'.format(
-                            format_exc()))
+                with Transaction() as transaction:
+                    transaction.add(self.customer, dict=dictionary)
+
+                if transaction:
+                    return OK('Transaction succeeded')
                 else:
-                    for record in records:
-                        try:
-                            # XXX: Debug
-                            with suppress(AttributeError):
-                                self.logger.info(
-                                    'Record._immobilie: {}'.format(
-                                        record._immobilie.id))
-
-                            record.save()
-                        except Exception:
-                            msg = ('Could not save record: '
-                                   '{record}\n{st}').format(
-                                record=record, st=format_exc())
-                            raise InternalServerError(msg) from None
-                        else:
-                            # XXX: Debug
-                            self.logger.info('Record: {id}@{typ}'.format(
-                                id=record.id, typ=record))
-
-                    return OK()
+                    return Error('Transaction failed')
 
     def delete(self):
         """Removes real estates"""
