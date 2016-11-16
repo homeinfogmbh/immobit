@@ -53,6 +53,13 @@ class TransactionLog(ImmoBitModel):
                 if self.action is not None:
                     self.end = datetime.now()
                     self.save()
+                else:
+                    print('action', self.action, sep='=', flush=True)
+            else:
+                print('objektnr_extern', self.objektnr_extern,
+                      sep='=', flush=True)
+        else:
+            print('account', self.account, sep='=', flush=True)
 
     @property
     def duration(self):
