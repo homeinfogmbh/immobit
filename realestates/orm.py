@@ -3,11 +3,13 @@
 from datetime import datetime
 
 from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
-    DateTimeField
+    DateTimeField, BooleanField
 
 from his.orm import Account
 
 from homeinfo.peewee import MySQLDatabase
+
+__all__ = ['TransactionLog']
 
 
 class ImmoBitModel(Model):
@@ -25,12 +27,13 @@ class ImmoBitModel(Model):
     id = PrimaryKeyField()
 
 
-class Transaction(ImmoBitModel):
+class TransactionLog(ImmoBitModel):
     """Stores real estate transactions"""
 
     account = ForeignKeyField(Account, db_column='account')
     objektnr_extern = CharField(255)
     action = CharField(6)  # CREATE, UPDATE, DELETE
+    success = BooleanField(default=False)
     start = DateTimeField()
     end = DateTimeField()
 
@@ -46,3 +49,8 @@ class Transaction(ImmoBitModel):
                 if self.action is not None:
                     self.end = datetime.now()
                     self.save()
+
+    @property
+    def duration(self):
+        """Calculates the duration"""
+        return self.end - self.start

@@ -1,6 +1,5 @@
 """WSGI interface"""
 
-from datetime import date
 from json import loads
 from traceback import format_exc
 
@@ -12,10 +11,7 @@ from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK
 
 from his.api.handlers import AuthorizedService
 
-# from .errors import NoSuchRealEstate, \
-#    RealEstatedAdded, CannotAddRealEstate, RealEstateExists, \
-#    NoRealEstateSpecified, CannotDeleteRealEstate, RealEstateUpdated, \
-#    RealEstateDeleted
+from .orm import TransactionLog
 
 __all__ = ['RealEstates']
 
@@ -51,6 +47,24 @@ class RealEstates(AuthorizedService):
             return []
         else:
             return [f for f in filter_str.split(',') if f.strip()]
+
+    def _add_real_estate(self, dictionary):
+        """Adds the real estate represented by the dictionary"""
+        try:
+            with Transaction(logger=self.logger) as transaction:
+                transaction.add(self.customer, dict=dictionary)
+        except IncompleteDataError as e:
+            raise Error('Incomplete data: {}'.format(
+                e.element), status=400) from None
+        except RealEstateExists:
+            raise Error('Real estate exists', status=400) from None
+        except ConsistencyError:
+            raise Error('Data inconsistent', status=400) from None
+        except OpenImmoDBError:
+            raise Error('Unspecified database error:\n{}'.format(
+                format_exc())) from None
+        else:
+            return transaction
 
     def get(self):
         """Returns available real estates"""
@@ -88,21 +102,12 @@ class RealEstates(AuthorizedService):
                 raise Error(
                     'Invalid JSON:\n{}'.format(text), status=400) from None
             else:
-                try:
-                    with Transaction(logger=self.logger) as transaction:
-                        transaction.add(self.customer, dict=dictionary)
-                except IncompleteDataError as e:
-                    raise Error('Incomplete data: {}'.format(
-                        e.element), status=400) from None
-                except RealEstateExists:
-                    raise Error('Real estate exists', status=400) from None
-                except ConsistencyError:
-                    raise Error('Data inconsistent', status=400) from None
-                except OpenImmoDBError:
-                    raise Error('Unspecified database error:\n{}'.format(
-                        format_exc())) from None
-                else:
-                    if transaction:
+                with TransactionLog(
+                        account=self.account,
+                        objektnr_extern=dictionary.get('objektnr_extern'),
+                        action='CREATE') as log:
+                    if self._add_real_estate(dictionary):
+                        log.success = True
                         return OK('Real estate added')
                     else:
                         return Error('Could not add real estate', status=500)
@@ -118,12 +123,19 @@ class RealEstates(AuthorizedService):
                 raise Error('No such real estate: {}'.format(
                     self.resource), status=400) from None
             else:
-                try:
-                    immobilie.remove()
-                except Exception:
-                    raise InternalServerError(
-                        'Could not delete real estate:\n{}'.format(
-                            format_exc())) from None
+                with TransactionLog(
+                        account=self.account,
+                        objektnr_extern=self.resource,
+                        action='DELETE') as log:
+                    try:
+                        immobilie.remove()
+                    except Exception:
+                        raise InternalServerError(
+                            'Could not delete real estate:\n{}'.format(
+                                format_exc())) from None
+                    else:
+                        log.success = True
+                        return OK('Real estate deleted')
 
     def put(self):
         """Overrides real estates"""
@@ -140,12 +152,19 @@ class RealEstates(AuthorizedService):
                 raise Error('No such real estate: {}'.format(
                     self.resource), status=400) from None
             else:
-                try:
-                    immobilie.patch(self.data)
-                except Exception:
-                    raise InternalServerError(
-                        'Could not patch real estate:\n{}'.format(
-                            format_exc())) from None
+                with TransactionLog(
+                        account=self.account,
+                        objektnr_extern=self.resource,
+                        action='DELETE') as log:
+                    try:
+                        immobilie.patch(self.data)
+                    except Exception:
+                        raise InternalServerError(
+                            'Could not patch real estate:\n{}'.format(
+                                format_exc())) from None
+                    else:
+                        log.success = True
+                        return OK('Real estate patched')
 
     def options(self):
         """Returns options information"""
