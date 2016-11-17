@@ -42,6 +42,24 @@ class RealEstates(AuthorizedService):
         else:
             return transaction
 
+    def _patch_real_estate(self, dictionary):
+        """Adds the real estate represented by the dictionary"""
+        try:
+            with Transaction(logger=self.logger) as trans:
+                trans.patch(self.customer, self.resource, dict=dictionary)
+        except IncompleteDataError as e:
+            raise Error('Incomplete data: {}'.format(
+                e.element), status=422) from None
+        except RealEstateExists:
+            raise Error('Real estate exists', status=409) from None
+        except ConsistencyError:
+            raise Error('Data inconsistent', status=422) from None
+        except OpenImmoDBError:
+            raise Error('Unspecified database error:\n{}'.format(
+                format_exc())) from None
+        else:
+            return trans
+
     @property
     def json(self):
         """Retruns JSON dict from data"""
@@ -134,28 +152,18 @@ class RealEstates(AuthorizedService):
         if self.resource is None:
             raise Error('No real estate specified', status=400) from None
         else:
-            try:
-                immobilie = Immobilie.fetch(self.customer, self.resource)
-            except DoesNotExist:
-                raise Error('No such real estate: {}'.format(
-                    self.resource), status=404) from None
-            else:
-                dictionary = self.json
-
-                with TransactionLog(
-                        account=self.account,
-                        customer=self.customer,
-                        objektnr_extern=self.resource,
-                        action='DELETE') as log:
-                    try:
-                        immobilie.patch(dictionary)
-                    except Exception:
-                        raise InternalServerError(
-                            'Could not patch real estate:\n{}'.format(
-                                format_exc())) from None
-                    else:
-                        log.success = True
-                        return OK('Real estate patched')
+            with TransactionLog(
+                    account=self.account,
+                    customer=self.customer,
+                    objektnr_extern=self.resource,
+                    action='DELETE') as log:
+                if self._patch_real_estate(self.json):
+                    log.success = True
+                    return OK('Real estate patched')
+                else:
+                    raise InternalServerError(
+                        'Could not patch real estate:\n{}'.format(
+                            format_exc())) from None
 
     def options(self):
         """Returns options information"""
