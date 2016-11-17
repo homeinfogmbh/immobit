@@ -9,7 +9,7 @@ from his.orm import service_table, HISModel, Account
 __all__ = ['TransactionLog']
 
 
-@service_table
+@service_table('realestates')
 class TransactionLog(HISModel):
     """Stores real estate transactions"""
 
