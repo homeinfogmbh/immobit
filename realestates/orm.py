@@ -5,13 +5,12 @@ from datetime import datetime
 from peewee import ForeignKeyField, CharField, DateTimeField, BooleanField
 
 from homeinfo.crm import Customer
-from his.orm import service_table, HISModel, Account
+from his.orm import module_model, Account
 
 __all__ = ['TransactionLog']
 
 
-@service_table('realestates')
-class TransactionLog(HISModel):
+class TransactionLog(module_model('realestates')):
     """Stores real estate transactions"""
 
     account = ForeignKeyField(Account, db_column='account')
