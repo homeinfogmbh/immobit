@@ -24,16 +24,6 @@ class RealEstates(AuthorizedService):
     DESCRIPTION = 'Immobiliendatenverwaltung'
     PROMOTE = True
 
-    @property
-    def filters(self):
-        """Returns filters"""
-        try:
-            filter_str = self.params['filter']
-        except KeyError:
-            return []
-        else:
-            return [f for f in filter_str.split(',') if f.strip()]
-
     def _add_real_estate(self, dictionary):
         """Adds the real estate represented by the dictionary"""
         try:
