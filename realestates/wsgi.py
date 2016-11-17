@@ -96,6 +96,7 @@ class RealEstates(AuthorizedService):
 
                 with TransactionLog(
                         account=self.account,
+                        customer=self.customer,
                         objektnr_extern=objektnr_extern,
                         action='CREATE') as log:
                     if self._add_real_estate(dictionary):
@@ -117,6 +118,7 @@ class RealEstates(AuthorizedService):
             else:
                 with TransactionLog(
                         account=self.account,
+                        customer=self.customer,
                         objektnr_extern=self.resource,
                         action='DELETE') as log:
                     try:
@@ -146,6 +148,7 @@ class RealEstates(AuthorizedService):
             else:
                 with TransactionLog(
                         account=self.account,
+                        customer=self.customer,
                         objektnr_extern=self.resource,
                         action='DELETE') as log:
                     try:
