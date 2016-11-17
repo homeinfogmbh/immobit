@@ -4,6 +4,7 @@ from datetime import datetime
 
 from peewee import ForeignKeyField, CharField, DateTimeField, BooleanField
 
+from homeinfo.crm import Customer
 from his.orm import service_table, HISModel, Account
 
 __all__ = ['TransactionLog']
@@ -14,6 +15,7 @@ class TransactionLog(HISModel):
     """Stores real estate transactions"""
 
     account = ForeignKeyField(Account, db_column='account')
+    customer = ForeignKeyField(Customer, db_column='customer')
     objektnr_extern = CharField(255)
     action = CharField(6)  # CREATE, UPDATE, DELETE
     success = BooleanField(default=False)
