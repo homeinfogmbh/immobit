@@ -42,6 +42,20 @@ class RealEstates(AuthorizedService):
         else:
             return transaction
 
+    @property
+    def json(self):
+        """Retruns JSON dict from data"""
+        try:
+            text = self.data.decode('utf-8')
+        except UnicodeDecodeError:
+            raise Error('Posted data is not UTF-8', status=415) from None
+        else:
+            try:
+                return loads(text)
+            except ValueError:
+                raise Error('Invalid JSON:\n{}'.format(text),
+                            status=422) from None
+
     def get(self):
         """Returns available real estates"""
         # Stub!
@@ -67,33 +81,23 @@ class RealEstates(AuthorizedService):
 
     def post(self):
         """Adds new real estates"""
-        try:
-            text = self.data.decode('utf-8')
-        except UnicodeDecodeError:
-            raise Error('Posted data is not UTF-8', status=415) from None
-        else:
-            try:
-                dictionary = loads(text)
-            except ValueError:
-                raise Error(
-                    'Invalid JSON:\n{}'.format(text), status=422) from None
-            else:
-                try:
-                    objektnr_extern = dictionary['verwaltung_techn'][
-                        'objektnr_extern']
-                except (KeyError, TypeError):
-                    objektnr_extern = None
+        dictionary = self.json
 
-                with TransactionLog(
-                        account=self.account,
-                        customer=self.customer,
-                        objektnr_extern=objektnr_extern,
-                        action='CREATE') as log:
-                    if self._add_real_estate(dictionary):
-                        log.success = True
-                        return OK('Real estate added', status=201)
-                    else:
-                        return InternalServerError('Could not add real estate')
+        try:
+            objektnr_extern = dictionary['verwaltung_techn']['objektnr_extern']
+        except (KeyError, TypeError):
+            objektnr_extern = None
+
+        with TransactionLog(
+                account=self.account,
+                customer=self.customer,
+                objektnr_extern=objektnr_extern,
+                action='CREATE') as log:
+            if self._add_real_estate(dictionary):
+                log.success = True
+                return OK('Real estate added', status=201)
+            else:
+                return InternalServerError('Could not add real estate')
 
     def delete(self):
         """Removes real estates"""
@@ -136,13 +140,15 @@ class RealEstates(AuthorizedService):
                 raise Error('No such real estate: {}'.format(
                     self.resource), status=404) from None
             else:
+                dictionary = self.json
+
                 with TransactionLog(
                         account=self.account,
                         customer=self.customer,
                         objektnr_extern=self.resource,
                         action='DELETE') as log:
                     try:
-                        immobilie.patch(self.data)
+                        immobilie.patch(dictionary)
                     except Exception:
                         raise InternalServerError(
                             'Could not patch real estate:\n{}'.format(
