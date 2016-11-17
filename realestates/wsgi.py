@@ -31,11 +31,11 @@ class RealEstates(AuthorizedService):
                 transaction.add(self.customer, dict=dictionary)
         except IncompleteDataError as e:
             raise Error('Incomplete data: {}'.format(
-                e.element), status=400) from None
+                e.element), status=422) from None
         except RealEstateExists:
-            raise Error('Real estate exists', status=400) from None
+            raise Error('Real estate exists', status=409) from None
         except ConsistencyError:
-            raise Error('Data inconsistent', status=400) from None
+            raise Error('Data inconsistent', status=422) from None
         except OpenImmoDBError:
             raise Error('Unspecified database error:\n{}'.format(
                 format_exc())) from None
@@ -58,10 +58,10 @@ class RealEstates(AuthorizedService):
                 immobilie = Immobilie.fetch(self.customer, self.resource)
             except DoesNotExist:
                 raise Error('No such real estate: {}'.format(
-                    self.resource), status=400) from None
+                    self.resource), status=404) from None
             else:
                 try:
-                    return JSON(immobilie.to_dict())
+                    return JSON(immobilie.to_dict(), status=200)
                 except Exception:
                     raise InternalServerError(format_exc()) from None
 
@@ -70,13 +70,13 @@ class RealEstates(AuthorizedService):
         try:
             text = self.data.decode('utf-8')
         except UnicodeDecodeError:
-            raise Error('Posted data is not UTF-8', status=400) from None
+            raise Error('Posted data is not UTF-8', status=415) from None
         else:
             try:
                 dictionary = loads(text)
             except ValueError:
                 raise Error(
-                    'Invalid JSON:\n{}'.format(text), status=400) from None
+                    'Invalid JSON:\n{}'.format(text), status=422) from None
             else:
                 try:
                     objektnr_extern = dictionary['verwaltung_techn'][
@@ -91,9 +91,9 @@ class RealEstates(AuthorizedService):
                         action='CREATE') as log:
                     if self._add_real_estate(dictionary):
                         log.success = True
-                        return OK('Real estate added')
+                        return OK('Real estate added', status=201)
                     else:
-                        return Error('Could not add real estate', status=500)
+                        return InternalServerError('Could not add real estate')
 
     def delete(self):
         """Removes real estates"""
@@ -104,7 +104,7 @@ class RealEstates(AuthorizedService):
                 immobilie = Immobilie.fetch(self.customer, self.resource)
             except DoesNotExist:
                 raise Error('No such real estate: {}'.format(
-                    self.resource), status=400) from None
+                    self.resource), status=404) from None
             else:
                 with TransactionLog(
                         account=self.account,
@@ -134,7 +134,7 @@ class RealEstates(AuthorizedService):
                 immobilie = Immobilie.fetch(self.customer, self.resource)
             except DoesNotExist:
                 raise Error('No such real estate: {}'.format(
-                    self.resource), status=400) from None
+                    self.resource), status=404) from None
             else:
                 with TransactionLog(
                         account=self.account,
