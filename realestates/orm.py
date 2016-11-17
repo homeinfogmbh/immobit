@@ -2,18 +2,15 @@
 
 from datetime import datetime
 
-from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
-    DateTimeField, BooleanField
+from peewee import ForeignKeyField, CharField, DateTimeField, BooleanField
 
-from his.orm import service_table, Account
-
-from homeinfo.peewee import MySQLDatabase
+from his.orm import service_table, HISModel, Account
 
 __all__ = ['TransactionLog']
 
 
 @service_table
-class TransactionLog(ImmoBitModel):
+class TransactionLog(HISModel):
     """Stores real estate transactions"""
 
     account = ForeignKeyField(Account, db_column='account')
