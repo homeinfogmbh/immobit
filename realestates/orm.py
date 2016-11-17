@@ -13,6 +13,9 @@ __all__ = ['TransactionLog']
 class TransactionLog(module_model('realestates')):
     """Stores real estate transactions"""
 
+    class Meta:
+        db_table = 'transaction_log'
+
     account = ForeignKeyField(Account, db_column='account')
     customer = ForeignKeyField(Customer, db_column='customer')
     objektnr_extern = CharField(255)
