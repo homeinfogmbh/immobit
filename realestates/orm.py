@@ -5,34 +5,16 @@ from datetime import datetime
 from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
     DateTimeField, BooleanField
 
-from his.config import config
-from his.orm import Account
+from his.orm import service_table, Account
 
 from homeinfo.peewee import MySQLDatabase
 
 __all__ = ['TransactionLog']
 
 
-class ImmoBitModel(Model):
-    """Generic model for ImmoBit's tables"""
-
-    class Meta:
-        database = MySQLDatabase(
-            'his_fs',
-            host=config.db['HOST'],
-            user=config.db['USER'],
-            passwd=config.db['PASSWD'],
-            closing=True)
-        schema = database.database
-
-    id = PrimaryKeyField()
-
-
+@service_table
 class TransactionLog(ImmoBitModel):
     """Stores real estate transactions"""
-
-    class Meta:
-        db_table = 'transaction_log'
 
     account = ForeignKeyField(Account, db_column='account')
     objektnr_extern = CharField(255)
