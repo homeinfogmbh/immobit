@@ -61,6 +61,21 @@ class RealEstates(AuthorizedService):
         """Yields real estates of the currant customer"""
         return Immobilie.select().where(Immobilie._customer == self.customer)
 
+    @property
+    def _pages(self):
+        """Returns the amout of possible pages"""
+        try:
+            limit = int(self.query['pages'])
+        except (ValueError, TypeError):
+            raise NotAnInteger('limit', limit) from None
+        else:
+            real_estates = len(list(self._real_estates))
+
+            if real_estates % limit:
+                return real_estates // limit + 1
+            else:
+                return real_estates // limit
+
     def _list(self):
         """Lists available reale states"""
         return JSON({'immobilie': [
@@ -115,20 +130,6 @@ class RealEstates(AuthorizedService):
                 format_exc())) from None
         else:
             return trans
-
-    def _pages(self):
-        """Returns the amout of possible pages"""
-        try:
-            limit = int(self.query['pages'])
-        except (ValueError, TypeError):
-            raise NotAnInteger('limit', limit) from None
-        else:
-            real_estates = len(list(self._real_estates))
-
-            if real_estates % limit:
-                return real_estates // limit + 1
-            else:
-                return real_estates // limit
 
     def get(self):
         """Returns available real estates"""
