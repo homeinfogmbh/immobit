@@ -135,10 +135,7 @@ class RealEstates(AuthorizedService):
                 raise Error('No such real estate: {}'.format(
                     self.resource), status=404) from None
             else:
-                try:
-                    return JSON(immobilie.to_dict(), status=200)
-                except Exception:
-                    raise InternalServerError(format_exc()) from None
+                return JSON(immobilie.to_dict(), status=200)
 
     def post(self):
         """Adds new real estates"""
@@ -178,7 +175,7 @@ class RealEstates(AuthorizedService):
                         action='DELETE') as log:
                     try:
                         immobilie.remove()
-                    except Exception:
+                    except OpenImmoDBError:
                         raise InternalServerError(
                             'Could not delete real estate:\n{}'.format(
                                 format_exc())) from None
