@@ -5,6 +5,7 @@ from his.api.errors import HISMessage
 
 
 __all__ = [
+    'InvalidAction',
     'InvalidOpenimmoData',
     'InvalidDOM',
     'NoSuchRealEstate',
@@ -15,6 +16,15 @@ __all__ = [
     'CannotDeleteRealEstate',
     'RealEstateUpdated',
     'RealEstateDeleted']
+
+
+class InvalidAction(HISMessage):
+    """Indicates that an invalid action has been requested"""
+
+    STATUS = 422
+    LOCALE = {
+        Language.DE_DE: 'Ungültige Aktion.',
+        Language.EN_US: 'Invalid action.'}
 
 
 class InvalidOpenimmoData(HISMessage):

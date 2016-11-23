@@ -9,8 +9,10 @@ from openimmodb import OpenImmoDBError, IncompleteDataError, ConsistencyError,\
     RealEstateExists, Transaction, Immobilie
 from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK
 
+from his.api.errors import NotAnInteger
 from his.api.handlers import AuthorizedService
 
+from .errors import InvalidAction
 from .orm import TransactionLog
 
 __all__ = ['RealEstates']
@@ -24,7 +26,58 @@ class RealEstates(AuthorizedService):
     DESCRIPTION = 'Immobiliendatenverwaltung'
     PROMOTE = True
 
-    def _add_real_estate(self, dictionary):
+    @property
+    def json(self):
+        """Retruns JSON dict from data"""
+        try:
+            text = self.data.decode('utf-8')
+        except UnicodeDecodeError:
+            raise Error('Posted data is not UTF-8', status=415) from None
+        else:
+            try:
+                return loads(text)
+            except ValueError:
+                raise Error('Invalid JSON:\n{}'.format(text),
+                            status=422) from None
+
+    @property
+    def paging(self):
+        """Returns options paging arguments"""
+        try:
+            page = int(self.query['page'])
+        except (ValueError, TypeError):
+            raise NotAnInteger('page', page) from None
+
+        try:
+            limit = int(self.query['limit'])
+        except (ValueError, TypeError):
+            raise NotAnInteger('limit', limit) from None
+
+        return (page, limit)
+
+    def _real_estates(self):
+        """Yields real estates of the currant customer"""
+        return Immobilie.select().where(Immobilie._customer == self.customer)
+
+    def _list(self):
+        """Lists available reale states"""
+        return JSON({'immobilie': [
+            re.short_dict() for re in self._real_estates]})
+
+    def _page_filter(self, page, size):
+        """Yields real estates from page no. <page> of size <size>"""
+        first = page * size
+        last = (page + 1) * size - 1
+
+        for current, immobilie in enumerate(self._real_estates):
+            if first <= current < last:
+                yield immobilie
+
+    def _page(self, page, size):
+        """Returns page no. <page> of size <size>"""
+        return JSON({'immobilie': list(self._page_filter(page, size))})
+
+    def _add(self, dictionary):
         """Adds the real estate represented by the dictionary"""
         try:
             with Transaction(logger=self.logger) as transaction:
@@ -42,7 +95,7 @@ class RealEstates(AuthorizedService):
         else:
             return transaction
 
-    def _patch_real_estate(self, dictionary):
+    def _patch(self, dictionary):
         """Adds the real estate represented by the dictionary"""
         try:
             with Transaction(logger=self.logger) as trans:
@@ -60,30 +113,23 @@ class RealEstates(AuthorizedService):
         else:
             return trans
 
-    @property
-    def json(self):
-        """Retruns JSON dict from data"""
-        try:
-            text = self.data.decode('utf-8')
-        except UnicodeDecodeError:
-            raise Error('Posted data is not UTF-8', status=415) from None
-        else:
-            try:
-                return loads(text)
-            except ValueError:
-                raise Error('Invalid JSON:\n{}'.format(text),
-                            status=422) from None
-
     def get(self):
         """Returns available real estates"""
         if self.resource is None:
-            real_estates = []
-
-            for immobilie in Immobilie.select().where(
-                    Immobilie._customer == self.customer):
-                real_estates.append(immobilie.short_dict())
-
-            return JSON({'immobilie': real_estates})
+            try:
+                action = self.query['action']
+            except KeyError:
+                try:
+                    page, size = self.paging
+                except KeyError:
+                    return self._list()
+                else:
+                    return self._page(page, size)
+            else:
+                if action == 'count':
+                    return JSON({'count': len(list(self._real_estates))})
+                else:
+                    raise InvalidAction() from None
         else:
             try:
                 immobilie = Immobilie.fetch(self.customer, self.resource)
@@ -110,7 +156,7 @@ class RealEstates(AuthorizedService):
                 customer=self.customer,
                 objektnr_extern=objektnr_extern,
                 action='CREATE') as log:
-            if self._add_real_estate(dictionary):
+            if self._add(dictionary):
                 log.success = True
                 return OK('Real estate added', status=201)
             else:
@@ -156,7 +202,7 @@ class RealEstates(AuthorizedService):
                     customer=self.customer,
                     objektnr_extern=self.resource,
                     action='DELETE') as log:
-                if self._patch_real_estate(self.json):
+                if self._patch(self.json):
                     log.success = True
                     return OK('Real estate patched')
                 else:
