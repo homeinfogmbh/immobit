@@ -75,7 +75,8 @@ class RealEstates(AuthorizedService):
 
     def _page(self, page, size):
         """Returns page no. <page> of size <size>"""
-        return JSON({'immobilie': list(self._page_filter(page, size))})
+        return JSON({'immobilie': [
+            re.short_dict() for re in self._page_filter(page, size))})
 
     def _add(self, dictionary):
         """Adds the real estate represented by the dictionary"""
