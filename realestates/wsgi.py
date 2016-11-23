@@ -25,6 +25,11 @@ class RealEstates(AuthorizedService):
     DESCRIPTION = 'Immobiliendatenverwaltung'
     PROMOTE = True
 
+    # XXX: Debug
+    def __call__(self, *args):
+        self.logger.debug('Got resource:', self.resource)
+        return super().__call__(*args)
+
     @property
     def json(self):
         """Retruns JSON dict from data"""
