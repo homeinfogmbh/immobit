@@ -116,6 +116,20 @@ class RealEstates(AuthorizedService):
         else:
             return trans
 
+    def _pages(self):
+        """Returns the amout of possible pages"""
+        try:
+            limit = int(self.query['pages'])
+        except (ValueError, TypeError):
+            raise NotAnInteger('limit', limit) from None
+        else:
+            real_estates = len(list(self._real_estates))
+
+            if real_estates % limit:
+                return real_estates // limit + 1
+            else:
+                return real_estates // limit
+
     def get(self):
         """Returns available real estates"""
         if self.resource is None:
@@ -125,7 +139,12 @@ class RealEstates(AuthorizedService):
                 try:
                     page, size = self.paging
                 except KeyError:
-                    return self._list()
+                    try:
+                        pages = self._pages
+                    except KeyError:
+                        return self._list()
+                    else:
+                        return JSON({'pages': pages})
                 else:
                     return self._page(page, size)
         else:
