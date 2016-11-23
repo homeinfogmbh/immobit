@@ -12,7 +12,6 @@ from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK
 from his.api.errors import NotAnInteger
 from his.api.handlers import AuthorizedService
 
-from .errors import InvalidAction
 from .orm import TransactionLog
 
 __all__ = ['RealEstates']
@@ -117,11 +116,8 @@ class RealEstates(AuthorizedService):
     def get(self):
         """Returns available real estates"""
         if self.resource is None:
-            if self.query.get('count', False)
-                if action == 'count':
-                    return JSON({'count': len(list(self._real_estates))})
-                else:
-                    raise InvalidAction() from None
+            if self.query.get('count', False):
+                return JSON({'count': len(list(self._real_estates))})
             else:
                 try:
                     page, size = self.paging
