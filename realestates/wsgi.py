@@ -27,7 +27,7 @@ class RealEstates(AuthorizedService):
 
     # XXX: Debug
     def __call__(self, *args):
-        self.logger.debug('Got resource:', self.resource)
+        self.logger.error('Got resource:', self.resource)
         return super().__call__(*args)
 
     @property
