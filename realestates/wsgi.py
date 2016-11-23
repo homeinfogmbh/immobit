@@ -55,6 +55,7 @@ class RealEstates(AuthorizedService):
 
         return (page, limit)
 
+    @property
     def _real_estates(self):
         """Yields real estates of the currant customer"""
         return Immobilie.select().where(Immobilie._customer == self.customer)
