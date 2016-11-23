@@ -117,20 +117,18 @@ class RealEstates(AuthorizedService):
     def get(self):
         """Returns available real estates"""
         if self.resource is None:
-            try:
-                action = self.query['action']
-            except KeyError:
+            if self.query.get('count', False)
+                if action == 'count':
+                    return JSON({'count': len(list(self._real_estates))})
+                else:
+                    raise InvalidAction() from None
+            else:
                 try:
                     page, size = self.paging
                 except KeyError:
                     return self._list()
                 else:
                     return self._page(page, size)
-            else:
-                if action == 'count':
-                    return JSON({'count': len(list(self._real_estates))})
-                else:
-                    raise InvalidAction() from None
         else:
             try:
                 immobilie = Immobilie.fetch(self.customer, self.resource)
