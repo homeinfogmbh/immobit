@@ -43,16 +43,18 @@ class RealEstates(AuthorizedService):
     def paging(self):
         """Returns options paging arguments"""
         try:
-            page = int(self.query['page'])
-        except (ValueError, TypeError):
-            raise NotAnInteger('page', page) from None
-
-        try:
             limit = int(self.query['limit'])
         except (ValueError, TypeError):
             raise NotAnInteger('limit', limit) from None
+        else:
+            try:
+                page = int(self.query['page'])
+            except KeyError:
+                page = 0
+            except (ValueError, TypeError):
+                raise NotAnInteger('page', page) from None
 
-        return (page, limit)
+            return (page, limit)
 
     @property
     def _real_estates(self):
