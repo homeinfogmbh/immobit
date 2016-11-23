@@ -76,13 +76,12 @@ class RealEstates(AuthorizedService):
 
     def get(self):
         """Returns available real estates"""
-        # Stub!
         if self.resource is None:
             real_estates = []
 
             for immobilie in Immobilie.select().where(
                     Immobilie._customer == self.customer):
-                real_estates.append(immobilie.to_dict())
+                real_estates.append(immobilie.short_dict())
 
             return JSON({'immobilie': real_estates})
         else:
