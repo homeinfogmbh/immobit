@@ -7,6 +7,7 @@ from his.api.errors import HISMessage
 __all__ = [
     'InvalidOpenimmoData',
     'InvalidDOM',
+    'IdMismatch',
     'NoSuchRealEstate',
     'RealEstatedAdded',
     'CannotAddRealEstate',
@@ -37,6 +38,15 @@ class InvalidDOM(HISMessage):
     LOCALE = {
         Language.DE_DE: 'Ungültiges Dokument-Objekt-Modell.',
         Language.EN_US: 'Invalid document object model.'}
+
+
+class IdMismatch(HISMessage):
+    """Indicates that the IDs of a real estate do not match"""
+
+    STATUS = 400
+    LOCALE = {
+        Language.DE_DE: 'IDs stimmen nicht überein.',
+        Language.EN_US: 'ID mismatch.'}
 
 
 class NoSuchRealEstate(HISMessage):

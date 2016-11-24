@@ -12,6 +12,7 @@ from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK
 from his.api.errors import NotAnInteger
 from his.api.handlers import AuthorizedService
 
+from .errors import IdMismatch, NoRealEstateSpecified, NoSuchRealEstate
 from .orm import TransactionLog
 
 __all__ = ['RealEstates']
@@ -58,7 +59,7 @@ class RealEstates(AuthorizedService):
 
     @property
     def _real_estates(self):
-        """Yields real estates of the currant customer"""
+        """Yields real estates of the current customer"""
         return Immobilie.select().where(Immobilie._customer == self.customer)
 
     @property
@@ -112,6 +113,30 @@ class RealEstates(AuthorizedService):
                 format_exc())) from None
         else:
             return transaction
+
+    def _update(self):
+        """Updates a real estate"""
+        dictionary = self.json
+
+        try:
+            objektnr_extern = dictionary['verwaltung_techn']['objektnr_extern']
+        except KeyError:
+            dictionary['verwaltung_techn']['objektnr_extern'] = self.resource
+            id_match = True
+        except TypeError:
+            # dictionary['verwaltung_techn'] is probably None
+            raise IncompleteDataError()  # XXX: todo
+        else:
+            id_match = objektnr_extern == self.resource
+
+        if id_match:
+            with Transaction(logger=self.logger) as t:
+                try:
+                    t.update(self.customer, objektnr_extern, dict=dictionary)
+                except DoesNotExist:
+                    raise NoSuchRealEstate() from None
+        else:
+            raise IdMismatch()
 
     def _patch(self, dictionary):
         """Adds the real estate represented by the dictionary"""
@@ -201,7 +226,19 @@ class RealEstates(AuthorizedService):
 
     def put(self):
         """Overrides real estates"""
-        return self.patch()
+        if self.resource is None:
+            raise NoRealEstateSpecified()
+        else:
+            with TransactionLog(
+                    account=self.account,
+                    customer=self.customer,
+                    objektnr_extern=self.resource,
+                    action='UPDATE') as log:
+                if self._update():
+                    log.success = True
+                    return OK('Real estate added', status=201)
+                else:
+                    return InternalServerError('Could not add real estate')
 
     def patch(self):
         """Partially updates real estates"""
