@@ -135,6 +135,8 @@ class RealEstates(AuthorizedService):
                     t.update(self.customer, objektnr_extern, dict=dictionary)
                 except DoesNotExist:
                     raise NoSuchRealEstate() from None
+                else:
+                    return t
         else:
             raise IdMismatch()
 
