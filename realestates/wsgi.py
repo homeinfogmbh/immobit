@@ -244,6 +244,9 @@ class RealEstates(AuthorizedService):
 
     def patch(self):
         """Partially updates real estates"""
+        # XXX: DEBUG
+        print('Log level:', self.logger.level, flush=True)
+
         if self.resource is None:
             raise Error('No real estate specified', status=400) from None
         else:
