@@ -41,37 +41,43 @@ class RealEstates(AuthorizedService):
                             status=422) from None
 
     @property
-    def paging(self):
-        """Returns options paging arguments"""
+    def limit(self):
+        """Returns the set limit of real estates per page"""
         try:
-            limit = int(self.query['limit'])
-        except (ValueError, TypeError):
-            raise NotAnInteger('limit', limit) from None
+            limit = self.query['limit']
+        except KeyError:
+            return None
         else:
             try:
-                page = int(self.query['page'])
-            except KeyError:
-                page = 0
+                return int(limit)
+            except (ValueError, TypeError):
+                raise NotAnInteger('limit', limit) from None
+
+    @property
+    def page(self):
+        """Returns the selected page number"""
+        try:
+            page = self.query['page']
+        except KeyError:
+            return 0
+        else:
+            try:
+                return int(page)
             except (ValueError, TypeError):
                 raise NotAnInteger('page', page) from None
-
-            return (page, limit)
 
     @property
     def _real_estates(self):
         """Yields real estates of the current customer"""
         return Immobilie.select().where(Immobilie._customer == self.customer)
 
-    @property
-    def _pages(self):
-        """Returns the amout of possible pages"""
-        try:
-            limit = int(self.query['pages'])
-        except (ValueError, TypeError):
-            raise NotAnInteger('limit', limit) from None
+    def _pages(self, limit, real_estates):
+        """Returns the amout of possible
+        pages for the specified limit
+        """
+        if limit is None:
+            return 1
         else:
-            real_estates = len(list(self._real_estates))
-
             if real_estates % limit:
                 return real_estates // limit + 1
             else:
@@ -82,19 +88,27 @@ class RealEstates(AuthorizedService):
         return JSON({'immobilie': [
             re.short_dict() for re in self._real_estates]})
 
-    def _page_filter(self, page, size):
+    def _mkpage(self, page, limit, real_estates):
         """Yields real estates from page no. <page> of size <size>"""
-        first = page * size
-        last = (page + 1) * size
+        first = page * limit
+        last = (page + 1) * limit
 
-        for current, immobilie in enumerate(self._real_estates):
-            if first <= current < last:
-                yield immobilie
+        for index, real_estate in enumerate(real_estates):
+            if first <= index < last:
+                yield real_estate
 
-    def _page(self, page, size):
-        """Returns page no. <page> of size <size>"""
-        return JSON({'immobilie': [
-            re.short_dict() for re in self._page_filter(page, size)]})
+    def _page(self):
+        """Returns the appropriate page"""
+        real_estates = list(self._real_estates)
+        page = self.page
+        limit = self.limit
+        return JSON({
+            'immobilie': [
+                real_estate.short_dict() for real_estate in
+                self._mkpage(page, limit, real_estates)],
+            'page': page,
+            'limit': limit,
+            'pages': self._pages(limit, len(real_estates))})
 
     def _add(self, dictionary):
         """Adds the real estate represented by the dictionary"""
@@ -168,7 +182,7 @@ class RealEstates(AuthorizedService):
                     return JSON({'pages': self._pages})
                 except KeyError:
                     try:
-                        return self._page(*self.paging)
+                        return self._page()
                     except KeyError:
                         return self._list()
         else:
