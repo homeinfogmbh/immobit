@@ -85,7 +85,7 @@ class RealEstates(AuthorizedService):
     def _page_filter(self, page, size):
         """Yields real estates from page no. <page> of size <size>"""
         first = page * size
-        last = (page + 1) * size - 1
+        last = (page + 1) * size
 
         for current, immobilie in enumerate(self._real_estates):
             if first <= current < last:
