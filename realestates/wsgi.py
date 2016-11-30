@@ -178,13 +178,10 @@ class RealEstates(AuthorizedService):
             if self.query.get('count', False):
                 return JSON({'count': len(list(self._real_estates))})
             else:
-                try:
-                    return JSON({'pages': self._pages})
-                except KeyError:
-                    try:
-                        return self._page()
-                    except KeyError:
-                        return self._list()
+                if self.limit is None:
+                    return self._list()
+                else:
+                    return self._page()
         else:
             try:
                 immobilie = Immobilie.fetch(self.customer, self.resource)
