@@ -12,6 +12,9 @@ from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK
 from his.api.errors import NotAnInteger
 from his.api.handlers import AuthorizedService
 
+from his.mods.fs.errors import NotReadable
+from his.mods.fs.orm import Inode
+
 from .errors import IdMismatch, NoRealEstateSpecified, NoSuchRealEstate
 from .orm import TransactionLog
 
@@ -172,6 +175,33 @@ class RealEstates(AuthorizedService):
         else:
             return trans
 
+    def _auth_file(self, file):
+        """Determines authorization of a certain file"""
+        for inode in Inode.select().where(Inode.file == file):
+            if inode.readable_by(self.account):
+                return True
+
+        raise NotReadable()
+
+    def _validate_attachment(self, attachment):
+        """Validates the respective attachment"""
+        try:
+            file = attachment['file']
+        except KeyError:
+            raise IncompleteDataError('attachment.file')
+        else:
+            try:
+                return self._auth_file(int(file))
+            except (ValueError, TypeError):
+                raise NotAnInteger('file', file)
+
+    def _validate_attachments(self, attachments):
+        """Validates the respective attachments"""
+        for attachment in attachments:
+            self._validate_attachment(attachment)
+
+        return True
+
     def get(self):
         """Returns available real estates"""
         if self.resource is None:
@@ -194,6 +224,13 @@ class RealEstates(AuthorizedService):
     def post(self):
         """Adds new real estates"""
         dictionary = self.json
+
+        try:
+            attachments = dictionary['anhaenge']['anhang']
+        except (KeyError, TypeError):
+            pass
+        else:
+            self._validate_attachments(attachments)
 
         try:
             objektnr_extern = dictionary['verwaltung_techn']['objektnr_extern']
