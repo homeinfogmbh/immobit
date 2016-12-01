@@ -1,5 +1,5 @@
 """Real estate manipulation system"""
 
-from .wsgi import RealEstates
+from .wsgi import MODULES
 
-__all__ = ['RealEstates']
+__all__ = ['MODULES']
