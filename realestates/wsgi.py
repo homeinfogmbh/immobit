@@ -18,11 +18,6 @@ from .orm import TransactionLog
 __all__ = ['RealEstates']
 
 
-HANDLERS = {
-    'data': RealEstates,
-    'attachments': Attachments}
-
-
 class RealEstates(AuthorizedService):
     """Handles requests for ImmoBit"""
 
@@ -294,3 +289,8 @@ class Attachments(AuthorizedService):
 
     def get(self):
         return OK('Mockup')
+
+
+HANDLERS = {
+    'data': RealEstates,
+    'attachments': Attachments}
