@@ -15,7 +15,9 @@ __all__ = [
     'NoRealEstateSpecified',
     'CannotDeleteRealEstate',
     'RealEstateUpdated',
-    'RealEstateDeleted']
+    'RealEstateDeleted',
+    'NoAttachmentSpecified',
+    'NoSuchAttachment']
 
 
 class InvalidOpenimmoData(HISMessage):
@@ -123,3 +125,21 @@ class RealEstateDeleted(HISMessage):
     LOCALE = {
         Language.DE_DE: 'Immobilie gelöscht.',
         Language.EN_US: 'Real estate deleted.'}
+
+
+class NoAttachmentSpecified(HISMessage):
+    """Indicates that no attachment was specified"""
+
+    STATUS = 400
+    LOCALE = {
+        Language.DE_DE: 'Kein Anhang angegeben.',
+        Language.EN_US: 'No attachment specified.'}
+
+
+class NoSuchAttachment(HISMessage):
+    """Indicates that the requested attachment does not exist"""
+
+    STATUS = 400
+    LOCALE = {
+        Language.DE_DE: 'Kein solcher Anhang.',
+        Language.EN_US: 'No such attachment.'}

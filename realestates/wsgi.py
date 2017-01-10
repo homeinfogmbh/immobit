@@ -17,6 +17,7 @@ from his.mods.fs.orm import Inode
 
 from .errors import IdMismatch, NoRealEstateSpecified, NoSuchRealEstate
 from .orm import TransactionLog
+from .mgr import AttachmentManager
 
 __all__ = ['RealEstates']
 
@@ -314,3 +315,55 @@ class RealEstates(AuthorizedService):
     def options(self):
         """Returns options information"""
         return OK()
+
+
+class Attachments(AuthorizedService):
+    """Handles requests for ImmoBit"""
+
+    NODE = 'attachments'
+    NAME = 'ImmoBit'
+    DESCRIPTION = 'Immobiliendatenverwaltung'
+    PROMOTE = True
+
+    @property
+    def objektnr_extern(self):
+        """Returns the respective real estate identifier"""
+        return self.query.get('objektnr_extern')
+
+    @property
+    def real_estate(self):
+        """Returns the appropriate real estate"""
+        if self.objektnr_extern is None:
+            raise NoRealEstateSpecified()
+        else:
+            try:
+                return Immobilie.fetch(self.customer, self.objektnr_extern)
+            except DoesNotExist:
+                raise Error('No such real estate: {}'.format(
+                    self.objektnr_extern), status=404) from None
+
+    @property
+    def path(self):
+        """Returns the path to the file"""
+        if self.data:
+            return self.data.decode()
+        else:
+            raise Error('No path specified.') from None
+
+    @property
+    def manager(self):
+        """Returns the appropriate attachment manager"""
+        return AttachmentManager(self.real_estate, self.resource)
+
+    def get(self):
+        """Gets attachment data"""
+        return self.manager.get()
+
+    def post(self):
+        """Gets attachment data"""
+        return self.manager.add(self.data)
+
+
+HANDLERS = {
+    'data': RealEstates,
+    'attachments': Attachments}
