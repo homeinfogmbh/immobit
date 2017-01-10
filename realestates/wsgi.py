@@ -314,20 +314,3 @@ class RealEstates(AuthorizedService):
     def options(self):
         """Returns options information"""
         return OK()
-
-
-class Attachments(AuthorizedService):
-    """Handles requests for ImmoBit"""
-
-    NODE = 'realestates'
-    NAME = 'ImmoBit'
-    DESCRIPTION = 'Immobiliendatenverwaltung'
-    PROMOTE = True
-
-    def get(self):
-        return OK('Mockup')
-
-
-HANDLERS = {
-    'data': RealEstates,
-    'attachments': Attachments}
