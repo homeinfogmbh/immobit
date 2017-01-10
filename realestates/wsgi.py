@@ -361,7 +361,7 @@ class Attachments(AuthorizedService):
 
     def post(self):
         """Gets attachment data"""
-        return self.manager.add(self.data)
+        return self.manager.add(self.path)
 
 
 HANDLERS = {
