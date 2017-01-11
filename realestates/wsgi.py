@@ -5,9 +5,9 @@ from traceback import format_exc
 
 from peewee import DoesNotExist
 
-from openimmodb import OpenImmoDBError, IncompleteDataError, ConsistencyError,\
-    RealEstateExists, Transaction, Immobilie
-from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK
+from openimmodb import OpenImmoDBError, ConsistencyError, Transaction, \
+    Immobilie, Anhang
+from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK, Binary
 
 from his.api.errors import NotAnInteger
 from his.api.handlers import AuthorizedService
@@ -15,11 +15,17 @@ from his.api.handlers import AuthorizedService
 from his.mods.fs.errors import NotReadable
 from his.mods.fs.orm import Inode
 
-from .errors import IdMismatch, NoRealEstateSpecified, NoSuchRealEstate
+from .errors import IncompleteDataError, InvalidJSON, IdMismatch, \
+    NoRealEstateSpecified,  NoSuchRealEstate, RealEstateExists, \
+    RealEstatedCreated, RealEstateUpdated, RealEstateDeleted,  \
+    NoAttachmentSpecified, AttachmentCreated, AttachmentExists, \
+    NoSuchAttachment, NoDataForAttachment
 from .orm import TransactionLog
-from .mgr import AttachmentManager
 
-__all__ = ['RealEstates']
+__all__ = [
+    'RealEstates',
+    'Attachments',
+    'HANDLERS']
 
 
 class RealEstates(AuthorizedService):
@@ -245,7 +251,7 @@ class RealEstates(AuthorizedService):
                 action='CREATE') as log:
             if self._add(dictionary):
                 log.success = True
-                return OK('Real estate added', status=201)
+                return RealEstatedCreated()
             else:
                 return InternalServerError('Could not add real estate')
 
@@ -273,7 +279,7 @@ class RealEstates(AuthorizedService):
                                 format_exc())) from None
                     else:
                         log.success = True
-                        return OK('Real estate deleted')
+                        return RealEstateDeleted()
 
     def put(self):
         """Overrides real estates"""
@@ -287,7 +293,7 @@ class RealEstates(AuthorizedService):
                     action='UPDATE') as log:
                 if self._update():
                     log.success = True
-                    return OK('Real estate added', status=201)
+                    return RealEstateUpdated()
                 else:
                     return InternalServerError('Could not add real estate')
 
@@ -320,10 +326,8 @@ class RealEstates(AuthorizedService):
 class Attachments(AuthorizedService):
     """Handles requests for ImmoBit"""
 
-    NODE = 'attachments'
-    NAME = 'ImmoBit'
-    DESCRIPTION = 'Immobiliendatenverwaltung'
-    PROMOTE = True
+    REAL_ESTATE_LIMIT = 15
+    CUSTOMER_LIMIT = 2000
 
     @property
     def objektnr_extern(self):
@@ -331,7 +335,7 @@ class Attachments(AuthorizedService):
         return self.query.get('objektnr_extern')
 
     @property
-    def real_estate(self):
+    def immobilie(self):
         """Returns the appropriate real estate"""
         if self.objektnr_extern is None:
             raise NoRealEstateSpecified()
@@ -343,25 +347,57 @@ class Attachments(AuthorizedService):
                     self.objektnr_extern), status=404) from None
 
     @property
-    def path(self):
-        """Returns the path to the file"""
-        if self.data:
-            return self.data.decode()
+    def anhang(self):
+        """Returns the respective Anhang ORM model"""
+        if self.resource is None:
+            raise NoAttachmentSpecified() from None
         else:
-            raise Error('No path specified.') from None
+            try:
+                return Anhang.get(
+                    (Anhang._immobilie == self.immobilie) &
+                    (Anhang.sha256sum == self.resource))
+            except DoesNotExist:
+                raise NoSuchAttachment() from None
 
     @property
-    def manager(self):
-        """Returns the appropriate attachment manager"""
-        return AttachmentManager(self.real_estate, self.resource)
+    def dict(self):
+        """Returns the POSTed Anhang dictionary"""
+        try:
+            return loads(self.data)
+        except ValueError:
+            raise InvalidJSON() from None
+        except TypeError:
+            raise NoAttachmentSpecified() from None
 
     def get(self):
-        """Gets attachment data"""
-        return self.manager.get()
+        """Gets the respective data"""
+        if self.query('data') == 'raw':
+            return Binary(self.anhang.to_bytes())
+        else:
+            return JSON(self.anhang.to_dict())
 
     def post(self):
-        """Gets attachment data"""
-        return self.manager.add(self.path)
+        """Adds an attachment"""
+        if Anhang.count(immobilie=self.immobilie) < self.REAL_ESTATE_LIMIT:
+            if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
+                if self.query('data') == 'raw':
+                    try:
+                        anhang = Anhang.from_bytes(self.data, self.immobilie)
+                    except AttachmentExists:
+                        raise AttachmentExists() from None
+                    else:
+                        anhang.save()
+                        return AttachmentCreated()
+                else:
+                    try:
+                        anhang = Anhang.from_dict(self.dict, self.immobilie)
+                    except DoesNotExist:
+                        raise NoDataForAttachment() from None
+                    except AttachmentExists:
+                        raise AttachmentExists() from None
+                    else:
+                        anhang.save()
+                        return AttachmentCreated()
 
 
 HANDLERS = {

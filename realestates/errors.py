@@ -7,17 +7,23 @@ from his.api.errors import HISMessage
 __all__ = [
     'InvalidOpenimmoData',
     'InvalidDOM',
+    'InvalidJSON',
     'IdMismatch',
+
     'NoSuchRealEstate',
-    'RealEstatedAdded',
+    'RealEstatedCreated',
     'CannotAddRealEstate',
     'RealEstateExists',
     'NoRealEstateSpecified',
     'CannotDeleteRealEstate',
     'RealEstateUpdated',
     'RealEstateDeleted',
+
     'NoAttachmentSpecified',
-    'NoSuchAttachment']
+    'AttachmentCreated',
+    'NoDataForAttachment',
+    'NoSuchAttachment',
+    'AttachmentExists']
 
 
 class InvalidOpenimmoData(HISMessage):
@@ -42,6 +48,15 @@ class InvalidDOM(HISMessage):
         Language.EN_US: 'Invalid document object model.'}
 
 
+class InvalidJSON(HISMessage):
+    """Indicates invalid JSON data"""
+
+    STATUS = 400
+    LOCALE = {
+        Language.DE_DE: 'Ungültiges JSON-Dokument.',
+        Language.EN_US: 'Invalid JSON document.'}
+
+
 class IdMismatch(HISMessage):
     """Indicates that the IDs of a real estate do not match"""
 
@@ -54,7 +69,7 @@ class IdMismatch(HISMessage):
 class NoSuchRealEstate(HISMessage):
     """Indicates that the requested real estate does not exist"""
 
-    STATUS = 400
+    STATUS = 404
     LOCALE = {
         Language.DE_DE: 'Keine solche Immobilie.',
         Language.EN_US: 'No such real estate.'}
@@ -64,13 +79,13 @@ class NoSuchRealEstate(HISMessage):
         super().__init__(charset=charset, cors=cors, data=data)
 
 
-class RealEstatedAdded(HISMessage):
-    """Indicates that a file was successfully added"""
+class RealEstatedCreated(HISMessage):
+    """Indicates that the real estate was successfully created"""
 
-    STATUS = 200
+    STATUS = 201
     LOCALE = {
         Language.DE_DE: 'Immobilie erstellt.',
-        Language.EN_US: 'Real estate added.'}
+        Language.EN_US: 'Real estate created.'}
 
 
 class CannotAddRealEstate(HISMessage):
@@ -85,7 +100,7 @@ class CannotAddRealEstate(HISMessage):
 class RealEstateExists(HISMessage):
     """Indicates that the respective real estate already exists"""
 
-    STATUS = 400
+    STATUS = 409
     LOCALE = {
         Language.DE_DE: 'Immobilie existiert bereits.',
         Language.EN_US: 'Real estate already exists.'}
@@ -139,7 +154,36 @@ class NoAttachmentSpecified(HISMessage):
 class NoSuchAttachment(HISMessage):
     """Indicates that the requested attachment does not exist"""
 
-    STATUS = 400
+    STATUS = 404
     LOCALE = {
         Language.DE_DE: 'Kein solcher Anhang.',
         Language.EN_US: 'No such attachment.'}
+
+
+class AttachmentCreated(HISMessage):
+    """Indicates that the attachment was successfully created"""
+
+    STATUS = 201
+    LOCALE = {
+        Language.DE_DE: 'Anhang erstellt.',
+        Language.EN_US: 'Attachment created.'}
+
+
+class NoDataForAttachment(HISMessage):
+    """Indicates that the requested attachment
+    does not yet have data stored
+    """
+
+    STATUS = 412
+    LOCALE = {
+        Language.DE_DE: 'Keine Daten für Anhang.',
+        Language.EN_US: 'No data for attachment.'}
+
+
+class AttachmentExists(HISMessage):
+    """Indicates that the respective attachment already exists"""
+
+    STATUS = 409
+    LOCALE = {
+        Language.DE_DE: 'Anhang existiert bereits.',
+        Language.EN_US: 'Attachment already exists.'}
