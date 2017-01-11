@@ -5,8 +5,8 @@ from traceback import format_exc
 
 from peewee import DoesNotExist
 
-from openimmodb import OpenImmoDBError, ConsistencyError, Transaction, \
-    Immobilie, Anhang
+from openimmodb import OpenImmoDBError, IncompleteDataError, \
+    ConsistencyError, Transaction, Immobilie, Anhang
 from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK, Binary
 
 from his.api.errors import NotAnInteger
@@ -15,7 +15,7 @@ from his.api.handlers import AuthorizedService
 from his.mods.fs.errors import NotReadable
 from his.mods.fs.orm import Inode
 
-from .errors import IncompleteDataError, InvalidJSON, IdMismatch, \
+from .errors import InvalidJSON, IdMismatch, \
     NoRealEstateSpecified,  NoSuchRealEstate, RealEstateExists, \
     RealEstatedCreated, RealEstateUpdated, RealEstateDeleted,  \
     NoAttachmentSpecified, AttachmentCreated, AttachmentExists, \

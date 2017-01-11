@@ -5,8 +5,6 @@ from his.api.errors import HISMessage
 
 
 __all__ = [
-    'InvalidOpenimmoData',
-    'InvalidDOM',
     'InvalidJSON',
     'IdMismatch',
 
@@ -24,28 +22,6 @@ __all__ = [
     'NoDataForAttachment',
     'NoSuchAttachment',
     'AttachmentExists']
-
-
-class InvalidOpenimmoData(HISMessage):
-    """Indicates invalid OpenImmo XML data"""
-
-    STATUS = 400
-    LOCALE = {
-        Language.DE_DE: 'Ungültige OpenImmo Daten.',
-        Language.EN_US: 'Invalid OpenImmo data.'}
-
-    def __init__(self, stacktrace, charset='utf-8', cors=None):
-        data = {'stacktrace': stacktrace}
-        super().__init__(charset=charset, cors=cors, data=data)
-
-
-class InvalidDOM(HISMessage):
-    """Indicates an invalid DOM"""
-
-    STATUS = 400
-    LOCALE = {
-        Language.DE_DE: 'Ungültiges Dokument-Objekt-Modell.',
-        Language.EN_US: 'Invalid document object model.'}
 
 
 class InvalidJSON(HISMessage):
