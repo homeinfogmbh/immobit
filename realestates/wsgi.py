@@ -19,7 +19,8 @@ from .errors import InvalidJSON, IdMismatch, \
     NoRealEstateSpecified,  NoSuchRealEstate, RealEstateExists, \
     RealEstatedCreated, RealEstateUpdated, RealEstateDeleted,  \
     NoAttachmentSpecified, AttachmentCreated, AttachmentExists, \
-    NoSuchAttachment, NoDataForAttachment
+    AttachmentDeleted, NoSuchAttachment, NoDataForAttachment, \
+    AttachmentLimitCustomerExceeded, AttachmentLimitRealEstateExceeded
 from .orm import TransactionLog
 
 __all__ = [
@@ -398,6 +399,15 @@ class Attachments(AuthorizedService):
                     else:
                         anhang.save()
                         return AttachmentCreated()
+            else:
+                raise AttachmentLimitCustomerExceeded() from None
+        else:
+            raise AttachmentLimitRealEstateExceeded() from None
+
+    def delete(self):
+        """Deletes an attachment"""
+        self.anhang.remove()
+        return AttachmentDeleted()
 
 
 HANDLERS = {

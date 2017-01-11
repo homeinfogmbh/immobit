@@ -21,7 +21,9 @@ __all__ = [
     'AttachmentCreated',
     'NoDataForAttachment',
     'NoSuchAttachment',
-    'AttachmentExists']
+    'AttachmentExists',
+    'AttachmentLimitRealEstateExceeded',
+    'AttachmentLimitCustomerExceeded']
 
 
 class InvalidJSON(HISMessage):
@@ -145,6 +147,15 @@ class AttachmentCreated(HISMessage):
         Language.EN_US: 'Attachment created.'}
 
 
+class AttachmentDeleted(HISMessage):
+    """Indicates that the attachment has been deleted"""
+
+    STATUS = 200
+    LOCALE = {
+        Language.DE_DE: 'Anhang gelöscht.',
+        Language.EN_US: 'Attachment deleted.'}
+
+
 class NoDataForAttachment(HISMessage):
     """Indicates that the requested attachment
     does not yet have data stored
@@ -163,3 +174,27 @@ class AttachmentExists(HISMessage):
     LOCALE = {
         Language.DE_DE: 'Anhang existiert bereits.',
         Language.EN_US: 'Attachment already exists.'}
+
+
+class AttachmentLimitRealEstateExceeded(HISMessage):
+    """Indicates that the limit for attachments
+    per real estate has been exceeded
+    """
+
+    STATUS = 409
+    LOCALE = {
+        Language.DE_DE: 'Zu viele Anhänge für diese Immobilie.',
+        Language.EN_US: 'Attachment limit exceeded '
+        'for the respective real estate.'}
+
+
+class AttachmentLimitCustomerExceeded(HISMessage):
+    """Indicates that the limit for attachments
+    per customer has been exceeded
+    """
+
+    STATUS = 409
+    LOCALE = {
+        Language.DE_DE: 'Zu viele Anhänge für diesen Kunden.',
+        Language.EN_US: 'Attachment limit exceeded '
+        'for the respective customer.'}
