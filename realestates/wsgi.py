@@ -375,7 +375,7 @@ class Attachments(AuthorizedService):
         else:
             try:
                 sha256sum = self.data.decode()
-            except ValueError:
+            except ValueError:NoDataForAttachment
                 return self.data
             else:
                 for inode in Inode.by_sha256(sha256sum):
@@ -386,10 +386,7 @@ class Attachments(AuthorizedService):
 
     def get(self):
         """Gets the respective data"""
-        if self.query('data') == 'raw':
-            return Binary(self.anhang.to_bytes())
-        else:
-            return JSON(self.anhang.to_dict())
+        return Binary(self.anhang.to_bytes())
 
     def post(self):
         """Adds an attachment"""
