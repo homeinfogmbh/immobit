@@ -390,18 +390,26 @@ class Attachments(AuthorizedService):
 
     def post(self):
         """Adds an attachment"""
+        print('DEBUG1')
         if Anhang.count(immobilie=self.immobilie) < self.REAL_ESTATE_LIMIT:
+            print('DEBUG2')
             if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
+                print('DEBUG3')
                 try:
+                    print('DEBUG4')
                     anhang = Anhang.from_bytes(self._data, self.immobilie)
                 except AttachmentExists:
+                    print('DEBUG5')
                     raise AttachmentExists() from None
                 else:
+                    print('DEBUG6')
                     anhang.save()
                     return AttachmentCreated()
             else:
+                print('DEBUG7')
                 raise AttachmentLimitCustomerExceeded() from None
         else:
+            print('DEBUG8')
             raise AttachmentLimitRealEstateExceeded() from None
 
     def put(self):
