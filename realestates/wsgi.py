@@ -427,6 +427,12 @@ class Attachments(AuthorizedService):
         return AttachmentDeleted()
 
 
+class Attachment(AuthorizedService):
+
+    def post(self):
+        self.logger.error('OK')
+
+
 HANDLERS = {
     'data': RealEstates,
     'attachments': Attachments}
