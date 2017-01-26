@@ -6,7 +6,8 @@ from traceback import format_exc
 from peewee import DoesNotExist
 
 from openimmodb import OpenImmoDBError, IncompleteDataError, \
-    ConsistencyError, Transaction, Immobilie, Anhang
+    RealEstateExists as RealEstateExists_, ConsistencyError, Transaction, \
+    Immobilie, Anhang
 from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK, Binary
 
 from his.api.errors import NotAnInteger
@@ -14,12 +15,12 @@ from his.api.handlers import AuthorizedService
 
 from his.mods.fs.orm import Inode
 
-from .errors import InvalidJSON, IdMismatch, \
-    NoRealEstateSpecified,  NoSuchRealEstate, RealEstateExists, \
-    RealEstatedCreated, RealEstateUpdated, RealEstateDeleted,  \
-    NoAttachmentSpecified, AttachmentCreated, AttachmentExists, \
-    AttachmentDeleted, NoSuchAttachment, NoDataForAttachment, \
-    AttachmentLimitCustomerExceeded, AttachmentLimitRealEstateExceeded
+from .errors import InvalidJSON, IdMismatch, NoRealEstateSpecified, \
+    NoSuchRealEstate, RealEstatedCreated, RealEstateExists, \
+    RealEstateUpdated, RealEstateDeleted,  NoAttachmentSpecified, \
+    AttachmentCreated, AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
+    NoDataForAttachment, AttachmentLimitCustomerExceeded, \
+    AttachmentLimitRealEstateExceeded
 from .orm import TransactionLog
 
 __all__ = [
@@ -125,8 +126,8 @@ class RealEstates(AuthorizedService):
         except IncompleteDataError as e:
             raise Error('Incomplete data: {}'.format(
                 e.element), status=422) from None
-        except RealEstateExists:
-            raise Error('Real estate exists', status=409) from None
+        except RealEstateExists_:
+            raise RealEstateExists() from None
         except ConsistencyError:
             raise Error('Data inconsistent', status=422) from None
         except OpenImmoDBError:
@@ -170,8 +171,8 @@ class RealEstates(AuthorizedService):
         except IncompleteDataError as e:
             raise Error('Incomplete data: {}'.format(
                 e.element), status=422) from None
-        except RealEstateExists:
-            raise Error('Real estate exists', status=409) from None
+        except RealEstateExists_:
+            raise RealEstateExists() from None
         except ConsistencyError:
             raise Error('Data inconsistent', status=422) from None
         except OpenImmoDBError:
