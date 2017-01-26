@@ -324,7 +324,7 @@ class RealEstates(AuthorizedService):
         return OK()
 
 
-class Attachments(AuthorizedService):
+class _Attachments(AuthorizedService):
     """Handles requests for ImmoBit"""
 
     REAL_ESTATE_LIMIT = 15
@@ -427,7 +427,7 @@ class Attachments(AuthorizedService):
         return AttachmentDeleted()
 
 
-class Attachment(AuthorizedService):
+class Attachments(AuthorizedService):
 
     def post(self):
         self.logger.error('OK')
