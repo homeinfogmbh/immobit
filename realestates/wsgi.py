@@ -331,21 +331,18 @@ class Attachments(AuthorizedService):
     CUSTOMER_LIMIT = 2000
 
     @property
-    def objektnr_extern(self):
-        """Returns the respective real estate identifier"""
-        return self.query.get('objektnr_extern')
-
-    @property
     def immobilie(self):
         """Returns the appropriate real estate"""
-        if self.objektnr_extern is None:
+        objektnr_extern = self.query.get('objektnr_extern')
+
+        if objektnr_extern is None:
             raise NoRealEstateSpecified()
         else:
             try:
-                return Immobilie.fetch(self.customer, self.objektnr_extern)
+                return Immobilie.fetch(self.customer, objektnr_extern)
             except DoesNotExist:
                 raise Error('No such real estate: {}'.format(
-                    self.objektnr_extern), status=404) from None
+                    objektnr_extern), status=404) from None
 
     @property
     def anhang(self):
@@ -362,13 +359,28 @@ class Attachments(AuthorizedService):
 
     @property
     def dict(self):
-        """Returns the POSTed Anhang dictionary"""
+        """Returns the Anhang dictionary"""
         try:
             return loads(self.data)
         except ValueError:
             raise InvalidJSON() from None
         except TypeError:
             raise NoAttachmentSpecified() from None
+
+    @property
+    def _data(self):
+        """Returns the attachment data"""
+        if not self.data:
+            raise NoDataForAttachment() from None
+        else:
+            try:
+                sha256sum = self.data.decode()
+            except ValueError:
+                return self.data
+            else:
+                for inode in Inode.by_sha256(sha256sum):
+                    if inode.readable_by(self.account):
+                        return inode.data
 
     def get(self):
         """Gets the respective data"""
@@ -381,28 +393,26 @@ class Attachments(AuthorizedService):
         """Adds an attachment"""
         if Anhang.count(immobilie=self.immobilie) < self.REAL_ESTATE_LIMIT:
             if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
-                if self.query('data') == 'raw':
-                    try:
-                        anhang = Anhang.from_bytes(self.data, self.immobilie)
-                    except AttachmentExists:
-                        raise AttachmentExists() from None
-                    else:
-                        anhang.save()
-                        return AttachmentCreated()
+                try:
+                    anhang = Anhang.from_bytes(self._data, self.immobilie)
+                except AttachmentExists:
+                    raise AttachmentExists() from None
                 else:
-                    try:
-                        anhang = Anhang.from_dict(self.dict, self.immobilie)
-                    except DoesNotExist:
-                        raise NoDataForAttachment() from None
-                    except AttachmentExists:
-                        raise AttachmentExists() from None
-                    else:
-                        anhang.save()
-                        return AttachmentCreated()
+                    anhang.save()
+                    return AttachmentCreated()
             else:
                 raise AttachmentLimitCustomerExceeded() from None
         else:
             raise AttachmentLimitRealEstateExceeded() from None
+
+    def put(self):
+        """Uploads metadata into an existing attachment"""
+        return self.patch()
+
+    def patch(self):
+        """Modifies metadata of an existing attachment"""
+        self.anhang.patch(self.dict).save()
+        return OK()
 
     def delete(self):
         """Deletes an attachment"""
