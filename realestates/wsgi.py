@@ -382,6 +382,8 @@ class Attachments(AuthorizedService):
                     if inode.readable_by(self.account):
                         return inode.data
 
+                raise NoDataForAttachment()
+
     def get(self):
         """Gets the respective data"""
         if self.query('data') == 'raw':
