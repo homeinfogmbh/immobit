@@ -375,7 +375,7 @@ class Attachments(AuthorizedService):
         else:
             try:
                 sha256sum = self.data.decode()
-            except ValueError:NoDataForAttachment
+            except ValueError:
                 return self.data
             else:
                 for inode in Inode.by_sha256(sha256sum):
