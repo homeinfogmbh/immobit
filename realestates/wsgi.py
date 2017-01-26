@@ -12,7 +12,6 @@ from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK, Binary
 from his.api.errors import NotAnInteger
 from his.api.handlers import AuthorizedService
 
-from his.mods.fs.errors import NotReadable
 from his.mods.fs.orm import Inode
 
 from .errors import InvalidJSON, IdMismatch, \
@@ -165,8 +164,9 @@ class RealEstates(AuthorizedService):
     def _patch(self, dictionary):
         """Adds the real estate represented by the dictionary"""
         try:
-            with Transaction(logger=self.logger) as trans:
-                trans.patch(self.customer, self.resource, dict=dictionary)
+            with Transaction(logger=self.logger) as transaction:
+                transaction.patch(
+                    self.customer, self.resource, dict=dictionary)
         except IncompleteDataError as e:
             raise Error('Incomplete data: {}'.format(
                 e.element), status=422) from None
@@ -178,35 +178,7 @@ class RealEstates(AuthorizedService):
             raise Error('Unspecified database error:\n{}'.format(
                 format_exc())) from None
         else:
-            return trans
-
-    def _auth_file(self, file):
-        """Determines authorization of a certain file"""
-        for inode in Inode.select().where(Inode.file == file):
-            if inode.readable_by(self.account):
-                return True
-
-        raise NotReadable()
-
-    def _validate_attachment(self, attachment):
-        """Validates the respective attachment"""
-        try:
-            file = attachment['file']
-        except KeyError:
-            raise Error('Incomplete data: attachment.file',
-                        status=422) from None
-        else:
-            try:
-                return self._auth_file(int(file))
-            except (ValueError, TypeError):
-                raise NotAnInteger('file', file)
-
-    def _validate_attachments(self, attachments):
-        """Validates the respective attachments"""
-        for attachment in attachments:
-            self._validate_attachment(attachment)
-
-        return True
+            return transaction
 
     def get(self):
         """Returns available real estates"""
@@ -230,13 +202,6 @@ class RealEstates(AuthorizedService):
     def post(self):
         """Adds new real estates"""
         dictionary = self.json
-
-        try:
-            attachments = dictionary['anhaenge']['anhang']
-        except (KeyError, TypeError):
-            pass
-        else:
-            self._validate_attachments(attachments)
 
         try:
             objektnr_extern = dictionary['verwaltung_techn']['objektnr_extern']
