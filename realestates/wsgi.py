@@ -33,9 +33,6 @@ class RealEstates(AuthorizedService):
     """Handles requests for ImmoBit"""
 
     NODE = 'realestates'
-    NAME = 'ImmoBit'
-    DESCRIPTION = 'Immobiliendatenverwaltung'
-    PROMOTE = True
 
     @property
     def json(self):
@@ -300,9 +297,6 @@ class RealEstates(AuthorizedService):
 
     def patch(self):
         """Partially updates real estates"""
-        # XXX: DEBUG
-        print('Log level:', self.logger.level, flush=True)
-
         if self.resource is None:
             raise Error('No real estate specified', status=400) from None
         else:
@@ -327,12 +321,12 @@ class RealEstates(AuthorizedService):
 class Attachments(AuthorizedService):
     """Handles requests for ImmoBit"""
 
+    NODE = 'realestates'
     REAL_ESTATE_LIMIT = 15
     CUSTOMER_LIMIT = 2000
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print('MYSELF:', dir(self))
 
     @property
     def immobilie(self):
@@ -394,26 +388,18 @@ class Attachments(AuthorizedService):
 
     def post(self):
         """Adds an attachment"""
-        print('DEBUG1')
         if Anhang.count(immobilie=self.immobilie) < self.REAL_ESTATE_LIMIT:
-            print('DEBUG2')
             if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
-                print('DEBUG3')
                 try:
-                    print('DEBUG4')
                     anhang = Anhang.from_bytes(self._data, self.immobilie)
                 except AttachmentExists:
-                    print('DEBUG5')
                     raise AttachmentExists() from None
                 else:
-                    print('DEBUG6')
                     anhang.save()
                     return AttachmentCreated()
             else:
-                print('DEBUG7')
                 raise AttachmentLimitCustomerExceeded() from None
         else:
-            print('DEBUG8')
             raise AttachmentLimitRealEstateExceeded() from None
 
     def put(self):
