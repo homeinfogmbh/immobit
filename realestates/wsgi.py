@@ -431,6 +431,7 @@ class Attachments(AuthorizedService):
 
     def post(self):
         self.logger.error('OK')
+        return OK
 
 
 HANDLERS = {
