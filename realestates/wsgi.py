@@ -147,7 +147,7 @@ class RealEstates(AuthorizedService):
             id_match = True
         except TypeError:
             # dictionary['verwaltung_techn'] is probably None
-            raise IncompleteDataError()  # XXX: todo
+            raise Error('Incomplete data', status=422) from None
         else:
             id_match = objektnr_extern == self.resource
 
@@ -193,7 +193,8 @@ class RealEstates(AuthorizedService):
         try:
             file = attachment['file']
         except KeyError:
-            raise IncompleteDataError('attachment.file')
+            raise Error('Incomplete data: attachment.file',
+                        status=422) from None
         else:
             try:
                 return self._auth_file(int(file))
@@ -380,7 +381,7 @@ class Attachments(AuthorizedService):
                     if inode.readable_by(self.account):
                         return inode.data
 
-                raise NoDataForAttachment()
+                raise NoDataForAttachment() from None
 
     def get(self):
         """Gets the respective data"""
