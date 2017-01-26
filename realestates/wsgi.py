@@ -324,7 +324,7 @@ class RealEstates(AuthorizedService):
         return OK()
 
 
-class _Attachments(AuthorizedService):
+class Attachments(AuthorizedService):
     """Handles requests for ImmoBit"""
 
     REAL_ESTATE_LIMIT = 15
@@ -427,15 +427,6 @@ class _Attachments(AuthorizedService):
         return AttachmentDeleted()
 
 
-class Attachments(AuthorizedService):
-
-    def post(self):
-        self.logger.error('OK')
-        return OK
-
-
 HANDLERS = {
     'data': RealEstates,
-    'attachments': Attachments,
-    'cool_stuff': Attachments,
-    'cooler_stuff': RealEstates}
+    'attachments': Attachments}
