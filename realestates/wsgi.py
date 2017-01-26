@@ -330,6 +330,10 @@ class Attachments(AuthorizedService):
     REAL_ESTATE_LIMIT = 15
     CUSTOMER_LIMIT = 2000
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print('MYSELF:', dir(self))
+
     @property
     def immobilie(self):
         """Returns the appropriate real estate"""
