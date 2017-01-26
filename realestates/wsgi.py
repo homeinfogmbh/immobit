@@ -435,4 +435,6 @@ class Attachments(AuthorizedService):
 
 HANDLERS = {
     'data': RealEstates,
-    'attachments': Attachments}
+    'attachments': Attachments,
+    'cool_stuff': Attachments,
+    'cooler_stuff': RealEstates}
