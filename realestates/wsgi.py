@@ -383,6 +383,10 @@ class Attachments(AuthorizedService):
         self.anhang.remove()
         return AttachmentDeleted()
 
+    def options(self):
+        """Returns options information"""
+        return OK()
+
 
 HANDLERS = {
     'data': RealEstates,
