@@ -359,7 +359,7 @@ class Attachments(AuthorizedService):
             if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
                 try:
                     anhang = Anhang.from_bytes(self._data, self.immobilie)
-                except AttachmentExists:
+                except AttachmentExists_:
                     raise AttachmentExists() from None
                 else:
                     anhang.save()
