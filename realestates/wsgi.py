@@ -389,6 +389,29 @@ class Attachments(AuthorizedService):
         return OK()
 
 
+class Contacts(AuthorizedService):
+    """Service to retrieve contacts"""
+
+    NODE = 'realestates'
+
+    @property
+    def _contacts(self):
+        """Yields appropriate contacts"""
+        for immobilie in Immobilie.select().where(
+                Immobilie.customer == self.customer):
+            for kontakt in Kontakt.select().where(
+                    Kontakt._immobilie == immobilie):
+                yield kontakt
+
+    def get(self):
+        """Returns appropriate contacts"""
+        if self.resource is not None:
+            raise Error('Contacts can only be listed') from None
+        else:
+            return JSON({'kontakt': [c.to_dict() for c in self._contacts]})
+
+
 HANDLERS = {
     'data': RealEstates,
-    'attachments': Attachments}
+    'attachments': Attachments,
+    'contacts': Contacts}
