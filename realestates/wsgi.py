@@ -27,6 +27,7 @@ from .orm import TransactionLog
 __all__ = [
     'RealEstates',
     'Attachments',
+    'Contacts',
     'HANDLERS']
 
 
