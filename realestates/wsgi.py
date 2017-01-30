@@ -6,7 +6,7 @@ from traceback import format_exc
 from peewee import DoesNotExist
 
 from openimmodb import OpenImmoDBError, IncompleteDataError, \
-    ConsistencyError, Transaction, Immobilie, Anhang, \
+    ConsistencyError, Transaction, Immobilie, Kontakt, Anhang, \
     RealEstateExists as RealEstateExists_, \
     AttachmentExists as AttachmentExists_
 from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK, Binary
