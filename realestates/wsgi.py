@@ -95,8 +95,7 @@ class RealEstates(AuthorizedService):
 
     def _list(self):
         """Lists available reale states"""
-        return JSON({'immobilie': [
-            re.short_dict() for re in self._real_estates]})
+        return JSON([re.short_dict() for re in self._real_estates])
 
     def _mkpage(self, page, limit, real_estates):
         """Yields real estates from page no. <page> of size <size>"""
@@ -409,7 +408,7 @@ class Contacts(AuthorizedService):
         if self.resource is not None:
             raise Error('Contacts can only be listed') from None
         else:
-            return JSON({'kontakt': [c.to_dict() for c in self._contacts]})
+            return JSON([c.to_dict() for c in self._contacts])
 
 
 HANDLERS = {
