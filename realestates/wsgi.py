@@ -328,7 +328,7 @@ class Attachments(AuthorizedService):
         except ValueError:
             raise InvalidJSON() from None
         except TypeError:
-            raise NoAttachmentSpecified() from None
+            raise NoDataForAttachment() from None
 
     @property
     def _data(self):
