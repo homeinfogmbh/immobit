@@ -311,17 +311,14 @@ class Attachments(AuthorizedService):
                     objektnr_extern), status=404) from None
 
     @property
-    def anhang(self):
+    def _anhang(self):
         """Returns the respective Anhang ORM model"""
-        if self.resource is None:
-            raise NoAttachmentSpecified() from None
-        else:
-            try:
-                return Anhang.get(
-                    (Anhang._immobilie == self.immobilie) &
-                    (Anhang.sha256sum == self.resource))
-            except DoesNotExist:
-                raise NoSuchAttachment() from None
+        try:
+            return Anhang.get(
+                (Anhang._immobilie == self.immobilie) &
+                (Anhang.sha256sum == self.resource))
+        except DoesNotExist:
+            raise NoSuchAttachment() from None
 
     @property
     def dict(self):
@@ -352,7 +349,10 @@ class Attachments(AuthorizedService):
 
     def get(self):
         """Gets the respective data"""
-        return Binary(self.anhang.to_bytes())
+        if self.resource is None:
+            raise NoAttachmentSpecified() from None
+        else:
+            return Binary(self._anhang.to_bytes())
 
     def post(self):
         """Adds an attachment"""
@@ -364,7 +364,7 @@ class Attachments(AuthorizedService):
                     raise AttachmentExists() from None
                 else:
                     anhang.save()
-                    return AttachmentCreated()
+                    return AttachmentCreated(anhang.sha256sum)
             else:
                 raise AttachmentLimitCustomerExceeded() from None
         else:
