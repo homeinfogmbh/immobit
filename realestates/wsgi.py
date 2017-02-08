@@ -20,8 +20,7 @@ from .errors import InvalidJSON, IdMismatch, NoRealEstateSpecified, \
     NoSuchRealEstate, RealEstatedCreated, RealEstateExists, \
     RealEstateUpdated, RealEstateDeleted,  NoAttachmentSpecified, \
     AttachmentCreated, AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
-    NoDataForAttachment, AttachmentLimitCustomerExceeded, \
-    AttachmentLimitRealEstateExceeded
+    NoDataForAttachment, AttachmentLimitExceeded
 from .orm import TransactionLog
 
 __all__ = [
@@ -366,9 +365,9 @@ class Attachments(AuthorizedService):
                     anhang.save()
                     return AttachmentCreated(anhang.sha256sum)
             else:
-                raise AttachmentLimitCustomerExceeded() from None
+                raise AttachmentLimitExceeded() from None
         else:
-            raise AttachmentLimitRealEstateExceeded() from None
+            raise AttachmentLimitExceeded() from None
 
     def put(self):
         """Uploads metadata into an existing attachment"""
