@@ -355,7 +355,7 @@ class Attachments(AuthorizedService):
         if self.resource is None:
             raise NoAttachmentSpecified() from None
         else:
-            return Binary(self._anhang.to_bytes())
+            return Binary(self._anhang.data)
 
     def post(self):
         """Adds an attachment"""
