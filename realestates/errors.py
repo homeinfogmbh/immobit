@@ -145,11 +145,9 @@ class AttachmentCreated(HISMessage):
         Language.DE_DE: 'Anhang erstellt.',
         Language.EN_US: 'Attachment created.'}
 
-    def __init__(self, sha256sum, charset='utf-8', cors=None):
+    def __init__(self, uuid, charset='utf-8', cors=None):
         """Adds the respective SHA-256 sum to the message"""
-        super().__init__(
-            charset=charset, cors=cors,
-            data={'sha256sum': sha256sum})
+        super().__init__(charset=charset, cors=cors, data={'uuid': uuid})
 
 
 class AttachmentDeleted(HISMessage):

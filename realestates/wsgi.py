@@ -315,7 +315,7 @@ class Attachments(AuthorizedService):
         try:
             return Anhang.get(
                 (Anhang._immobilie == self._immobilie) &
-                (Anhang.sha256sum == self.resource))
+                (Anhang.uuid == self.resource))
         except DoesNotExist:
             raise NoSuchAttachment() from None
 
@@ -363,7 +363,7 @@ class Attachments(AuthorizedService):
                     raise AttachmentExists() from None
                 else:
                     anhang.save()
-                    return AttachmentCreated(anhang.sha256sum)
+                    return AttachmentCreated(anhang.uuid)
             else:
                 raise AttachmentLimitExceeded() from None
         else:
