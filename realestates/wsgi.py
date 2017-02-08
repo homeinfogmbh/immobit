@@ -307,7 +307,7 @@ class Attachments(AuthorizedService):
     def _anhang(self):
         """Returns the respective Anhang ORM model"""
         try:
-            anhang = Anhang.get(Anhang.uuid == self.resource)
+            anhang = Anhang.get(Anhang.id == self.resource)
         except DoesNotExist:
             raise NoSuchAttachment() from None
         else:
@@ -365,7 +365,7 @@ class Attachments(AuthorizedService):
                         raise AttachmentExists() from None
                     else:
                         anhang.save()
-                        return AttachmentCreated(anhang.uuid)
+                        return AttachmentCreated(anhang.id)
                 else:
                     raise AttachmentLimitExceeded() from None
             else:
