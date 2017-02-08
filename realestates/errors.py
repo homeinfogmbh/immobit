@@ -22,7 +22,8 @@ __all__ = [
     'NoDataForAttachment',
     'NoSuchAttachment',
     'AttachmentExists',
-    'AttachmentLimitExceeded']
+    'AttachmentLimitExceeded',
+    'ForeignAttachmentAccess']
 
 
 class InvalidJSON(HISMessage):
@@ -180,11 +181,18 @@ class AttachmentExists(HISMessage):
 
 
 class AttachmentLimitExceeded(HISMessage):
-    """Indicates that the limit for attachments
-    per real estate has been exceeded
-    """
+    """Indicates that the limit for attachments has been exceeded"""
 
     STATUS = 403
     LOCALE = {
         Language.DE_DE: 'Zu viele Anhänge.',
         Language.EN_US: 'Attachment limit exceeded.'}
+
+
+class ForeignAttachmentAccess(HISMessage):
+    """Indicates an attempted access of a foreign attachment"""
+
+    STATUS = 403
+    LOCALE = {
+        Language.DE_DE: 'Versuchter Zugriff auf fremden Anhang.',
+        Language.EN_US: 'Foreign attachment access.'}

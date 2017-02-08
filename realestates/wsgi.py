@@ -20,7 +20,7 @@ from .errors import InvalidJSON, IdMismatch, NoRealEstateSpecified, \
     NoSuchRealEstate, RealEstatedCreated, RealEstateExists, \
     RealEstateUpdated, RealEstateDeleted,  NoAttachmentSpecified, \
     AttachmentCreated, AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
-    NoDataForAttachment, AttachmentLimitExceeded
+    NoDataForAttachment, AttachmentLimitExceeded, ForeignAttachmentAccess
 from .orm import TransactionLog
 
 __all__ = [
@@ -307,9 +307,14 @@ class Attachments(AuthorizedService):
     def _anhang(self):
         """Returns the respective Anhang ORM model"""
         try:
-            return Anhang.get(Anhang.uuid == self.resource)
+            anhang = Anhang.get(Anhang.uuid == self.resource)
         except DoesNotExist:
             raise NoSuchAttachment() from None
+        else:
+            if anhang._immobilie._customer == self.customer:
+                return anhang
+            else:
+                raise ForeignAttachmentAccess() from None
 
     @property
     def _dict(self):
