@@ -307,14 +307,21 @@ class Attachments(AuthorizedService):
     def _anhang(self):
         """Returns the respective Anhang ORM model"""
         try:
-            anhang = Anhang.get(Anhang.id == self.resource)
-        except DoesNotExist:
+            aid = int(self.resource)
+        except TypeError:
+            raise NoAttachmentSpecified() from None
+        except ValueError:
             raise NoSuchAttachment() from None
         else:
-            if anhang._immobilie._customer == self.customer:
-                return anhang
+            try:
+                anhang = Anhang.get(Anhang.id == aid)
+            except DoesNotExist:
+                raise NoSuchAttachment() from None
             else:
-                raise ForeignAttachmentAccess() from None
+                if anhang._immobilie._customer == self.customer:
+                    return anhang
+                else:
+                    raise ForeignAttachmentAccess() from None
 
     @property
     def _dict(self):
