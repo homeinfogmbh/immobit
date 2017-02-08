@@ -324,11 +324,10 @@ class Attachments(AuthorizedService):
     def _dict(self):
         """Returns the Anhang dictionary"""
         try:
-            return loads(self.data)
+            return loads(self.data.decode())
         except ValueError:
             raise InvalidJSON() from None
         except TypeError:
-            raise Error(str(self.data)) from None
             raise NoDataForAttachment() from None
 
     @property
