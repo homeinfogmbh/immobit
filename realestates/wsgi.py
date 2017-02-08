@@ -298,24 +298,16 @@ class Attachments(AuthorizedService):
     @property
     def _immobilie(self):
         """Returns the appropriate real estate"""
-        objektnr_extern = self.query.get('objektnr_extern')
-
-        if objektnr_extern is None:
-            raise NoRealEstateSpecified()
-        else:
-            try:
-                return Immobilie.fetch(self.customer, objektnr_extern)
-            except DoesNotExist:
-                raise Error('No such real estate: {}'.format(
-                    objektnr_extern), status=404) from None
+        try:
+            return Immobilie.fetch(self.customer, self.resource)
+        except DoesNotExist:
+            raise NoSuchRealEstate() from None
 
     @property
     def _anhang(self):
         """Returns the respective Anhang ORM model"""
         try:
-            return Anhang.get(
-                (Anhang._immobilie == self._immobilie) &
-                (Anhang.uuid == self.resource))
+            return Anhang.get(Anhang.uuid == self.resource)
         except DoesNotExist:
             raise NoSuchAttachment() from None
 
@@ -355,19 +347,24 @@ class Attachments(AuthorizedService):
 
     def post(self):
         """Adds an attachment"""
-        if Anhang.count(immobilie=self._immobilie) < self.REAL_ESTATE_LIMIT:
-            if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
-                try:
-                    anhang = Anhang.from_bytes(self._data, self._immobilie)
-                except AttachmentExists_:
-                    raise AttachmentExists() from None
+        if self.resource is None:
+            raise NoRealEstateSpecified()
+        else:
+            immobilie = self._immobilie
+
+            if Anhang.count(immobilie=immobilie) < self.REAL_ESTATE_LIMIT:
+                if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
+                    try:
+                        anhang = Anhang.from_bytes(self._data, immobilie)
+                    except AttachmentExists_:
+                        raise AttachmentExists() from None
+                    else:
+                        anhang.save()
+                        return AttachmentCreated(anhang.uuid)
                 else:
-                    anhang.save()
-                    return AttachmentCreated(anhang.uuid)
+                    raise AttachmentLimitExceeded() from None
             else:
                 raise AttachmentLimitExceeded() from None
-        else:
-            raise AttachmentLimitExceeded() from None
 
     def put(self):
         """Uploads metadata into an existing attachment"""
