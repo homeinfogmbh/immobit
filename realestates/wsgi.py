@@ -297,7 +297,7 @@ class Attachments(AuthorizedService):
         super().__init__(*args, **kwargs)
 
     @property
-    def immobilie(self):
+    def _immobilie(self):
         """Returns the appropriate real estate"""
         objektnr_extern = self.query.get('objektnr_extern')
 
@@ -315,13 +315,13 @@ class Attachments(AuthorizedService):
         """Returns the respective Anhang ORM model"""
         try:
             return Anhang.get(
-                (Anhang._immobilie == self.immobilie) &
+                (Anhang._immobilie == self._immobilie) &
                 (Anhang.sha256sum == self.resource))
         except DoesNotExist:
             raise NoSuchAttachment() from None
 
     @property
-    def dict(self):
+    def _dict(self):
         """Returns the Anhang dictionary"""
         try:
             return loads(self.data)
@@ -356,10 +356,10 @@ class Attachments(AuthorizedService):
 
     def post(self):
         """Adds an attachment"""
-        if Anhang.count(immobilie=self.immobilie) < self.REAL_ESTATE_LIMIT:
+        if Anhang.count(immobilie=self._immobilie) < self.REAL_ESTATE_LIMIT:
             if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
                 try:
-                    anhang = Anhang.from_bytes(self._data, self.immobilie)
+                    anhang = Anhang.from_bytes(self._data, self._immobilie)
                 except AttachmentExists_:
                     raise AttachmentExists() from None
                 else:
@@ -376,12 +376,12 @@ class Attachments(AuthorizedService):
 
     def patch(self):
         """Modifies metadata of an existing attachment"""
-        self.anhang.patch(self.dict).save()
+        self._anhang.patch(self._dict).save()
         return OK()
 
     def delete(self):
         """Deletes an attachment"""
-        self.anhang.remove()
+        self._anhang.remove()
         return AttachmentDeleted()
 
     def options(self):
