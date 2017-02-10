@@ -1,7 +1,7 @@
 """Error message definitions"""
 
 from his.api.locale import Language
-from his.api.errors import HISMessage
+from his.api.messages import HISMessage
 
 
 __all__ = [

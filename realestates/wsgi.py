@@ -11,12 +11,12 @@ from openimmodb import OpenImmoDBError, IncompleteDataError, \
     AttachmentExists as AttachmentExists_
 from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK, Binary
 
-from his.api.errors import NotAnInteger
+from his.api.messages import NotAnInteger
 from his.api.handlers import AuthorizedService
 
 from his.mods.fs.orm import Inode
 
-from .errors import InvalidJSON, IdMismatch, NoRealEstateSpecified, \
+from .messages import InvalidJSON, IdMismatch, NoRealEstateSpecified, \
     NoSuchRealEstate, RealEstatedCreated, RealEstateExists, \
     RealEstateUpdated, RealEstateDeleted,  NoAttachmentSpecified, \
     AttachmentCreated, AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
