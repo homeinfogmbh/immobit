@@ -13,4 +13,6 @@ setup(
     requires=['his'],
     package_dir={'his.mods': ''},
     packages=['his.mods.realestates'],
+    data_files=[
+        ('/etc/his.d/locale', ['files/etc/his.d/locale/realestates.ini']),
     description='Immobit')

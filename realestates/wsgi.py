@@ -372,7 +372,7 @@ class Attachments(AuthorizedService):
                         raise AttachmentExists() from None
                     else:
                         anhang.save()
-                        return AttachmentCreated(anhang.id)
+                        return AttachmentCreated(id=anhang.id)
                 else:
                     raise AttachmentLimitExceeded() from None
             else:

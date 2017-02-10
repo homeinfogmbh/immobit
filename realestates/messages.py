@@ -1,11 +1,11 @@
 """Error message definitions"""
 
-from his.api.locale import Language
+from configparser import ConfigParser
 from his.api.messages import HISMessage
 
 
 __all__ = [
-    'InvalidJSON',
+    'RealEstatesMessage',
     'IdMismatch',
 
     'NoSuchRealEstate',
@@ -26,173 +26,112 @@ __all__ = [
     'ForeignAttachmentAccess']
 
 
-class InvalidJSON(HISMessage):
-    """Indicates invalid JSON data"""
+class RealEstatesMessage(HISMessage):
+    """Basic real estates message"""
 
-    STATUS = 400
-    LOCALE = {
-        Language.DE_DE: 'Ungültiges JSON-Dokument.',
-        Language.EN_US: 'Invalid JSON document.'}
+    LOCALE = ConfigParser()
+    LOCALE.read('/etc/his.d/locale/realestates.ini')
 
 
-class IdMismatch(HISMessage):
+class IdMismatch(RealEstatesMessage):
     """Indicates that the IDs of a real estate do not match"""
 
     STATUS = 400
-    LOCALE = {
-        Language.DE_DE: 'IDs stimmen nicht überein.',
-        Language.EN_US: 'ID mismatch.'}
 
 
-class NoSuchRealEstate(HISMessage):
+class NoSuchRealEstate(RealEstatesMessage):
     """Indicates that the requested real estate does not exist"""
 
     STATUS = 404
-    LOCALE = {
-        Language.DE_DE: 'Keine solche Immobilie.',
-        Language.EN_US: 'No such real estate.'}
-
-    def __init__(self, objektnr_extern, charset='utf-8', cors=None):
-        data = {'objektnr_extern': objektnr_extern}
-        super().__init__(charset=charset, cors=cors, data=data)
 
 
-class RealEstatedCreated(HISMessage):
+class RealEstatedCreated(RealEstatesMessage):
     """Indicates that the real estate was successfully created"""
 
     STATUS = 201
-    LOCALE = {
-        Language.DE_DE: 'Immobilie erstellt.',
-        Language.EN_US: 'Real estate created.'}
 
 
-class CannotAddRealEstate(HISMessage):
+class CannotAddRealEstate(RealEstatesMessage):
     """Indicates that the respective real estate could not be added"""
 
     STATUS = 500
-    LOCALE = {
-        Language.DE_DE: 'Immobilie konnte nicht gespeichert werden.',
-        Language.EN_US: 'Could not add real estate.'}
 
 
-class RealEstateExists(HISMessage):
+class RealEstateExists(RealEstatesMessage):
     """Indicates that the respective real estate already exists"""
 
     STATUS = 409
-    LOCALE = {
-        Language.DE_DE: 'Immobilie existiert bereits.',
-        Language.EN_US: 'Real estate already exists.'}
 
 
-class NoRealEstateSpecified(HISMessage):
+class NoRealEstateSpecified(RealEstatesMessage):
     """Indicates that no real estate was specified"""
 
     STATUS = 400
-    LOCALE = {
-        Language.DE_DE: 'Keine Immobilie angegeben.',
-        Language.EN_US: 'No real estate specified.'}
 
 
-class CannotDeleteRealEstate(HISMessage):
+class CannotDeleteRealEstate(RealEstatesMessage):
     """Indicates that the respective real estate could not be deleted"""
 
     STATUS = 500
-    LOCALE = {
-        Language.DE_DE: 'Immobilie konnte nicht gelöscht werden.',
-        Language.EN_US: 'Could not delete real estate.'}
 
 
-class RealEstateUpdated(HISMessage):
+class RealEstateUpdated(RealEstatesMessage):
     """Indicates that the real estate has been updated"""
 
     STATUS = 200
-    LOCALE = {
-        Language.DE_DE: 'Immobilie aktualisiert.',
-        Language.EN_US: 'Real estate updated.'}
 
 
-class RealEstateDeleted(HISMessage):
+class RealEstateDeleted(RealEstatesMessage):
     """Indicates that the real estate has been deleted"""
 
     STATUS = 200
-    LOCALE = {
-        Language.DE_DE: 'Immobilie gelöscht.',
-        Language.EN_US: 'Real estate deleted.'}
 
 
-class NoAttachmentSpecified(HISMessage):
+class NoAttachmentSpecified(RealEstatesMessage):
     """Indicates that no attachment was specified"""
 
     STATUS = 400
-    LOCALE = {
-        Language.DE_DE: 'Kein Anhang angegeben.',
-        Language.EN_US: 'No attachment specified.'}
 
 
-class NoSuchAttachment(HISMessage):
+class NoSuchAttachment(RealEstatesMessage):
     """Indicates that the requested attachment does not exist"""
 
     STATUS = 404
-    LOCALE = {
-        Language.DE_DE: 'Kein solcher Anhang.',
-        Language.EN_US: 'No such attachment.'}
 
 
-class AttachmentCreated(HISMessage):
+class AttachmentCreated(RealEstatesMessage):
     """Indicates that the attachment was successfully created"""
 
     STATUS = 201
-    LOCALE = {
-        Language.DE_DE: 'Anhang erstellt.',
-        Language.EN_US: 'Attachment created.'}
-
-    def __init__(self, id, charset='utf-8', cors=None):
-        """Adds the respective SHA-256 sum to the message"""
-        super().__init__(charset=charset, cors=cors, data={'id': id})
 
 
-class AttachmentDeleted(HISMessage):
+class AttachmentDeleted(RealEstatesMessage):
     """Indicates that the attachment has been deleted"""
 
     STATUS = 200
-    LOCALE = {
-        Language.DE_DE: 'Anhang gelöscht.',
-        Language.EN_US: 'Attachment deleted.'}
 
 
-class NoDataForAttachment(HISMessage):
+class NoDataForAttachment(RealEstatesMessage):
     """Indicates that the requested attachment
     does not yet have data stored
     """
 
     STATUS = 412
-    LOCALE = {
-        Language.DE_DE: 'Keine Daten für Anhang.',
-        Language.EN_US: 'No data for attachment.'}
 
 
-class AttachmentExists(HISMessage):
+class AttachmentExists(RealEstatesMessage):
     """Indicates that the respective attachment already exists"""
 
     STATUS = 409
-    LOCALE = {
-        Language.DE_DE: 'Anhang existiert bereits.',
-        Language.EN_US: 'Attachment already exists.'}
 
 
-class AttachmentLimitExceeded(HISMessage):
+class AttachmentLimitExceeded(RealEstatesMessage):
     """Indicates that the limit for attachments has been exceeded"""
 
     STATUS = 403
-    LOCALE = {
-        Language.DE_DE: 'Zu viele Anhänge.',
-        Language.EN_US: 'Attachment limit exceeded.'}
 
 
-class ForeignAttachmentAccess(HISMessage):
+class ForeignAttachmentAccess(RealEstatesMessage):
     """Indicates an attempted access of a foreign attachment"""
 
     STATUS = 403
-    LOCALE = {
-        Language.DE_DE: 'Versuchter Zugriff auf fremden Anhang.',
-        Language.EN_US: 'Foreign attachment access.'}
