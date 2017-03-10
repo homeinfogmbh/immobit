@@ -420,6 +420,6 @@ class Contacts(AuthorizedService):
 
 
 HANDLERS = {
-    'data': RealEstates,
+    'realestates': RealEstates,
     'attachments': Attachments,
     'contacts': Contacts}

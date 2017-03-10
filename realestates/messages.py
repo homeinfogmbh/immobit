@@ -30,7 +30,7 @@ class RealEstatesMessage(HISMessage):
     """Basic real estates message"""
 
     LOCALE = ConfigParser()
-    LOCALE.read('/etc/his.d/locale/realestates.ini')
+    LOCALE.read('/etc/his.d/locale/immobrowse.ini')
 
 
 class IdMismatch(RealEstatesMessage):
