@@ -6,13 +6,13 @@ from homeinfo.lib.misc import GitInfo
 version, author, author_email, *_ = GitInfo()
 
 setup(
-    name='immobrowse',
+    name='immobit',
     version=version,
     author=author,
     author_email=author_email,
     requires=['his'],
-    packages=['immobrowse'],
+    packages=['immobit'],
     data_files=[
         ('/etc/his.d/locale',
-         ['files/etc/his.d/locale/immobrowse.ini'])],
+         ['files/etc/his.d/locale/immobit.ini'])],
     description='Immobit')

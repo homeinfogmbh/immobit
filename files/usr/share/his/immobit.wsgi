@@ -2,6 +2,6 @@
 """HIS core handler"""
 
 from homeinfo.lib.rest import RestApp
-from immobrowse import HANDLERS
+from immobit import HANDLERS
 
 application = RestApp(HANDLERS, cors=True, debug=True)
