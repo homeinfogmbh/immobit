@@ -4,4 +4,4 @@
 from homeinfo.lib.rest import RestApp
 from immobit import HANDLERS
 
-application = RestApp(HANDLERS, cors=True, debug=True)
+application = RestApp({'immobit': HANDLERS}, cors=True, debug=True)
