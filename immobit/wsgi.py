@@ -9,7 +9,7 @@ from openimmodb import OpenImmoDBError, IncompleteDataError, \
     ConsistencyError, Transaction, Immobilie, Kontakt, Anhang, \
     RealEstateExists as RealEstateExists_, \
     AttachmentExists as AttachmentExists_
-from homeinfo.lib.wsgi import JSON, Error, InternalServerError, OK, Binary
+from wsgilib import JSON, Error, InternalServerError, OK, Binary
 
 from his.api.messages import NotAnInteger, InvalidJSON
 from his.api.handlers import AuthorizedService
