@@ -4,4 +4,4 @@
 from wsgilib import RestApp
 from immobit import HANDLERS
 
-application = RestApp({'immobit': HANDLERS}, cors=True, debug=True)
+application = RestApp(HANDLERS, cors=True, debug=True)
