@@ -195,9 +195,7 @@ class RealEstates(AuthorizedService):
             try:
                 immobilie = Immobilie.fetch(self.customer, self.resource)
             except DoesNotExist:
-                raise NoSuchRealEstate(
-                    customer=self.customer,
-                    objektnr_extern=self.resource) from None
+                raise NoSuchRealEstate() from None
             else:
                 return JSON(immobilie.to_dict(), status=200)
 
@@ -229,9 +227,7 @@ class RealEstates(AuthorizedService):
             try:
                 immobilie = Immobilie.fetch(self.customer, self.resource)
             except DoesNotExist:
-                raise NoSuchRealEstate(
-                    customer=self.customer,
-                    objektnr_extern=self.resource) from None
+                raise NoSuchRealEstate() from None
             else:
                 with TransactionLog(
                         account=self.account,
