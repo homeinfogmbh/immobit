@@ -11,16 +11,17 @@ from openimmodb import OpenImmoDBError, IncompleteDataError, \
     AttachmentExists as AttachmentExists_
 from wsgilib import JSON, Error, InternalServerError, OK, Binary
 
-from his.api.messages import NotAnInteger, InvalidJSON
+from his.api.messages import NotAnInteger, InvalidUTF8Data, InvalidJSON
 from his.api.handlers import AuthorizedService
 
 from his.mods.fs.orm import Inode
 
 from .messages import IdMismatch, NoRealEstateSpecified, NoSuchRealEstate, \
-    RealEstatedCreated, RealEstateExists, RealEstateUpdated, \
-    RealEstateDeleted,  NoAttachmentSpecified, AttachmentCreated, \
-    AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
-    NoDataForAttachment, AttachmentLimitExceeded, ForeignAttachmentAccess
+    RealEstatedCreated, CannotAddRealEstate, RealEstateExists, \
+    RealEstateUpdated, RealEstateDeleted, CannotDeleteRealEstate, \
+    NoAttachmentSpecified, AttachmentCreated, AttachmentExists, \
+    AttachmentDeleted, NoSuchAttachment, NoDataForAttachment, \
+    AttachmentLimitExceeded, ForeignAttachmentAccess
 from .orm import TransactionLog
 
 __all__ = [
@@ -41,13 +42,12 @@ class RealEstates(AuthorizedService):
         try:
             text = self.data.decode('utf-8')
         except UnicodeDecodeError:
-            raise Error('Posted data is not UTF-8', status=415) from None
+            raise InvalidUTF8Data() from None
         else:
             try:
                 return loads(text)
             except ValueError:
-                raise Error('Invalid JSON:\n{}'.format(text),
-                            status=422) from None
+                raise InvalidJSON() from None
 
     @property
     def limit(self):
@@ -131,7 +131,7 @@ class RealEstates(AuthorizedService):
         except ConsistencyError:
             raise Error('Data inconsistent', status=422) from None
         except OpenImmoDBError:
-            raise Error('Unspecified database error:\n{}'.format(
+            raise InternalServerError('Unspecified database error:\n{}'.format(
                 format_exc())) from None
         else:
             return transaction
@@ -195,8 +195,9 @@ class RealEstates(AuthorizedService):
             try:
                 immobilie = Immobilie.fetch(self.customer, self.resource)
             except DoesNotExist:
-                raise Error('No such real estate: {}'.format(
-                    self.resource), status=404) from None
+                raise NoSuchRealEstate(
+                    customer=self.customer,
+                    objektnr_extern=self.resource) from None
             else:
                 return JSON(immobilie.to_dict(), status=200)
 
@@ -218,18 +219,19 @@ class RealEstates(AuthorizedService):
                 log.success = True
                 return RealEstatedCreated()
             else:
-                return InternalServerError('Could not add real estate')
+                raise CannotAddRealEstate() from None
 
     def delete(self):
         """Removes real estates"""
         if self.resource is None:
-            raise Error('No real estate specified', status=400) from None
+            raise NoRealEstateSpecified() from None
         else:
             try:
                 immobilie = Immobilie.fetch(self.customer, self.resource)
             except DoesNotExist:
-                raise Error('No such real estate: {}'.format(
-                    self.resource), status=404) from None
+                raise NoSuchRealEstate(
+                    customer=self.customer,
+                    objektnr_extern=self.resource) from None
             else:
                 with TransactionLog(
                         account=self.account,
@@ -239,9 +241,10 @@ class RealEstates(AuthorizedService):
                     try:
                         immobilie.remove()
                     except OpenImmoDBError:
-                        raise InternalServerError(
+                        self.logger.error(
                             'Could not delete real estate:\n{}'.format(
-                                format_exc())) from None
+                                format_exc()))
+                        raise CannotDeleteRealEstate() from None
                     else:
                         log.success = True
                         return RealEstateDeleted()
@@ -265,7 +268,7 @@ class RealEstates(AuthorizedService):
     def patch(self):
         """Partially updates real estates"""
         if self.resource is None:
-            raise Error('No real estate specified', status=400) from None
+            raise NoRealEstateSpecified() from None
         else:
             with TransactionLog(
                     account=self.account,
