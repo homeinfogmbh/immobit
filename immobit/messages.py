@@ -1,7 +1,6 @@
 """Error message definitions"""
 
-from configparser import ConfigParser
-from his.api.messages import HISMessage
+from his.api.messages import locales, HISMessage
 
 
 __all__ = [
@@ -26,11 +25,11 @@ __all__ = [
     'ForeignAttachmentAccess']
 
 
+@locales('/etc/his.d/locale/immobit.ini')
 class RealEstatesMessage(HISMessage):
     """Basic real estates message"""
 
-    LOCALE = ConfigParser()
-    LOCALE.read('/etc/his.d/locale/immobit.ini')
+    pass
 
 
 class IdMismatch(RealEstatesMessage):
