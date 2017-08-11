@@ -78,7 +78,7 @@ class RealEstates(AuthorizedService):
     @property
     def _real_estates(self):
         """Yields real estates of the current customer"""
-        return Immobilie.select().where(Immobilie._customer == self.customer)
+        return Immobilie.select().where(Immobilie.customer == self.customer)
 
     def _pages(self, limit, real_estates):
         """Returns the amout of possible
@@ -317,7 +317,7 @@ class Attachments(AuthorizedService):
             except DoesNotExist:
                 raise NoSuchAttachment() from None
             else:
-                if anhang._immobilie._customer == self.customer:
+                if anhang.immobilie.customer == self.customer:
                     return anhang
                 else:
                     raise ForeignAttachmentAccess() from None
@@ -407,7 +407,7 @@ class Contacts(AuthorizedService):
         for immobilie in Immobilie.select().where(
                 Immobilie.customer == self.customer):
             for kontakt in Kontakt.select().where(
-                    Kontakt._immobilie == immobilie):
+                    Kontakt.immobilie == immobilie):
                 yield kontakt
 
     def get(self):
