@@ -5,7 +5,7 @@ from traceback import format_exc
 
 from peewee import DoesNotExist
 
-from openimmodb import OpenImmoDBError, IncompleteDataError, \
+from openimmodb import OpenImmoDBError, IncompleteDataError, InvalidDataError,\
     ConsistencyError, Transaction, Immobilie, Kontakt, Anhang, \
     RealEstateExists as RealEstateExists_, \
     AttachmentExists as AttachmentExists_
@@ -123,11 +123,11 @@ class RealEstates(AuthorizedService):
         try:
             with Transaction(logger=self.logger) as transaction:
                 transaction.add(self.customer, dict=dictionary)
+        except RealEstateExists_:
+            raise RealEstateExists() from None
         except IncompleteDataError as e:
             raise Error('Incomplete data: {}'.format(
                 e.element), status=422) from None
-        except RealEstateExists_:
-            raise RealEstateExists() from None
         except ConsistencyError:
             raise Error('Data inconsistent', status=422) from None
         except OpenImmoDBError:
@@ -171,6 +171,8 @@ class RealEstates(AuthorizedService):
         except IncompleteDataError as e:
             raise Error('Incomplete data: {}'.format(
                 e.element), status=422) from None
+        except InvalidDataError as e:
+            raise Error(str(e), status=422) from None
         except RealEstateExists_:
             raise RealEstateExists() from None
         except ConsistencyError:
