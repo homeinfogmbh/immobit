@@ -94,7 +94,8 @@ class RealEstates(AuthorizedService):
 
     def _list(self):
         """Lists available reale states"""
-        return JSON([re.short_dict() for re in self._real_estates])
+        return JSON([re.short_dict() for re in self._real_estates],
+                    strip=False)
 
     def _mkpage(self, page, limit, real_estates):
         """Yields real estates from page no. <page> of size <size>"""
@@ -116,7 +117,8 @@ class RealEstates(AuthorizedService):
                 self._mkpage(page, limit, real_estates)],
             'page': page,
             'limit': limit,
-            'pages': self._pages(limit, len(real_estates))})
+            'pages': self._pages(limit, len(real_estates))},
+            strip=False)
 
     def _add(self, dictionary):
         """Adds the real estate represented by the dictionary"""
