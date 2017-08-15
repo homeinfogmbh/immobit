@@ -199,7 +199,7 @@ class RealEstates(AuthorizedService):
             except DoesNotExist:
                 raise NoSuchRealEstate() from None
             else:
-                return JSON(immobilie.to_dict(), status=200)
+                return JSON(immobilie.to_dict(), strip=False, status=200)
 
     def post(self):
         """Adds new real estates"""
