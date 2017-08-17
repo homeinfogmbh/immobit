@@ -2,12 +2,13 @@
 
 from datetime import datetime
 
-from peewee import ForeignKeyField, CharField, DateTimeField, BooleanField
+from peewee import DoesNotExist, ForeignKeyField, CharField, DateTimeField, \
+    BooleanField
 
 from homeinfo.crm import Customer
 from his.orm import module_model, Account
 
-__all__ = ['TransactionLog']
+__all__ = ['TransactionLog', 'CustomerPortal']
 
 
 class TransactionLog(module_model('realestates')):
@@ -41,3 +42,25 @@ class TransactionLog(module_model('realestates')):
     def duration(self):
         """Calculates the duration"""
         return self.end - self.start
+
+
+class CustomerPortal(module_model('realestates')):
+    """Configures customer-portal mappings"""
+
+    class Meta:
+        db_table = 'customer_portal'
+
+    customer = ForeignKeyField(Customer, db_column='customer')
+    portal = CharField(32)
+
+    @classmethod
+    def add(cls, customer, portal):
+        """Adds a customer-portal mapping"""
+        try:
+            return cls.get((cls.customer == customer) & (cls.portal == portal))
+        except DoesNotExist:
+            customer_portal = cls()
+            customer_portal.customer = customer
+            customer_portal.portal = portal
+            customer_portal.save()
+            return customer_portal

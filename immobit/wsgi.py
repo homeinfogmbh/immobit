@@ -22,7 +22,7 @@ from .messages import IdMismatch, NoRealEstateSpecified, NoSuchRealEstate, \
     NoAttachmentSpecified, AttachmentCreated, AttachmentExists, \
     AttachmentDeleted, NoSuchAttachment, NoDataForAttachment, \
     AttachmentLimitExceeded, ForeignAttachmentAccess
-from .orm import TransactionLog
+from .orm import TransactionLog, CustomerPortal
 
 __all__ = [
     'RealEstates',
@@ -422,7 +422,20 @@ class Contacts(AuthorizedService):
             return JSON([c.to_dict() for c in self._contacts])
 
 
+class Portals(AuthorizedService):
+    """Yields customer portals"""
+
+    NODE = 'realestates'
+
+    def get(self):
+        """Returns the respective portals"""
+        return JSON([customer_portal.portal for customer_portal in
+                     CustomerPortal.select().where(
+                         CustomerPortal.customer == self.customer)])
+
+
 HANDLERS = {
     'realestates': RealEstates,
     'attachments': Attachments,
-    'contacts': Contacts}
+    'contacts': Contacts,
+    'portals': Portals}
