@@ -7,6 +7,7 @@ from peewee import DoesNotExist, Model, PrimaryKeyField, ForeignKeyField, \
 
 from homeinfo.crm import Customer
 from his.orm import his_db, Account
+from peeweeplus import EnumerationField
 
 __all__ = ['TransactionLog', 'CustomerPortal']
 
@@ -33,7 +34,7 @@ class TransactionLog(ImmoBitModel):
     account = ForeignKeyField(Account, db_column='account')
     customer = ForeignKeyField(Customer, db_column='customer')
     objektnr_extern = CharField(255)
-    action = CharField(6)  # CREATE, UPDATE, DELETE
+    action = EnumerationField(('CREATE', 'REPLACE', 'UPDATE', 'DELETE'))
     success = BooleanField(default=False)
     start = DateTimeField()
     end = DateTimeField()
