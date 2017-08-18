@@ -258,7 +258,7 @@ class RealEstates(AuthorizedService):
                     account=self.account,
                     customer=self.customer,
                     objektnr_extern=self.resource,
-                    action='UPDATE') as log:
+                    action='REPLACE') as log:
                 if self._update():
                     log.success = True
                     return RealEstateUpdated()
@@ -274,7 +274,7 @@ class RealEstates(AuthorizedService):
                     account=self.account,
                     customer=self.customer,
                     objektnr_extern=self.resource,
-                    action='DELETE') as log:
+                    action='UPDATE') as log:
                 if self._patch(self.json):
                     log.success = True
                     return OK('Real estate patched')
