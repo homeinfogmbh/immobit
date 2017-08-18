@@ -5,22 +5,13 @@ from datetime import datetime
 from peewee import DoesNotExist, Model, PrimaryKeyField, ForeignKeyField, \
     CharField, DateTimeField, BooleanField
 
-from peeweeplus import MySQLDatabase
-
 from homeinfo.crm import Customer
-from his.orm import Account
-
-from.config import config
+from his.orm import his_db, Account
 
 __all__ = ['TransactionLog', 'CustomerPortal']
 
 
-database = MySQLDatabase(
-    config['db']['db'],
-    host=config['db']['host'],
-    user=config['db']['user'],
-    passwd=config['db']['passwd'],
-    closing=True)
+database = his_db('immobit')
 
 
 class ImmoBitModel(Model):
