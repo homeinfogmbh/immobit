@@ -16,7 +16,7 @@ __all__ = ['TransactionLog', 'CustomerPortal']
 
 
 database = MySQLDatabase(
-    'immobit',
+    config['db']['db'],
     host=config['db']['host'],
     user=config['db']['user'],
     passwd=config['db']['passwd'],
