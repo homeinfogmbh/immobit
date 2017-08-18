@@ -2,16 +2,38 @@
 
 from datetime import datetime
 
-from peewee import DoesNotExist, ForeignKeyField, CharField, DateTimeField, \
-    BooleanField
+from peewee import DoesNotExist, Model, PrimaryKeyField, ForeignKeyField, \
+    CharField, DateTimeField, BooleanField
+
+from peeweeplus import MySQLDatabase
 
 from homeinfo.crm import Customer
-from his.orm import module_model, Account
+from his.orm import Account
+
+from.config import config
 
 __all__ = ['TransactionLog', 'CustomerPortal']
 
 
-class TransactionLog(module_model('realestates')):
+database = MySQLDatabase(
+    'immobit',
+    host=config['db']['host'],
+    user=config['db']['user'],
+    passwd=config['db']['passwd'],
+    closing=True)
+
+
+class ImmoBitModel(Model):
+    """Basic immobit model"""
+
+    id = PrimaryKeyField()
+
+    class Meta:
+        database = database
+        schema = database.database
+
+
+class TransactionLog(ImmoBitModel):
     """Stores real estate transactions"""
 
     class Meta:
@@ -44,7 +66,7 @@ class TransactionLog(module_model('realestates')):
         return self.end - self.start
 
 
-class CustomerPortal(module_model('realestates')):
+class CustomerPortal(ImmoBitModel):
     """Configures customer-portal mappings"""
 
     class Meta:
