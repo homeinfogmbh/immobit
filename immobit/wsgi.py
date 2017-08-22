@@ -19,7 +19,7 @@ from his.mods.fs.orm import Inode
 from .messages import InvalidRealEstateID, NoRealEstateSpecified, \
     NoSuchRealEstate, RealEstatedCreated, CannotAddRealEstate, \
     RealEstateExists, RealEstateDeleted, CannotDeleteRealEstate, \
-    NoDataProvided, NoAttachmentSpecified, AttachmentCreated, \
+    NoRealEstateDataProvided, NoAttachmentSpecified, AttachmentCreated, \
     AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
     NoDataForAttachment, AttachmentLimitExceeded, ForeignAttachmentAccess
 from .orm import TransactionLog, CustomerPortal
@@ -40,7 +40,7 @@ class AbstractCommonHanlderBase(AuthorizedService):
         try:
             text = self.data.decode('utf-8')
         except AttributeError:
-            raise NoDataProvided() from None
+            raise NoRealEstateDataProvided() from None
         except UnicodeDecodeError:
             raise InvalidUTF8Data() from None
         else:
@@ -210,9 +210,11 @@ class RealEstates(AbstractCommonHanlderBase):
             objektnr_extern = None
 
         with self.transaction_log('CREATE', objektnr_extern) as log:
-            if self._add(dictionary):
+            transaction = self._add(dictionary)
+
+            if transaction:
                 log.success = True
-                return RealEstatedCreated()
+                return RealEstatedCreated(id=transaction.id)
             else:
                 raise CannotAddRealEstate() from None
 

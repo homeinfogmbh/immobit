@@ -13,7 +13,7 @@ __all__ = [
     'RealEstateExists',
     'NoRealEstateSpecified',
     'CannotDeleteRealEstate',
-    'NoDataProvided',
+    'NoRealEstateDataProvided',
     'RealEstateUpdated',
     'RealEstateDeleted',
 
@@ -75,8 +75,8 @@ class CannotDeleteRealEstate(RealEstatesMessage):
     STATUS = 500
 
 
-class NoDataProvided(RealEstatesMessage):
-    """Indicates that data was expected but not provieded."""
+class NoRealEstateDataProvided(RealEstatesMessage):
+    """Indicates that real estate data was expected but not provieded."""
 
     STATUS = 400
 
