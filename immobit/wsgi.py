@@ -153,7 +153,7 @@ class RealEstates(AbstractCommonHanlderBase):
         """Adds the real estate represented by the dictionary"""
         try:
             with Transaction(logger=self.logger) as transaction:
-                transaction.add(self.customer, dict=dictionary)
+                id = transaction.add(self.customer, dict=dictionary)
         except RealEstateExists_:
             raise RealEstateExists() from None
         except IncompleteDataError as e:
@@ -165,7 +165,7 @@ class RealEstates(AbstractCommonHanlderBase):
             raise InternalServerError('Unspecified database error:\n{}'.format(
                 format_exc())) from None
         else:
-            return transaction
+            return (transaction, id)
 
     def _patch(self, immobilie, dictionary):
         """Adds the real estate represented by the dictionary"""
@@ -210,11 +210,11 @@ class RealEstates(AbstractCommonHanlderBase):
             objektnr_extern = None
 
         with self.transaction_log('CREATE', objektnr_extern) as log:
-            transaction = self._add(dictionary)
+            transaction, id = self._add(dictionary)
 
             if transaction:
                 log.success = True
-                return RealEstatedCreated(id=transaction.id)
+                return RealEstatedCreated(id=id)
             else:
                 raise CannotAddRealEstate() from None
 
