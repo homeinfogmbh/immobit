@@ -5,7 +5,6 @@ from his.api.messages import locales, HISMessage
 
 __all__ = [
     'RealEstatesMessage',
-    'IdMismatch',
 
     'InvalidRealEstateID',
     'NoSuchRealEstate',
@@ -14,6 +13,7 @@ __all__ = [
     'RealEstateExists',
     'NoRealEstateSpecified',
     'CannotDeleteRealEstate',
+    'NoDataProvided',
     'RealEstateUpdated',
     'RealEstateDeleted',
 
@@ -31,12 +31,6 @@ class RealEstatesMessage(HISMessage):
     """Basic real estates message"""
 
     pass
-
-
-class IdMismatch(RealEstatesMessage):
-    """Indicates that the IDs of a real estate do not match"""
-
-    STATUS = 400
 
 
 class InvalidRealEstateID(RealEstatesMessage):
@@ -79,6 +73,12 @@ class CannotDeleteRealEstate(RealEstatesMessage):
     """Indicates that the respective real estate could not be deleted"""
 
     STATUS = 500
+
+
+class NoDataProvided(RealEstatesMessage):
+    """Indicates that data was expected but not provieded."""
+
+    STATUS = 400
 
 
 class RealEstateUpdated(RealEstatesMessage):

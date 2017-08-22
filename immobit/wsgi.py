@@ -16,10 +16,10 @@ from his.api.handlers import AuthorizedService
 
 from his.mods.fs.orm import Inode
 
-from .messages import IdMismatch, InvalidRealEstateID, NoRealEstateSpecified, \
+from .messages import InvalidRealEstateID, NoRealEstateSpecified, \
     NoSuchRealEstate, RealEstatedCreated, CannotAddRealEstate, \
-    RealEstateExists, RealEstateUpdated, RealEstateDeleted, \
-    CannotDeleteRealEstate, NoAttachmentSpecified, AttachmentCreated, \
+    RealEstateExists, RealEstateDeleted, CannotDeleteRealEstate, \
+    NoDataProvided, NoAttachmentSpecified, AttachmentCreated, \
     AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
     NoDataForAttachment, AttachmentLimitExceeded, ForeignAttachmentAccess
 from .orm import TransactionLog, CustomerPortal
@@ -31,14 +31,36 @@ __all__ = [
     'HANDLERS']
 
 
-class RealEstateAware(AuthorizedService):
+class AbstractCommonHanlderBase(AuthorizedService):
     """Real estate aware service"""
+
+    @property
+    def json(self):
+        """Retruns JSON dict from data"""
+        try:
+            text = self.data.decode('utf-8')
+        except AttributeError:
+            raise NoDataProvided() from None
+        except UnicodeDecodeError:
+            raise InvalidUTF8Data() from None
+        else:
+            try:
+                return loads(text)
+            except ValueError:
+                raise InvalidJSON() from None
+
+    @property
+    def real_estates(self):
+        """Yields real estates of the current customer"""
+        return Immobilie.select().where(Immobilie.customer == self.customer)
 
     @property
     def real_estate(self):
         """Returns the specified real estate"""
         try:
             record_id = int(self.resource)
+        except TypeError:
+            raise NoRealEstateSpecified() from None
         except ValueError:
             raise InvalidRealEstateID() from None
         else:
@@ -50,23 +72,10 @@ class RealEstateAware(AuthorizedService):
                 raise NoSuchRealEstate() from None
 
 
-class RealEstates(RealEstateAware):
+class RealEstates(AbstractCommonHanlderBase):
     """Handles requests for ImmoBit"""
 
     NODE = 'realestates'
-
-    @property
-    def json(self):
-        """Retruns JSON dict from data"""
-        try:
-            text = self.data.decode('utf-8')
-        except UnicodeDecodeError:
-            raise InvalidUTF8Data() from None
-        else:
-            try:
-                return loads(text)
-            except ValueError:
-                raise InvalidJSON() from None
 
     @property
     def limit(self):
@@ -94,10 +103,11 @@ class RealEstates(RealEstateAware):
             except (ValueError, TypeError):
                 raise NotAnInteger('page', page) from None
 
-    @property
-    def real_estates(self):
-        """Yields real estates of the current customer"""
-        return Immobilie.select().where(Immobilie.customer == self.customer)
+    def transaction_log(self, action, objektnr_extern):
+        """Returns a new transaction log entry"""
+        return TransactionLog(
+            account=self.account, customer=self.customer,
+            objektnr_extern=objektnr_extern, action=action)
 
     def _pages(self, limit, real_estates):
         """Returns the amout of possible
@@ -157,38 +167,11 @@ class RealEstates(RealEstateAware):
         else:
             return transaction
 
-    def _update(self):
-        """Updates a real estate"""
-        dictionary = self.json
-
-        try:
-            objektnr_extern = dictionary['verwaltung_techn']['objektnr_extern']
-        except KeyError:
-            dictionary['verwaltung_techn']['objektnr_extern'] = self.resource
-            id_match = True
-        except TypeError:
-            # dictionary['verwaltung_techn'] is probably None
-            raise Error('Incomplete data', status=422) from None
-        else:
-            id_match = objektnr_extern == self.resource
-
-        if id_match:
-            with Transaction(logger=self.logger) as t:
-                try:
-                    t.update(self.customer, objektnr_extern, dict=dictionary)
-                except DoesNotExist:
-                    raise NoSuchRealEstate() from None
-                else:
-                    return t
-        else:
-            raise IdMismatch()
-
-    def _patch(self, dictionary):
+    def _patch(self, immobilie, dictionary):
         """Adds the real estate represented by the dictionary"""
         try:
             with Transaction(logger=self.logger) as transaction:
-                transaction.patch(
-                    self.customer, self.resource, dict=dictionary)
+                transaction.patch(immobilie, dict=dictionary)
         except IncompleteDataError as e:
             raise Error('Incomplete data: {}'.format(
                 e.element), status=422) from None
@@ -215,7 +198,7 @@ class RealEstates(RealEstateAware):
                 else:
                     return self._page()
         else:
-            return JSON(self.immobilie.to_dict(), strip=False, status=200)
+            return JSON(self.real_estate.to_dict(), strip=False, status=200)
 
     def post(self):
         """Adds new real estates"""
@@ -226,11 +209,7 @@ class RealEstates(RealEstateAware):
         except (KeyError, TypeError):
             objektnr_extern = None
 
-        with TransactionLog(
-                account=self.account,
-                customer=self.customer,
-                objektnr_extern=objektnr_extern,
-                action='CREATE') as log:
+        with self.transaction_log('CREATE', objektnr_extern) as log:
             if self._add(dictionary):
                 log.success = True
                 return RealEstatedCreated()
@@ -239,65 +218,39 @@ class RealEstates(RealEstateAware):
 
     def delete(self):
         """Removes real estates"""
-        if self.resource is None:
-            raise NoRealEstateSpecified() from None
-        else:
-            with TransactionLog(
-                    account=self.account,
-                    customer=self.customer,
-                    objektnr_extern=self.resource,
-                    action='DELETE') as log:
-                try:
-                    self.immobilie.remove()
-                except OpenImmoDBError:
-                    self.logger.error(
-                        'Could not delete real estate:\n{}'.format(
-                            format_exc()))
-                    raise CannotDeleteRealEstate() from None
-                else:
-                    log.success = True
-                    return RealEstateDeleted()
+        immobilie = self.real_estate
 
-    def put(self):
-        """Overrides real estates"""
-        if self.resource is None:
-            raise NoRealEstateSpecified()
-        else:
-            with TransactionLog(
-                    account=self.account,
-                    customer=self.customer,
-                    objektnr_extern=self.resource,
-                    action='REPLACE') as log:
-                if self._update():
-                    log.success = True
-                    return RealEstateUpdated()
-                else:
-                    return InternalServerError('Could not add real estate')
+        with self.transaction_log('DELETE', immobilie.objektnr_extern) as log:
+            try:
+                immobilie.remove()
+            except OpenImmoDBError:
+                self.logger.error(
+                    'Could not delete real estate:\n{}'.format(
+                        format_exc()))
+                raise CannotDeleteRealEstate() from None
+            else:
+                log.success = True
+                return RealEstateDeleted()
 
     def patch(self):
         """Partially updates real estates"""
-        if self.resource is None:
-            raise NoRealEstateSpecified() from None
-        else:
-            with TransactionLog(
-                    account=self.account,
-                    customer=self.customer,
-                    objektnr_extern=self.resource,
-                    action='UPDATE') as log:
-                if self._patch(self.json):
-                    log.success = True
-                    return OK('Real estate patched')
-                else:
-                    raise InternalServerError(
-                        'Could not patch real estate:\n{}'.format(
-                            format_exc())) from None
+        immobilie = self.real_estate
+
+        with self.transaction_log('UPDATE', immobilie.objektnr_extern) as log:
+            if self._patch(immobilie, self.json):
+                log.success = True
+                return OK('Real estate patched')
+            else:
+                raise InternalServerError(
+                    'Could not patch real estate:\n{}'.format(
+                        format_exc())) from None
 
     def options(self):
         """Returns options information"""
         return OK()
 
 
-class Attachments(RealEstateAware):
+class Attachments(AbstractCommonHanlderBase):
     """Handles requests for ImmoBit"""
 
     NODE = 'realestates'
@@ -308,7 +261,7 @@ class Attachments(RealEstateAware):
         super().__init__(*args, **kwargs)
 
     @property
-    def _anhang(self):
+    def anhang(self):
         """Returns the respective Anhang ORM model"""
         try:
             aid = int(self.resource)
@@ -359,14 +312,14 @@ class Attachments(RealEstateAware):
         if self.resource is None:
             raise NoAttachmentSpecified() from None
         else:
-            return Binary(self._anhang.data)
+            return Binary(self.anhang.data)
 
     def post(self):
         """Adds an attachment"""
         if self.resource is None:
             raise NoRealEstateSpecified()
         else:
-            immobilie = self.immobilie
+            immobilie = self.real_estate
 
             if Anhang.count(immobilie=immobilie) < self.REAL_ESTATE_LIMIT:
                 if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
@@ -388,12 +341,12 @@ class Attachments(RealEstateAware):
 
     def patch(self):
         """Modifies metadata of an existing attachment"""
-        self._anhang.patch(self._dict).save()
+        self.anhang.patch(self._dict).save()
         return OK()
 
     def delete(self):
         """Deletes an attachment"""
-        self._anhang.remove()
+        self.anhang.remove()
         return AttachmentDeleted()
 
     def options(self):
@@ -401,16 +354,15 @@ class Attachments(RealEstateAware):
         return OK()
 
 
-class Contacts(AuthorizedService):
+class Contacts(AbstractCommonHanlderBase):
     """Service to retrieve contacts"""
 
     NODE = 'realestates'
 
     @property
-    def _contacts(self):
+    def contacts(self):
         """Yields appropriate contacts"""
-        for immobilie in Immobilie.select().where(
-                Immobilie.customer == self.customer):
+        for immobilie in self.real_estates:
             for kontakt in Kontakt.select().where(
                     Kontakt.immobilie == immobilie):
                 yield kontakt
@@ -418,9 +370,9 @@ class Contacts(AuthorizedService):
     def get(self):
         """Returns appropriate contacts"""
         if self.resource is not None:
-            raise Error('Contacts can only be listed') from None
+            raise Error('Contacts can only be listed.') from None
         else:
-            return JSON([c.to_dict() for c in self._contacts])
+            return JSON([c.to_dict() for c in self.contacts])
 
 
 class Portals(AuthorizedService):
@@ -428,11 +380,21 @@ class Portals(AuthorizedService):
 
     NODE = 'realestates'
 
+    @property
+    def customer_portals(self):
+        """Yields appropriate customer <> portal mappings"""
+        return CustomerPortal.select().where(
+            CustomerPortal.customer == self.customer)
+
+    @property
+    def portals(self):
+        """Yields appropriate portals"""
+        for customer_portal in self.customer_portals:
+            yield customer_portal.portal
+
     def get(self):
         """Returns the respective portals"""
-        return JSON([customer_portal.portal for customer_portal in
-                     CustomerPortal.select().where(
-                         CustomerPortal.customer == self.customer)])
+        return JSON(list(self.portals), strip=False)
 
 
 HANDLERS = {
