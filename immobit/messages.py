@@ -7,6 +7,7 @@ __all__ = [
     'RealEstatesMessage',
     'IdMismatch',
 
+    'InvalidRealEstateID',
     'NoSuchRealEstate',
     'RealEstatedCreated',
     'CannotAddRealEstate',
@@ -36,6 +37,12 @@ class IdMismatch(RealEstatesMessage):
     """Indicates that the IDs of a real estate do not match"""
 
     STATUS = 400
+
+
+class InvalidRealEstateID(RealEstatesMessage):
+    """Indicates that the provided data is not a valid real estate ID"""
+
+    STATUS = 422
 
 
 class NoSuchRealEstate(RealEstatesMessage):

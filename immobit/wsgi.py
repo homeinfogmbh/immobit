@@ -16,12 +16,12 @@ from his.api.handlers import AuthorizedService
 
 from his.mods.fs.orm import Inode
 
-from .messages import IdMismatch, NoRealEstateSpecified, NoSuchRealEstate, \
-    RealEstatedCreated, CannotAddRealEstate, RealEstateExists, \
-    RealEstateUpdated, RealEstateDeleted, CannotDeleteRealEstate, \
-    NoAttachmentSpecified, AttachmentCreated, AttachmentExists, \
-    AttachmentDeleted, NoSuchAttachment, NoDataForAttachment, \
-    AttachmentLimitExceeded, ForeignAttachmentAccess
+from .messages import IdMismatch, InvalidRealEstateID, NoRealEstateSpecified, \
+    NoSuchRealEstate, RealEstatedCreated, CannotAddRealEstate, \
+    RealEstateExists, RealEstateUpdated, RealEstateDeleted, \
+    CannotDeleteRealEstate, NoAttachmentSpecified, AttachmentCreated, \
+    AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
+    NoDataForAttachment, AttachmentLimitExceeded, ForeignAttachmentAccess
 from .orm import TransactionLog, CustomerPortal
 
 __all__ = [
@@ -31,7 +31,26 @@ __all__ = [
     'HANDLERS']
 
 
-class RealEstates(AuthorizedService):
+class RealEstateAware(AuthorizedService):
+    """Real estate aware service"""
+
+    @property
+    def real_estate(self):
+        """Returns the specified real estate"""
+        try:
+            record_id = int(self.resource)
+        except ValueError:
+            raise InvalidRealEstateID() from None
+        else:
+            try:
+                return Immobilie.get(
+                    (Immobilie.customer == self.customer) &
+                    (Immobilie.id == record_id))
+            except DoesNotExist:
+                raise NoSuchRealEstate() from None
+
+
+class RealEstates(RealEstateAware):
     """Handles requests for ImmoBit"""
 
     NODE = 'realestates'
@@ -76,7 +95,7 @@ class RealEstates(AuthorizedService):
                 raise NotAnInteger('page', page) from None
 
     @property
-    def _real_estates(self):
+    def real_estates(self):
         """Yields real estates of the current customer"""
         return Immobilie.select().where(Immobilie.customer == self.customer)
 
@@ -94,7 +113,7 @@ class RealEstates(AuthorizedService):
 
     def _list(self):
         """Lists available reale states"""
-        return JSON([re.short_dict() for re in self._real_estates],
+        return JSON([re.short_dict() for re in self.real_estates],
                     strip=False)
 
     def _mkpage(self, page, limit, real_estates):
@@ -108,7 +127,7 @@ class RealEstates(AuthorizedService):
 
     def _page(self):
         """Returns the appropriate page"""
-        real_estates = list(self._real_estates)
+        real_estates = list(self.real_estates)
         page = self.page
         limit = self.limit
         return JSON({
@@ -189,19 +208,14 @@ class RealEstates(AuthorizedService):
         """Returns available real estates"""
         if self.resource is None:
             if self.query.get('count', False):
-                return JSON({'count': len(list(self._real_estates))})
+                return JSON({'count': len(list(self.real_estates))})
             else:
                 if self.limit is None:
                     return self._list()
                 else:
                     return self._page()
         else:
-            try:
-                immobilie = Immobilie.fetch(self.customer, self.resource)
-            except DoesNotExist:
-                raise NoSuchRealEstate() from None
-            else:
-                return JSON(immobilie.to_dict(), strip=False, status=200)
+            return JSON(self.immobilie.to_dict(), strip=False, status=200)
 
     def post(self):
         """Adds new real estates"""
@@ -228,26 +242,21 @@ class RealEstates(AuthorizedService):
         if self.resource is None:
             raise NoRealEstateSpecified() from None
         else:
-            try:
-                immobilie = Immobilie.fetch(self.customer, self.resource)
-            except DoesNotExist:
-                raise NoSuchRealEstate() from None
-            else:
-                with TransactionLog(
-                        account=self.account,
-                        customer=self.customer,
-                        objektnr_extern=self.resource,
-                        action='DELETE') as log:
-                    try:
-                        immobilie.remove()
-                    except OpenImmoDBError:
-                        self.logger.error(
-                            'Could not delete real estate:\n{}'.format(
-                                format_exc()))
-                        raise CannotDeleteRealEstate() from None
-                    else:
-                        log.success = True
-                        return RealEstateDeleted()
+            with TransactionLog(
+                    account=self.account,
+                    customer=self.customer,
+                    objektnr_extern=self.resource,
+                    action='DELETE') as log:
+                try:
+                    self.immobilie.remove()
+                except OpenImmoDBError:
+                    self.logger.error(
+                        'Could not delete real estate:\n{}'.format(
+                            format_exc()))
+                    raise CannotDeleteRealEstate() from None
+                else:
+                    log.success = True
+                    return RealEstateDeleted()
 
     def put(self):
         """Overrides real estates"""
@@ -288,7 +297,7 @@ class RealEstates(AuthorizedService):
         return OK()
 
 
-class Attachments(AuthorizedService):
+class Attachments(RealEstateAware):
     """Handles requests for ImmoBit"""
 
     NODE = 'realestates'
@@ -297,14 +306,6 @@ class Attachments(AuthorizedService):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-    @property
-    def _immobilie(self):
-        """Returns the appropriate real estate"""
-        try:
-            return Immobilie.fetch(self.customer, self.resource)
-        except DoesNotExist:
-            raise NoSuchRealEstate() from None
 
     @property
     def _anhang(self):
@@ -365,7 +366,7 @@ class Attachments(AuthorizedService):
         if self.resource is None:
             raise NoRealEstateSpecified()
         else:
-            immobilie = self._immobilie
+            immobilie = self.immobilie
 
             if Anhang.count(immobilie=immobilie) < self.REAL_ESTATE_LIMIT:
                 if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
