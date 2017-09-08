@@ -123,8 +123,7 @@ class RealEstates(AbstractCommonHanlderBase):
 
     def _list(self):
         """Lists available reale states"""
-        return JSON([re.short_dict() for re in self.real_estates],
-                    strip=False)
+        return JSON([re.short_dict() for re in self.real_estates])
 
     def _mkpage(self, page, limit, real_estates):
         """Yields real estates from page no. <page> of size <size>"""
