@@ -1,6 +1,7 @@
 """ORM models"""
 
 from datetime import datetime
+from enum import Enum
 
 from peewee import DoesNotExist, Model, PrimaryKeyField, ForeignKeyField, \
     CharField, DateTimeField, BooleanField
