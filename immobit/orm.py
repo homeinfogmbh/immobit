@@ -15,6 +15,14 @@ __all__ = ['TransactionLog', 'CustomerPortal']
 database = his_db('immobit')
 
 
+class Action(Enum):
+    """Possible openimmo actions."""
+    CREATE = 'CREATE'
+    REPLACE = 'REPLACE'
+    UPDATE = 'UPDATE'
+    DELETE = 'DELETE'
+
+
 class ImmoBitModel(Model):
     """Basic immobit model"""
 
@@ -34,7 +42,7 @@ class TransactionLog(ImmoBitModel):
     account = ForeignKeyField(Account, db_column='account')
     customer = ForeignKeyField(Customer, db_column='customer')
     objektnr_extern = CharField(255)
-    action = EnumerationField(('CREATE', 'REPLACE', 'UPDATE', 'DELETE'))
+    action = EnumerationField(Action)
     success = BooleanField(default=False)
     start = DateTimeField()
     end = DateTimeField()
