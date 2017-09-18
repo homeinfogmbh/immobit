@@ -17,6 +17,7 @@ database = his_db('immobit')
 
 class Action(Enum):
     """Possible openimmo actions."""
+
     CREATE = 'CREATE'
     REPLACE = 'REPLACE'
     UPDATE = 'UPDATE'
