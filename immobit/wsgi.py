@@ -272,25 +272,15 @@ class Attachments(AbstractCommonHanlderBase):
                     raise ForeignAttachmentAccess() from None
 
     @property
-    def _dict(self):
-        """Returns the Anhang dictionary"""
-        try:
-            return loads(self.data.decode())
-        except ValueError:
-            raise InvalidJSON() from None
-        except TypeError:
-            raise NoDataForAttachment() from None
-
-    @property
     def _data(self):
         """Returns the attachment data"""
-        if not self.data:
+        if not self.data.bytes:
             raise NoDataForAttachment() from None
         else:
             try:
-                sha256sum = self.data.decode()
+                sha256sum = self.data.bytes.decode()
             except ValueError:
-                return self.data
+                return self.data.bytes
             else:
                 for inode in Inode.by_sha256(sha256sum):
                     if inode.readable_by(self.account):
@@ -332,7 +322,7 @@ class Attachments(AbstractCommonHanlderBase):
 
     def patch(self):
         """Modifies metadata of an existing attachment"""
-        self.anhang.patch(self._dict).save()
+        self.anhang.patch(self.data.json).save()
         return OK()
 
     def delete(self):
