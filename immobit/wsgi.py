@@ -1,6 +1,5 @@
 """WSGI interface"""
 
-from json import loads
 from traceback import format_exc
 
 from peewee import DoesNotExist
