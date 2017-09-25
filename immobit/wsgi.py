@@ -34,20 +34,10 @@ __all__ = [
 class AbstractCommonHanlderBase(AuthorizedService):
     """Real estate aware service"""
 
-    @property
-    def json(self):
-        """Retruns JSON dict from data"""
-        try:
-            text = self.data.decode('utf-8')
-        except AttributeError:
-            raise NoRealEstateDataProvided() from None
-        except UnicodeDecodeError:
-            raise InvalidUTF8Data() from None
-        else:
-            try:
-                return loads(text)
-            except ValueError:
-                raise InvalidJSON() from None
+    ERRORS = {
+        'NO_DATA_PROVIDED': NoRealEstateDataProvided(),
+        'NON_UTF8_DATA': InvalidUTF8Data(),
+        'NON_JSON_DATA': InvalidJSON()}
 
     @property
     def real_estates(self):
@@ -201,7 +191,7 @@ class RealEstates(AbstractCommonHanlderBase):
 
     def post(self):
         """Adds new real estates"""
-        dictionary = self.json
+        dictionary = self.data.json
 
         try:
             objektnr_extern = dictionary['verwaltung_techn']['objektnr_extern']
@@ -238,7 +228,7 @@ class RealEstates(AbstractCommonHanlderBase):
         immobilie = self.real_estate
 
         with self.transaction_log('UPDATE', immobilie.objektnr_extern) as log:
-            if self._patch(immobilie, self.json):
+            if self._patch(immobilie, self.data.json):
                 log.success = True
                 return OK('Real estate patched')
             else:
