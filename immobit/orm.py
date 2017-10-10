@@ -1,4 +1,4 @@
-"""ORM models"""
+"""ORM models."""
 
 from datetime import datetime
 from enum import Enum
@@ -26,7 +26,7 @@ class Action(Enum):
 
 
 class ImmoBitModel(Model):
-    """Basic immobit model"""
+    """Basic immobit model."""
 
     id = PrimaryKeyField()
 
@@ -36,7 +36,7 @@ class ImmoBitModel(Model):
 
 
 class TransactionLog(ImmoBitModel):
-    """Stores real estate transactions"""
+    """Stores real estate transactions."""
 
     class Meta:
         db_table = 'transaction_log'
@@ -50,12 +50,12 @@ class TransactionLog(ImmoBitModel):
     end = DateTimeField()
 
     def __enter__(self):
-        """Initialize a new transaction"""
+        """Initialize a new transaction."""
         self.start = datetime.now()
         return self
 
     def __exit__(self, *_):
-        """Store transaction iff it is complete"""
+        """Store transaction iff it is complete."""
         if self.account is not None:
             if self.objektnr_extern is not None:
                 if self.action is not None:
@@ -64,12 +64,12 @@ class TransactionLog(ImmoBitModel):
 
     @property
     def duration(self):
-        """Calculates the duration"""
+        """Calculates the duration."""
         return self.end - self.start
 
 
 class CustomerPortal(ImmoBitModel):
-    """Configures customer-portal mappings"""
+    """Configures customer-portal mappings."""
 
     class Meta:
         db_table = 'customer_portal'
@@ -79,7 +79,7 @@ class CustomerPortal(ImmoBitModel):
 
     @classmethod
     def add(cls, customer, portal):
-        """Adds a customer-portal mapping"""
+        """Adds a customer-portal mapping."""
         try:
             return cls.get((cls.customer == customer) & (cls.portal == portal))
         except DoesNotExist:
