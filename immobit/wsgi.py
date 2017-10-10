@@ -1,4 +1,4 @@
-"""WSGI interface"""
+"""WSGI interface."""
 
 from traceback import format_exc
 
@@ -30,8 +30,33 @@ __all__ = [
     'HANDLERS']
 
 
+def pages(limit, real_estates):
+    """Returns the amout of possible
+    pages for the specified limit.
+    """
+
+    if limit is None:
+        return 1
+
+    if real_estates % limit:
+        return real_estates // limit + 1
+
+    return real_estates // limit
+
+
+def mkpage(page, limit, real_estates):
+    """Yields real estates from page no. <page> of size <size>."""
+
+    first = page * limit
+    last = (page + 1) * limit
+
+    for index, real_estate in enumerate(real_estates):
+        if first <= index < last:
+            yield real_estate
+
+
 class AbstractCommonHanlderBase(AuthorizedService):
-    """Real estate aware service"""
+    """Real estate aware service."""
 
     ERRORS = {
         'NO_DATA_PROVIDED': NoRealEstateDataProvided(),
@@ -40,12 +65,12 @@ class AbstractCommonHanlderBase(AuthorizedService):
 
     @property
     def real_estates(self):
-        """Yields real estates of the current customer"""
+        """Yields real estates of the current customer."""
         return Immobilie.select().where(Immobilie.customer == self.customer)
 
     @property
     def real_estate(self):
-        """Returns the specified real estate"""
+        """Returns the specified real estate."""
         try:
             record_id = int(self.resource)
         except TypeError:
@@ -62,13 +87,13 @@ class AbstractCommonHanlderBase(AuthorizedService):
 
 
 class RealEstates(AbstractCommonHanlderBase):
-    """Handles requests for ImmoBit"""
+    """Handles requests for ImmoBit."""
 
     NODE = 'realestates'
 
     @property
     def limit(self):
-        """Returns the set limit of real estates per page"""
+        """Returns the set limit of real estates per page."""
         try:
             limit = self.query['limit']
         except KeyError:
@@ -81,7 +106,7 @@ class RealEstates(AbstractCommonHanlderBase):
 
     @property
     def page(self):
-        """Returns the selected page number"""
+        """Returns the selected page number."""
         try:
             page = self.query['page']
         except KeyError:
@@ -93,78 +118,56 @@ class RealEstates(AbstractCommonHanlderBase):
                 raise NotAnInteger('page', page) from None
 
     def transaction_log(self, action, objektnr_extern):
-        """Returns a new transaction log entry"""
+        """Returns a new transaction log entry."""
         return TransactionLog(
             account=self.account, customer=self.customer,
             objektnr_extern=objektnr_extern, action=action)
 
-    def _pages(self, limit, real_estates):
-        """Returns the amout of possible
-        pages for the specified limit
-        """
-        if limit is None:
-            return 1
-        else:
-            if real_estates % limit:
-                return real_estates // limit + 1
-            else:
-                return real_estates // limit
-
     def _list(self):
-        """Lists available reale states"""
+        """Lists available reale states."""
         return JSON([re.short_dict() for re in self.real_estates])
 
-    def _mkpage(self, page, limit, real_estates):
-        """Yields real estates from page no. <page> of size <size>"""
-        first = page * limit
-        last = (page + 1) * limit
-
-        for index, real_estate in enumerate(real_estates):
-            if first <= index < last:
-                yield real_estate
-
     def _page(self):
-        """Returns the appropriate page"""
+        """Returns the appropriate page."""
         real_estates = list(self.real_estates)
         page = self.page
         limit = self.limit
         return JSON({
             'immobilie': [
                 real_estate.short_dict() for real_estate in
-                self._mkpage(page, limit, real_estates)],
+                mkpage(page, limit, real_estates)],
             'page': page,
             'limit': limit,
-            'pages': self._pages(limit, len(real_estates))},
-            strip=False)
+            'pages': pages(limit, len(real_estates))}, strip=False)
 
     def _add(self, dictionary):
-        """Adds the real estate represented by the dictionary"""
+        """Adds the real estate represented by the dictionary."""
         try:
             with Transaction(logger=self.logger) as transaction:
-                id = transaction.add(self.customer, dict=dictionary)
+                ident = transaction.add(self.customer, dict=dictionary)
         except RealEstateExists_:
             raise RealEstateExists() from None
-        except IncompleteDataError as e:
+        except IncompleteDataError as error:
             raise Error('Incomplete data: {}'.format(
-                e.element), status=422) from None
+                error.element), status=422) from None
         except ConsistencyError:
             raise Error('Data inconsistent', status=422) from None
         except OpenImmoDBError:
             raise InternalServerError('Unspecified database error:\n{}'.format(
                 format_exc())) from None
         else:
-            return (transaction, id)
+            return (transaction, ident)
 
     def _patch(self, immobilie, dictionary):
-        """Adds the real estate represented by the dictionary"""
+        """Adds the real estate represented by the dictionary."""
         try:
             with Transaction(logger=self.logger) as transaction:
                 transaction.patch(immobilie, dict=dictionary)
-        except IncompleteDataError as e:
+        except IncompleteDataError as error:
             raise Error('Incomplete data: {}'.format(
-                e.element), status=422) from None
-        except InvalidDataError as e:
-            raise Error(str(e), status=422) from None
+                error.element), status=422) from None
+        except InvalidDataError as error:
+            raise Error(str(error), status=422) from None
         except RealEstateExists_:
             raise RealEstateExists() from None
         except ConsistencyError:
@@ -176,20 +179,20 @@ class RealEstates(AbstractCommonHanlderBase):
             return transaction
 
     def get(self):
-        """Returns available real estates"""
+        """Returns available real estates."""
         if self.resource is None:
             if self.query.get('count', False):
                 return JSON({'count': len(list(self.real_estates))})
-            else:
-                if self.limit is None:
-                    return self._list()
-                else:
-                    return self._page()
-        else:
-            return JSON(self.real_estate.to_dict(), strip=False, status=200)
+
+            if self.limit is None:
+                return self._list()
+
+            return self._page()
+
+        return JSON(self.real_estate.to_dict(), strip=False, status=200)
 
     def post(self):
-        """Adds new real estates"""
+        """Adds new real estates."""
         dictionary = self.data.json
 
         try:
@@ -198,16 +201,16 @@ class RealEstates(AbstractCommonHanlderBase):
             objektnr_extern = None
 
         with self.transaction_log('CREATE', objektnr_extern) as log:
-            transaction, id = self._add(dictionary)
+            transaction, ident = self._add(dictionary)
 
             if transaction:
                 log.success = True
-                return RealEstatedCreated(id=id)
-            else:
-                raise CannotAddRealEstate() from None
+                return RealEstatedCreated(id=ident)
+
+            raise CannotAddRealEstate() from None
 
     def delete(self):
-        """Removes real estates"""
+        """Removes real estates."""
         immobilie = self.real_estate
 
         with self.transaction_log('DELETE', immobilie.objektnr_extern) as log:
@@ -223,7 +226,7 @@ class RealEstates(AbstractCommonHanlderBase):
                 return RealEstateDeleted()
 
     def patch(self):
-        """Partially updates real estates"""
+        """Partially updates real estates."""
         immobilie = self.real_estate
 
         with self.transaction_log('UPDATE', immobilie.objektnr_extern) as log:
@@ -236,12 +239,12 @@ class RealEstates(AbstractCommonHanlderBase):
                         format_exc())) from None
 
     def options(self):
-        """Returns options information"""
+        """Returns options information."""
         return OK()
 
 
 class Attachments(AbstractCommonHanlderBase):
-    """Handles requests for ImmoBit"""
+    """Handles requests for ImmoBit."""
 
     NODE = 'realestates'
     REAL_ESTATE_LIMIT = 15
@@ -252,7 +255,7 @@ class Attachments(AbstractCommonHanlderBase):
 
     @property
     def anhang(self):
-        """Returns the respective Anhang ORM model"""
+        """Returns the respective Anhang ORM model."""
         try:
             aid = int(self.resource)
         except TypeError:
@@ -272,7 +275,7 @@ class Attachments(AbstractCommonHanlderBase):
 
     @property
     def _data(self):
-        """Returns the attachment data"""
+        """Returns the attachment data."""
         if not self.data.bytes:
             raise NoDataForAttachment() from None
         else:
@@ -288,67 +291,65 @@ class Attachments(AbstractCommonHanlderBase):
                 raise NoDataForAttachment() from None
 
     def get(self):
-        """Gets the respective data"""
+        """Gets the respective data."""
         if self.resource is None:
             raise NoAttachmentSpecified() from None
         else:
             return Binary(self.anhang.data)
 
     def post(self):
-        """Adds an attachment"""
+        """Adds an attachment."""
         if self.resource is None:
             raise NoRealEstateSpecified()
-        else:
-            immobilie = self.real_estate
 
-            if Anhang.count(immobilie=immobilie) < self.REAL_ESTATE_LIMIT:
-                if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
-                    try:
-                        anhang = Anhang.from_bytes(self._data, immobilie)
-                    except AttachmentExists_:
-                        raise AttachmentExists() from None
-                    else:
-                        anhang.save()
-                        return AttachmentCreated(id=anhang.id)
+        immobilie = self.real_estate
+
+        if Anhang.count(immobilie=immobilie) < self.REAL_ESTATE_LIMIT:
+            if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
+                try:
+                    anhang = Anhang.from_bytes(self._data, immobilie)
+                except AttachmentExists_:
+                    raise AttachmentExists() from None
                 else:
-                    raise AttachmentLimitExceeded() from None
-            else:
-                raise AttachmentLimitExceeded() from None
+                    anhang.save()
+                    return AttachmentCreated(id=anhang.id)
+
+        raise AttachmentLimitExceeded() from None
 
     def put(self):
-        """Uploads metadata into an existing attachment"""
+        """Uploads metadata into an existing attachment."""
         return self.patch()
 
     def patch(self):
-        """Modifies metadata of an existing attachment"""
+        """Modifies metadata of an existing attachment."""
         self.anhang.patch(self.data.json).save()
         return OK()
 
     def delete(self):
-        """Deletes an attachment"""
+        """Deletes an attachment."""
         self.anhang.remove()
         return AttachmentDeleted()
 
     def options(self):
-        """Returns options information"""
+        """Returns options information."""
         return OK()
 
 
 class Contacts(AbstractCommonHanlderBase):
-    """Service to retrieve contacts"""
+    """Service to retrieve contacts."""
 
     NODE = 'realestates'
 
     @property
     def contacts(self):
-        """Yields appropriate contacts"""
+        """Yields appropriate contacts."""
         for immobilie in self.real_estates:
             for kontakt in Kontakt.select().where(
                     Kontakt.immobilie == immobilie):
                 yield kontakt
 
     def get(self):
-        """Returns appropriate contacts"""
+        """Returns appropriate contacts."""
         if self.resource is not None:
             raise Error('Contacts can only be listed.') from None
         else:
@@ -356,24 +357,24 @@ class Contacts(AbstractCommonHanlderBase):
 
 
 class Portals(AuthorizedService):
-    """Yields customer portals"""
+    """Yields customer portals."""
 
     NODE = 'realestates'
 
     @property
     def customer_portals(self):
-        """Yields appropriate customer <> portal mappings"""
+        """Yields appropriate customer <> portal mappings."""
         return CustomerPortal.select().where(
             CustomerPortal.customer == self.customer)
 
     @property
     def portals(self):
-        """Yields appropriate portals"""
+        """Yields appropriate portals."""
         for customer_portal in self.customer_portals:
             yield customer_portal.portal
 
     def get(self):
-        """Returns the respective portals"""
+        """Returns the respective portals."""
         return JSON(list(self.portals), strip=False)
 
 
