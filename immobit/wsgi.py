@@ -194,6 +194,10 @@ class RealEstates(AbstractCommonHanlderBase):
     def post(self):
         """Adds new real estates."""
         dictionary = self.data.json
+        print('JSON:', self.data.json)
+        print('Text:', self.data.text)
+        print('Bytes:', self.data.bytes)
+        print('Read:', self.data.wsgi_input.read())
 
         try:
             objektnr_extern = dictionary['verwaltung_techn']['objektnr_extern']
