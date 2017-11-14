@@ -147,9 +147,8 @@ class RealEstates(AbstractCommonHanlderBase):
                 ident = transaction.add(self.customer, dictionary=dictionary)
         except RealEstateExists_:
             raise RealEstateExists() from None
-        except IncompleteDataError as error:
-            raise Error('Incomplete data: {}'.format(
-                error.element), status=422) from None
+        except IncompleteDataError as incomplete_data_error:
+            raise Error(str(incomplete_data_error), status=422) from None
         except ConsistencyError:
             raise Error('Data inconsistent', status=422) from None
         except OpenImmoDBError:
@@ -163,11 +162,10 @@ class RealEstates(AbstractCommonHanlderBase):
         try:
             with Transaction(logger=self.logger) as transaction:
                 transaction.patch(immobilie, dictionary=dictionary)
-        except IncompleteDataError as error:
-            raise Error('Incomplete data: {}'.format(
-                error.element), status=422) from None
-        except InvalidDataError as error:
-            raise Error(str(error), status=422) from None
+        except IncompleteDataError as incomplete_data_error:
+            raise Error(str(incomplete_data_error), status=422) from None
+        except InvalidDataError as invalid_data_error:
+            raise Error(str(invalid_data_error), status=422) from None
         except RealEstateExists_:
             raise RealEstateExists() from None
         except ConsistencyError:
