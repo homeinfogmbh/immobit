@@ -193,19 +193,14 @@ class RealEstates(AbstractCommonHanlderBase):
 
     def post(self):
         """Adds new real estates."""
-        dictionary = self.data.json
-        print('JSON:', self.data.json)
-        print('Text:', self.data.text)
-        print('Bytes:', self.data.bytes)
-        print('Read:', self.data.wsgi_input.read())
-
         try:
-            objektnr_extern = dictionary['verwaltung_techn']['objektnr_extern']
+            objektnr_extern = self.data.json['verwaltung_techn'][
+                'objektnr_extern']
         except (KeyError, TypeError):
             objektnr_extern = None
 
         with self.transaction_log('CREATE', objektnr_extern) as log:
-            transaction, ident = self._add(dictionary)
+            transaction, ident = self._add(self.data.json)
 
             if transaction:
                 log.success = True
