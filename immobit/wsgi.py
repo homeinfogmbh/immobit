@@ -144,7 +144,7 @@ class RealEstates(AbstractCommonHanlderBase):
         """Adds the real estate represented by the dictionary."""
         try:
             with Transaction(logger=self.logger) as transaction:
-                ident = transaction.add(self.customer, dict=dictionary)
+                ident = transaction.add(self.customer, dictionary=dictionary)
         except RealEstateExists_:
             raise RealEstateExists() from None
         except IncompleteDataError as error:
@@ -162,7 +162,7 @@ class RealEstates(AbstractCommonHanlderBase):
         """Adds the real estate represented by the dictionary."""
         try:
             with Transaction(logger=self.logger) as transaction:
-                transaction.patch(immobilie, dict=dictionary)
+                transaction.patch(immobilie, dictionary=dictionary)
         except IncompleteDataError as error:
             raise Error('Incomplete data: {}'.format(
                 error.element), status=422) from None

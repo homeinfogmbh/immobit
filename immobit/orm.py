@@ -13,7 +13,7 @@ from peeweeplus import EnumField
 __all__ = ['TransactionLog', 'CustomerPortal']
 
 
-database = his_db('immobit')
+DATABASE = his_db('immobit')
 
 
 class Action(Enum):
@@ -31,7 +31,7 @@ class ImmoBitModel(Model):
     id = PrimaryKeyField()
 
     class Meta:
-        database = database
+        database = DATABASE
         schema = database.database
 
 
