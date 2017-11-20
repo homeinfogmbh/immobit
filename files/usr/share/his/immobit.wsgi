@@ -2,6 +2,6 @@
 """HIS core handler"""
 
 from wsgilib import RestApp
-from immobit import HANDLERS
+from immobit import ROUTER
 
-application = RestApp(HANDLERS, cors=True, debug=True)
+application = RestApp(ROUTER, cors=True, debug=True)

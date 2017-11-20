@@ -1,5 +1,5 @@
 """Real estate manipulation system"""
 
-from .wsgi import HANDLERS
+from immobit.wsgi import ROUTER
 
-__all__ = ['HANDLERS']
+__all__ = ['ROUTER']

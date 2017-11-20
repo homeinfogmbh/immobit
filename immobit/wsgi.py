@@ -1,5 +1,6 @@
 """WSGI interface."""
 
+from functools import lru_cache
 from traceback import format_exc
 
 from peewee import DoesNotExist
@@ -8,26 +9,28 @@ from openimmodb import OpenImmoDBError, IncompleteDataError, InvalidDataError,\
     ConsistencyError, Transaction, Immobilie, Kontakt, Anhang, \
     RealEstateExists as RealEstateExists_, \
     AttachmentExists as AttachmentExists_
-from wsgilib import JSON, Error, InternalServerError, OK, Binary
+from wsgilib import JSON, Error, InternalServerError, OK, Binary, Router
 
 from his.api.messages import NotAnInteger, InvalidUTF8Data, InvalidJSON
-from his.api.handlers import AuthorizedService
-
+from his.api.handlers import service, AuthorizedService
 from his.mods.fs.orm import Inode
 
-from .messages import InvalidRealEstateID, NoRealEstateSpecified, \
-    NoSuchRealEstate, RealEstatedCreated, CannotAddRealEstate, \
-    RealEstateExists, RealEstateDeleted, CannotDeleteRealEstate, \
-    NoRealEstateDataProvided, NoAttachmentSpecified, AttachmentCreated, \
-    AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
-    NoDataForAttachment, AttachmentLimitExceeded, ForeignAttachmentAccess
-from .orm import TransactionLog, CustomerPortal
+from immobit.messages import NoRealEstateSpecified, NoSuchRealEstate, \
+    RealEstatedCreated, CannotAddRealEstate, RealEstateExists, \
+    RealEstateDeleted, CannotDeleteRealEstate, NoRealEstateDataProvided, \
+    NoAttachmentSpecified, AttachmentCreated, AttachmentExists, \
+    AttachmentDeleted, NoSuchAttachment, NoDataForAttachment, \
+    AttachmentLimitExceeded, ForeignAttachmentAccess
+from immobit.orm import TransactionLog, CustomerPortal
 
 __all__ = [
     'RealEstates',
     'Attachments',
     'Contacts',
-    'HANDLERS']
+    'ROUTER']
+
+
+ROUTER = Router()
 
 
 def pages(limit, real_estates):
@@ -55,7 +58,7 @@ def mkpage(page, limit, real_estates):
             yield real_estate
 
 
-class AbstractCommonHanlderBase(AuthorizedService):
+class RealEstatesAware(AuthorizedService):
     """Real estate aware service."""
 
     ERRORS = {
@@ -68,54 +71,53 @@ class AbstractCommonHanlderBase(AuthorizedService):
         """Yields real estates of the current customer."""
         return Immobilie.select().where(Immobilie.customer == self.customer)
 
-    @property
-    def real_estate(self):
-        """Returns the specified real estate."""
-        try:
-            record_id = int(self.resource)
-        except TypeError:
-            raise NoRealEstateSpecified() from None
-        except ValueError:
-            raise InvalidRealEstateID() from None
-        else:
-            try:
-                return Immobilie.get(
-                    (Immobilie.customer == self.customer) &
-                    (Immobilie.id == record_id))
-            except DoesNotExist:
-                raise NoSuchRealEstate() from None
 
-
-class RealEstates(AbstractCommonHanlderBase):
+@service('realestates')
+@ROUTER.route('/realestates/[id:int]')
+class RealEstates(RealEstatesAware):
     """Handles requests for ImmoBit."""
 
-    NODE = 'realestates'
+    @property
+    @lru_cache(maxsize=1)
+    def real_estate(self):
+        """Returns the specified real estate."""
+        if self.vars['id'] is None:
+            raise NoRealEstateSpecified() from None
+
+        try:
+            return Immobilie.get(
+                (Immobilie.customer == self.customer) &
+                (Immobilie.id == self.vars['id']))
+        except DoesNotExist:
+            raise NoSuchRealEstate() from None
 
     @property
+    @lru_cache(maxsize=1)
     def limit(self):
         """Returns the set limit of real estates per page."""
         try:
             limit = self.query['limit']
         except KeyError:
             return None
-        else:
-            try:
-                return int(limit)
-            except (ValueError, TypeError):
-                raise NotAnInteger('limit', limit) from None
+
+        try:
+            return int(limit)
+        except (ValueError, TypeError):
+            raise NotAnInteger('limit', limit) from None
 
     @property
+    @lru_cache(maxsize=1)
     def page(self):
         """Returns the selected page number."""
         try:
             page = self.query['page']
         except KeyError:
             return 0
-        else:
-            try:
-                return int(page)
-            except (ValueError, TypeError):
-                raise NotAnInteger('page', page) from None
+
+        try:
+            return int(page)
+        except (ValueError, TypeError):
+            raise NotAnInteger('page', page) from None
 
     def transaction_log(self, action, objektnr_extern):
         """Returns a new transaction log entry."""
@@ -208,11 +210,10 @@ class RealEstates(AbstractCommonHanlderBase):
 
     def delete(self):
         """Removes real estates."""
-        immobilie = self.real_estate
-
-        with self.transaction_log('DELETE', immobilie.objektnr_extern) as log:
+        with self.transaction_log(
+                'DELETE', self.real_estate.objektnr_extern) as log:
             try:
-                immobilie.remove()
+                self.real_estate.remove()
             except OpenImmoDBError:
                 self.logger.error(
                     'Could not delete real estate:\n{}'.format(
@@ -224,92 +225,89 @@ class RealEstates(AbstractCommonHanlderBase):
 
     def patch(self):
         """Partially updates real estates."""
-        immobilie = self.real_estate
-
-        with self.transaction_log('UPDATE', immobilie.objektnr_extern) as log:
-            if self._patch(immobilie, self.data.json):
+        with self.transaction_log(
+                'UPDATE', self.real_estate.objektnr_extern) as log:
+            if self._patch(self.real_estate, self.data.json):
                 log.success = True
                 return OK('Real estate patched')
-            else:
-                raise InternalServerError(
-                    'Could not patch real estate:\n{}'.format(
-                        format_exc())) from None
+
+            raise InternalServerError(
+                'Could not patch real estate:\n{}'.format(
+                    format_exc())) from None
 
     def options(self):
         """Returns options information."""
         return OK()
 
 
-class Attachments(AbstractCommonHanlderBase):
+@service('realestates')
+@ROUTER.route('/attachments/<real_estate_id:int>/[id:int]')
+class Attachments(RealEstatesAware):
     """Handles requests for ImmoBit."""
 
-    NODE = 'realestates'
     REAL_ESTATE_LIMIT = 15
     CUSTOMER_LIMIT = 2000
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    @property
+    @lru_cache(maxsize=1)
+    def real_estate(self):
+        """Returns the specified real estate."""
+        try:
+            return Immobilie.get(
+                (Immobilie.customer == self.customer) &
+                (Immobilie.id == self.vars['real_estate_id']))
+        except DoesNotExist:
+            raise NoSuchRealEstate() from None
 
     @property
+    @lru_cache(maxsize=1)
     def anhang(self):
         """Returns the respective Anhang ORM model."""
-        try:
-            aid = int(self.resource)
-        except TypeError:
+        if self.vars.id is None:
             raise NoAttachmentSpecified() from None
-        except ValueError:
+
+        try:
+            anhang = Anhang.get(Anhang.id == self.vars['id'])
+        except DoesNotExist:
             raise NoSuchAttachment() from None
-        else:
-            try:
-                anhang = Anhang.get(Anhang.id == aid)
-            except DoesNotExist:
-                raise NoSuchAttachment() from None
-            else:
-                if anhang.immobilie.customer == self.customer:
-                    return anhang
-                else:
-                    raise ForeignAttachmentAccess() from None
+
+        if anhang.immobilie.customer == self.customer:
+            return anhang
+
+        raise ForeignAttachmentAccess() from None
 
     @property
     def _data(self):
         """Returns the attachment data."""
         if not self.data.bytes:
             raise NoDataForAttachment() from None
-        else:
-            try:
-                sha256sum = self.data.bytes.decode()
-            except ValueError:
-                return self.data.bytes
-            else:
-                for inode in Inode.by_sha256(sha256sum):
-                    if inode.readable_by(self.account):
-                        return inode.data
 
-                raise NoDataForAttachment() from None
+        try:
+            sha256sum = self.data.bytes.decode()
+        except ValueError:
+            return self.data.bytes
+
+        for inode in Inode.by_sha256(sha256sum):
+            if inode.readable_by(self.account):
+                return inode.data
+
+        raise NoDataForAttachment() from None
 
     def get(self):
         """Gets the respective data."""
-        if self.resource is None:
-            raise NoAttachmentSpecified() from None
-        else:
-            return Binary(self.anhang.data)
+        return Binary(self.anhang.data)
 
     def post(self):
         """Adds an attachment."""
-        if self.resource is None:
-            raise NoRealEstateSpecified()
-
-        immobilie = self.real_estate
-
-        if Anhang.count(immobilie=immobilie) < self.REAL_ESTATE_LIMIT:
+        if Anhang.count(immobilie=self.real_estate) < self.REAL_ESTATE_LIMIT:
             if Anhang.count(customer=self.customer) < self.CUSTOMER_LIMIT:
                 try:
-                    anhang = Anhang.from_bytes(self._data, immobilie)
+                    anhang = Anhang.from_bytes(self._data, self.real_estate)
                 except AttachmentExists_:
                     raise AttachmentExists() from None
-                else:
-                    anhang.save()
-                    return AttachmentCreated(id=anhang.id)
+
+                anhang.save()
+                return AttachmentCreated(id=anhang.id)
 
         raise AttachmentLimitExceeded() from None
 
@@ -332,10 +330,10 @@ class Attachments(AbstractCommonHanlderBase):
         return OK()
 
 
-class Contacts(AbstractCommonHanlderBase):
+@service('realestates')
+@ROUTER.route('/contacts')
+class Contacts(RealEstatesAware):
     """Service to retrieve contacts."""
-
-    NODE = 'realestates'
 
     @property
     def contacts(self):
@@ -347,16 +345,13 @@ class Contacts(AbstractCommonHanlderBase):
 
     def get(self):
         """Returns appropriate contacts."""
-        if self.resource is not None:
-            raise Error('Contacts can only be listed.') from None
-        else:
-            return JSON([c.to_dict() for c in self.contacts])
+        return JSON([c.to_dict() for c in self.contacts])
 
 
+@service('realestates')
+@ROUTER.route('/portals')
 class Portals(AuthorizedService):
     """Yields customer portals."""
-
-    NODE = 'realestates'
 
     @property
     def customer_portals(self):
@@ -373,10 +368,3 @@ class Portals(AuthorizedService):
     def get(self):
         """Returns the respective portals."""
         return JSON(list(self.portals), strip=False)
-
-
-HANDLERS = {
-    'realestates': RealEstates,
-    'attachments': Attachments,
-    'contacts': Contacts,
-    'portals': Portals}
