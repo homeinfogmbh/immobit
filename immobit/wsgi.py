@@ -241,7 +241,7 @@ class RealEstates(RealEstatesAware):
 
 
 @service('immobit')
-@ROUTER.route('/attachments/<real_estate_id:int>/[id:int]')
+@ROUTER.route('/attachments/[id:int]')
 class Attachments(RealEstatesAware):
     """Handles requests for ImmoBit."""
 
@@ -255,15 +255,9 @@ class Attachments(RealEstatesAware):
         try:
             return Immobilie.get(
                 (Immobilie.customer == self.customer) &
-                (Immobilie.id == self.vars['real_estate_id']))
+                (Immobilie.id == self.vars['id']))
         except DoesNotExist:
             raise NoSuchRealEstate() from None
-
-
-    @property
-    def attachments(self):
-        """Yields all attachments."""
-        return Anhang.select().where(Anhang.immobilie == self.real_estate)
 
     @property
     @lru_cache(maxsize=1)
@@ -301,9 +295,6 @@ class Attachments(RealEstatesAware):
 
     def get(self):
         """Gets the respective data."""
-        if self.vars['id'] is None:
-            return JSON([anhang.to_dict() for anhang in self.attachments])
-
         return Binary(self.anhang.data)
 
     def post(self):
