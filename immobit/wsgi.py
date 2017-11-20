@@ -263,7 +263,7 @@ class Attachments(RealEstatesAware):
     @lru_cache(maxsize=1)
     def anhang(self):
         """Returns the respective Anhang ORM model."""
-        if self.vars.id is None:
+        if self.vars['id'] is None:
             raise NoAttachmentSpecified() from None
 
         try:
