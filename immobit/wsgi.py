@@ -72,7 +72,7 @@ class RealEstatesAware(AuthorizedService):
         return Immobilie.select().where(Immobilie.customer == self.customer)
 
 
-@service('realestates')
+@service('immobit')
 @ROUTER.route('/realestates/[id:int]')
 class RealEstates(RealEstatesAware):
     """Handles requests for ImmoBit."""
@@ -240,7 +240,7 @@ class RealEstates(RealEstatesAware):
         return OK()
 
 
-@service('realestates')
+@service('immobit')
 @ROUTER.route('/attachments/<real_estate_id:int>/[id:int]')
 class Attachments(RealEstatesAware):
     """Handles requests for ImmoBit."""
@@ -330,7 +330,7 @@ class Attachments(RealEstatesAware):
         return OK()
 
 
-@service('realestates')
+@service('immobit')
 @ROUTER.route('/contacts')
 class Contacts(RealEstatesAware):
     """Service to retrieve contacts."""
@@ -348,7 +348,7 @@ class Contacts(RealEstatesAware):
         return JSON([c.to_dict() for c in self.contacts])
 
 
-@service('realestates')
+@service('immobit')
 @ROUTER.route('/portals')
 class Portals(AuthorizedService):
     """Yields customer portals."""
