@@ -259,6 +259,12 @@ class Attachments(RealEstatesAware):
         except DoesNotExist:
             raise NoSuchRealEstate() from None
 
+
+    @property
+    def attachments(self):
+        """Yields all attachments."""
+        return Anhang.select().where(Anhang.immobilie == self.real_estate)
+
     @property
     @lru_cache(maxsize=1)
     def anhang(self):
@@ -295,6 +301,9 @@ class Attachments(RealEstatesAware):
 
     def get(self):
         """Gets the respective data."""
+        if self.vars['id'] is None:
+            return JSON([anhang.to_dict() for anhang in self.attachments])
+
         return Binary(self.anhang.data)
 
     def post(self):
