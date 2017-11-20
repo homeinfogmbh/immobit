@@ -13,10 +13,7 @@ setup(
     requires=['his'],
     packages=['immobit'],
     data_files=[
-        ('/usr/share/his',
-         ['files/usr/share/his/immobit.wsgi']),
-        ('/etc/uwsgi/apps-available',
-         ['files/etc/uwsgi/apps-available/immobit.ini']),
-        ('/etc/his.d/locale',
-         ['files/etc/his.d/locale/immobit.ini'])],
+        ('/usr/share/his', ['files/immobit.wsgi']),
+        ('/etc/uwsgi/apps-available', ['files/immobit.ini']),
+        ('/etc/his.d/locale/immobit.ini', ['files/immobit.locales.ini'])],
     description='Immobit')
