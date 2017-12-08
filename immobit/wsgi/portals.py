@@ -11,9 +11,10 @@ __all__ = ['get_portals']
 def _get_portals():
     """Yields appropriate portals."""
 
+    print('Customer:', CUSTOMER, CUSTOMER.id, flush=True)
+
     for customer_portal in CustomerPortal.select().where(
             CustomerPortal.customer == CUSTOMER):
-        print('Customer:', CUSTOMER, CUSTOMER.id)
         yield customer_portal.portal
 
 
