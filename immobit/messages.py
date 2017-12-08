@@ -1,6 +1,6 @@
 """Error message definitions."""
 
-from his.api.messages import locales, HISMessage
+from his import locales, Message
 
 
 __all__ = [
@@ -27,7 +27,7 @@ __all__ = [
 
 
 @locales('/etc/his.d/locale/immobit.ini')
-class RealEstatesMessage(HISMessage):
+class RealEstatesMessage(Message):
     """Basic real estates message."""
 
     pass

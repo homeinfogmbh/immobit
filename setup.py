@@ -11,9 +11,9 @@ setup(
     maintainer='Richard Neumann',
     maintainer_email='<r dot neumann at homeinfo period de>',
     requires=['his'],
-    packages=['immobit'],
+    packages=['immobit', 'immobit.wsgi'],
+    scripts=['files/immobitd'],
     data_files=[
-        ('/usr/share/his', ['files/immobit.wsgi']),
-        ('/etc/uwsgi/apps-available', ['files/immobit.ini']),
-        ('/etc/his.d/locale/immobit.ini', ['files/immobit.locales.ini'])],
+        ('/usr/lib/systemd/system', ['files/immobit.service']),
+        ('/etc/his.d/locale/immobit.ini', ['files/immobit.ini'])],
     description='Immobit')

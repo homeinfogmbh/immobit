@@ -6,8 +6,8 @@ from enum import Enum
 from peewee import DoesNotExist, Model, PrimaryKeyField, ForeignKeyField, \
     CharField, DateTimeField, BooleanField
 
+from his import his_db, Account
 from homeinfo.crm import Customer
-from his.orm import his_db, Account
 from peeweeplus import EnumField
 
 __all__ = ['TransactionLog', 'CustomerPortal']
