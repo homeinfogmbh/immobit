@@ -2,7 +2,7 @@
 
 from his import authenticated, authorized
 from openimmodb import Kontakt
-from wsgilib import cors, JSON
+from wsgilib import JSON
 
 from immobit.wsgi.realestates import _get_real_estates
 
@@ -17,7 +17,6 @@ def _get_contacts():
             yield kontakt
 
 
-@cors()
 @authenticated
 @authorized('immobit')
 def get_contacts():

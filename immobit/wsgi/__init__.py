@@ -12,7 +12,7 @@ from immobit.wsgi.realestates import get_real_estates, get_real_estate, \
 __all__ = ['APPLICATION']
 
 
-APPLICATION = Application('ImmoBit')
+APPLICATION = Application('ImmoBit', cors=True)
 APPLICATION.route('/attachments/<int:ident>', methods=['GET'])(get_attachment)
 APPLICATION.route('/attachments/<int:ident>', methods=['POST'])(add_attachment)
 APPLICATION.route('/attachments/<int:ident>', methods=['PATCH', 'PUT'])(
