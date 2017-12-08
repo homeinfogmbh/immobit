@@ -1,7 +1,7 @@
 """Real estate portals API."""
 
 from his import CUSTOMER, authenticated, authorized
-from wsgilib import crossdomain, JSON
+from wsgilib import JSON
 
 from immobit.orm import CustomerPortal
 
@@ -16,7 +16,6 @@ def _get_portals():
         yield customer_portal.portal
 
 
-@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def get_portals():
