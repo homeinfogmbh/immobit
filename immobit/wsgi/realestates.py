@@ -10,7 +10,7 @@ from his.messages.data import NotAnInteger
 from openimmodb import OpenImmoDBError, IncompleteDataError, InvalidDataError,\
     ConsistencyError, Transaction, Immobilie, \
     RealEstateExists as RealEstateExists_
-from wsgilib import JSON, OK, Error
+from wsgilib import crossdomain, JSON, OK, Error
 
 from immobit.messages import NoSuchRealEstate, RealEstatedCreated, \
     CannotAddRealEstate, RealEstateExists, RealEstateDeleted, \
@@ -157,6 +157,7 @@ def _patch_real_estate(immobilie, dictionary):
     return transaction
 
 
+@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def get_real_estates():
@@ -171,6 +172,7 @@ def get_real_estates():
     return _page_real_estates()
 
 
+@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def get_real_estate(ident):
@@ -179,6 +181,7 @@ def get_real_estate(ident):
     return JSON(_get_real_estate(ident).to_dict())
 
 
+@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def add_real_estate():
@@ -201,6 +204,7 @@ def add_real_estate():
         raise CannotAddRealEstate() from None
 
 
+@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def delete_real_estate(ident):
@@ -218,6 +222,7 @@ def delete_real_estate(ident):
         return RealEstateDeleted()
 
 
+@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def patch_real_estate(ident):

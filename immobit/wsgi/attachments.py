@@ -4,7 +4,7 @@ from peewee import DoesNotExist
 
 from his import CUSTOMER, DATA, authenticated, authorized
 from openimmodb import Immobilie, Anhang, AttachmentExists as AttachmentExists_
-from wsgilib import OK, Binary
+from wsgilib import crossdomain, OK, Binary
 
 from immobit.messages import NoSuchRealEstate, AttachmentCreated, \
     AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
@@ -46,6 +46,7 @@ def _get_real_estate(ident):
         raise NoSuchRealEstate()
 
 
+@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def get_attachment(ident):
@@ -54,6 +55,7 @@ def get_attachment(ident):
     return Binary(_get_attachment(ident).data)
 
 
+@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def add_attachment(ident):
@@ -74,6 +76,7 @@ def add_attachment(ident):
     raise AttachmentLimitExceeded()
 
 
+@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def patch_attachment(ident):
@@ -83,6 +86,7 @@ def patch_attachment(ident):
     return OK()
 
 
+@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def delete_attachment(ident):

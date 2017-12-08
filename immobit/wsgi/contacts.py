@@ -2,7 +2,7 @@
 
 from his import authenticated, authorized
 from openimmodb import Kontakt
-from wsgilib import JSON
+from wsgilib import crossdomain, JSON
 
 from immobit.wsgi.realestates import _get_real_estates
 
@@ -17,6 +17,7 @@ def _get_contacts():
             yield kontakt
 
 
+@crossdomain(origin='*')
 @authenticated
 @authorized('immobit')
 def get_contacts():
