@@ -16,7 +16,6 @@ from immobit.messages import NoSuchRealEstate, RealEstatedCreated, \
     CannotAddRealEstate, RealEstateExists, RealEstateDeleted, \
     CannotDeleteRealEstate
 from immobit.orm import TransactionLog
-from immobit.wsgi import APPLICATION
 
 __all__ = [
     'get_real_estates',
@@ -158,7 +157,6 @@ def _patch_real_estate(immobilie, dictionary):
     return transaction
 
 
-@APPLICATION.route('/realestates', methods=['GET'])
 @authenticated
 @authorized('immobit')
 def get_real_estates():
@@ -173,7 +171,6 @@ def get_real_estates():
     return _page_real_estates()
 
 
-@APPLICATION.route('/realestates/<int:ident>', methods=['GET'])
 @authenticated
 @authorized('immobit')
 def get_real_estate(ident):
@@ -182,7 +179,6 @@ def get_real_estate(ident):
     return JSON(_get_real_estate(ident).to_dict())
 
 
-@APPLICATION.route('/realestates/', methods=['POST'])
 @authenticated
 @authorized('immobit')
 def add_real_estate():
@@ -205,7 +201,6 @@ def add_real_estate():
         raise CannotAddRealEstate() from None
 
 
-@APPLICATION.route('/realestates/<int:ident>', methods=['DELETE'])
 @authenticated
 @authorized('immobit')
 def delete_real_estate(ident):
@@ -223,7 +218,6 @@ def delete_real_estate(ident):
         return RealEstateDeleted()
 
 
-@APPLICATION.route('/realestates/<int:ident>', methods=['PATCH'])
 @authenticated
 @authorized('immobit')
 def patch_real_estate(ident):

@@ -4,7 +4,6 @@ from his import CUSTOMER, authenticated, authorized
 from wsgilib import JSON
 
 from immobit.orm import CustomerPortal
-from immobit.wsgi import APPLICATION
 
 __all__ = ['get_portals']
 
@@ -17,7 +16,6 @@ def _get_portals():
         yield customer_portal.portal
 
 
-@APPLICATION.route('/portals', methods=['GET'])
 @authenticated
 @authorized('immobit')
 def get_portals():

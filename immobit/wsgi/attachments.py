@@ -9,7 +9,6 @@ from wsgilib import OK, Binary
 from immobit.messages import NoSuchRealEstate, AttachmentCreated, \
     AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
     AttachmentLimitExceeded, ForeignAttachmentAccess
-from immobit.wsgi import APPLICATION
 
 __all__ = [
     'get_attachment',
@@ -47,7 +46,6 @@ def _get_real_estate(ident):
         raise NoSuchRealEstate()
 
 
-@APPLICATION.route('/attachments/<int:ident>', methods=['GET'])
 @authenticated
 @authorized('immobit')
 def get_attachment(ident):
@@ -56,7 +54,6 @@ def get_attachment(ident):
     return Binary(_get_attachment(ident).data)
 
 
-@APPLICATION.route('/attachments/<int:ident>', methods=['POST'])
 @authenticated
 @authorized('immobit')
 def add_attachment(ident):
@@ -77,7 +74,6 @@ def add_attachment(ident):
     raise AttachmentLimitExceeded()
 
 
-@APPLICATION.route('/attachments/<int:ident>', methods=['PATCH', 'PUT'])
 @authenticated
 @authorized('immobit')
 def patch_attachment(ident):
@@ -87,7 +83,6 @@ def patch_attachment(ident):
     return OK()
 
 
-@APPLICATION.route('/attachments/<int:ident>', methods=['DELETE'])
 @authenticated
 @authorized('immobit')
 def delete_attachment(ident):
