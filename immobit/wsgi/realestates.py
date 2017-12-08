@@ -61,7 +61,7 @@ def _mkpage(page, limit, real_estates):
 def _get_real_estates():
     """Yields real estates of the current customer."""
 
-    return Immobilie.select().where(Immobilie.customer == CUSTOMER)
+    return Immobilie.select().where(Immobilie.customer == CUSTOMER.id)
 
 
 def _get_real_estate(ident):
