@@ -26,11 +26,10 @@ __all__ = [
     'ForeignAttachmentAccess']
 
 
-@locales('/etc/his.d/locale/immobit.ini')
 class RealEstatesMessage(Message):
     """Basic real estates message."""
 
-    pass
+    LOCALES = locales('/etc/his.d/locale/immobit.ini')
 
 
 class InvalidRealEstateID(RealEstatesMessage):
