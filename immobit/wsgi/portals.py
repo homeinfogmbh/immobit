@@ -13,6 +13,7 @@ def _get_portals():
 
     for customer_portal in CustomerPortal.select().where(
             CustomerPortal.customer == CUSTOMER):
+        print('Customer:', CUSTOMER, CUSTOMER.id)
         yield customer_portal.portal
 
 
