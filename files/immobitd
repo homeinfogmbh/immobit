@@ -1,11 +1,11 @@
 #! /usr/bin/env python3
 """ImmoBit Daemon."""
 
-from his.config import CONFIG
+from immobit.config import CONFIG
 from immobit.wsgi import APPLICATION
 
 
 if __name__ == '__main__':
-    HOST = CONFIG['immobit']['host']
-    PORT = int(CONFIG['immobit']['port'])
+    HOST = CONFIG['wsgi']['host']
+    PORT = int(CONFIG['wsgi']['port'])
     APPLICATION.run(host=HOST, port=PORT)
