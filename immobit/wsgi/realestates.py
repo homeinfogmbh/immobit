@@ -111,8 +111,7 @@ def _page_real_estates():
     limit = _get_limit()
     return JSON({
         'immobilie': [
-            real_estate.short_dict() for real_estate in
-            _mkpage(page, limit)],
+            real_estate.short_dict() for real_estate in _mkpage(page, limit)],
         'page': page,
         'limit': limit,
         'pages': _pages(limit)}, strip=False)
