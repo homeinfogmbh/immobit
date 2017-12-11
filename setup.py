@@ -15,5 +15,5 @@ setup(
     scripts=['files/immobitd'],
     data_files=[
         ('/usr/lib/systemd/system', ['files/immobit.service']),
-        ('/etc/his.d/locale/immobit.ini', ['files/immobit.ini'])],
+        ('/etc/his.d/locale', ['files/immobit.ini'])],
     description='Immobit')
