@@ -33,7 +33,13 @@ def _transaction(action, objektnr_extern):
         objektnr_extern=objektnr_extern, action=action)
 
 
-def _pages(limit, real_estates):
+def _get_real_estates():
+    """Yields real estates of the current customer."""
+
+    return Immobilie.select().where(Immobilie.customer == CUSTOMER.id)
+
+
+def _pages(limit):
     """Returns the amout of possible
     pages for the specified limit.
     """
@@ -41,27 +47,23 @@ def _pages(limit, real_estates):
     if limit is None:
         return 1
 
+    real_estates = sum(1 for _ in _get_real_estates())
+
     if real_estates % limit:
         return real_estates // limit + 1
 
     return real_estates // limit
 
 
-def _mkpage(page, limit, real_estates):
+def _mkpage(page, limit):
     """Yields real estates from page no. <page> of size <size>."""
 
     first = page * limit
     last = (page + 1) * limit
 
-    for index, real_estate in enumerate(real_estates):
+    for index, real_estate in enumerate(_get_real_estates()):
         if first <= index < last:
             yield real_estate
-
-
-def _get_real_estates():
-    """Yields real estates of the current customer."""
-
-    return Immobilie.select().where(Immobilie.customer == CUSTOMER.id)
 
 
 def _get_real_estate(ident):
@@ -104,16 +106,16 @@ def _get_page():
 
 def _page_real_estates():
     """Returns the appropriate page."""
-    real_estates = tuple(_get_real_estates())
+
     page = _get_page()
     limit = _get_limit()
     return JSON({
         'immobilie': [
             real_estate.short_dict() for real_estate in
-            _mkpage(page, limit, real_estates)],
+            _mkpage(page, limit)],
         'page': page,
         'limit': limit,
-        'pages': _pages(limit, len(real_estates))}, strip=False)
+        'pages': _pages(limit)}, strip=False)
 
 
 def _add_real_estate(dictionary):
@@ -164,7 +166,7 @@ def get_real_estates():
     """Returns available real estates."""
 
     if request.args.get('count', False):
-        return JSON({'count': len(list(_get_real_estates()))})
+        return JSON({'count': sum(1 for _ in _get_real_estates())})
 
     if _get_limit() is None:
         return JSON([re.short_dict() for re in _get_real_estates()])
