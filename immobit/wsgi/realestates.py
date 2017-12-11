@@ -198,9 +198,11 @@ def add_real_estate():
 
         if transaction:
             log.success = True
-            return RealEstatedCreated(id=ident)
 
-        raise CannotAddRealEstate() from None
+    if log.success:
+        return RealEstatedCreated(id=ident)
+
+    raise CannotAddRealEstate()
 
 
 @authenticated
@@ -217,7 +219,11 @@ def delete_real_estate(ident):
             raise CannotDeleteRealEstate(stacktrace=format_exc())
 
         log.success = True
+
+    if log.success:
         return RealEstateDeleted()
+
+    raise CannotDeleteRealEstate()
 
 
 @authenticated
@@ -230,9 +236,11 @@ def patch_real_estate(ident):
     with _transaction('UPDATE', real_estate.objektnr_extern) as log:
         if _patch_real_estate(real_estate, DATA.json):
             log.success = True
-            return RealEstateUpdated()
 
-        raise JSON({
-            'message': 'Could not patch real estate.',
-            'stacktrace': format_exc(),
-            'patch': DATA.json}, status=500)
+    if log.success:
+        return RealEstateUpdated()
+
+    raise JSON({
+        'message': 'Could not patch real estate.',
+        'stacktrace': format_exc(),
+        'patch': DATA.json}, status=500)
