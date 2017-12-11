@@ -10,11 +10,11 @@ from his.messages.data import NotAnInteger
 from openimmodb import OpenImmoDBError, IncompleteDataError, InvalidDataError,\
     ConsistencyError, Transaction, Immobilie, \
     RealEstateExists as RealEstateExists_
-from wsgilib import JSON, OK, Error
+from wsgilib import JSON, Error
 
 from immobit.messages import NoSuchRealEstate, RealEstatedCreated, \
     CannotAddRealEstate, RealEstateExists, RealEstateDeleted, \
-    CannotDeleteRealEstate
+    CannotDeleteRealEstate, RealEstateUpdated
 from immobit.orm import TransactionLog
 
 __all__ = [
