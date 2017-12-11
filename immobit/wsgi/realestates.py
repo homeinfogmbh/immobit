@@ -232,9 +232,11 @@ def patch_real_estate(ident):
     """Partially updates real estates."""
 
     real_estate = _get_real_estate(ident)
+    json = DATA.json
+    #print(json)
 
     with _transaction('UPDATE', real_estate.objektnr_extern) as log:
-        if _patch_real_estate(real_estate, DATA.json):
+        if _patch_real_estate(real_estate, json):
             log.success = True
 
     if log.success:
