@@ -138,6 +138,8 @@ def _add_real_estate(dictionary):
 
 def _patch_real_estate(immobilie, dictionary):
     """Adds the real estate represented by the dictionary."""
+    print(dictionary, flush=True)
+
     try:
         with Transaction() as transaction:
             transaction.patch(immobilie, dictionary=dictionary)
@@ -228,7 +230,7 @@ def patch_real_estate(ident):
     with _transaction('UPDATE', real_estate.objektnr_extern) as log:
         if _patch_real_estate(real_estate, DATA.json):
             log.success = True
-            return RealEstateUpdated(patch=DATA.json)
+            return RealEstateUpdated()
 
         raise JSON({
             'message': 'Could not patch real estate.',
