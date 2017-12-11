@@ -232,5 +232,5 @@ def patch_real_estate(ident):
 
         raise JSON({
             'message': 'Could not patch real estate.',
-            'stacktrace': format_exc()
+            'stacktrace': format_exc(),
             'patch': dictionary}, status=500)
