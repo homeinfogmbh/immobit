@@ -228,7 +228,7 @@ def patch_real_estate(ident):
     with _transaction('UPDATE', real_estate.objektnr_extern) as log:
         if _patch_real_estate(real_estate, DATA.json):
             log.success = True
-            return RealEstateUpdated()
+            return RealEstateUpdated(patch=DATA.json)
 
         raise JSON({
             'message': 'Could not patch real estate.',
