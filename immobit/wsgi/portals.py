@@ -12,7 +12,7 @@ def _get_portals():
     """Yields appropriate portals."""
 
     for customer_portal in CustomerPortal.select().where(
-            CustomerPortal.customer == CUSTOMER.id):
+            CustomerPortal.customer == CUSTOMER.id):    # Must access ID here!
         yield customer_portal.portal
 
 

@@ -29,8 +29,8 @@ def _transaction(action, objektnr_extern):
     """Returns a new transaction log entry."""
 
     return TransactionLog(
-        account=ACCOUNT, customer=CUSTOMER, objektnr_extern=objektnr_extern,
-        action=action)
+        account=ACCOUNT.id, customer=CUSTOMER.id,
+        objektnr_extern=objektnr_extern, action=action)
 
 
 def _pages(limit, real_estates):
@@ -69,7 +69,7 @@ def _get_real_estate(ident):
 
     try:
         return Immobilie.get(
-            (Immobilie.customer == CUSTOMER) & (Immobilie.id == ident))
+            (Immobilie.customer == CUSTOMER.id) & (Immobilie.id == ident))
     except DoesNotExist:
         raise NoSuchRealEstate()
 
@@ -121,7 +121,7 @@ def _add_real_estate(dictionary):
 
     try:
         with Transaction() as transaction:
-            ident = transaction.add(CUSTOMER, dictionary=dictionary)
+            ident = transaction.add(CUSTOMER.id, dictionary=dictionary)
     except RealEstateExists_:
         raise RealEstateExists()
     except IncompleteDataError as incomplete_data_error:

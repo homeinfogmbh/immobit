@@ -29,7 +29,7 @@ def _get_attachment(ident):
     except DoesNotExist:
         raise NoSuchAttachment()
 
-    if anhang.immobilie.customer == CUSTOMER:
+    if anhang.immobilie.customer == CUSTOMER.id:
         return anhang
 
     raise ForeignAttachmentAccess()
@@ -40,7 +40,7 @@ def _get_real_estate(ident):
 
     try:
         return Immobilie.get(
-            (Immobilie.customer == CUSTOMER)
+            (Immobilie.customer == CUSTOMER.id)
             & (Immobilie.id == ident))
     except DoesNotExist:
         raise NoSuchRealEstate()
@@ -62,7 +62,7 @@ def add_attachment(ident):
     real_estate = _get_real_estate(ident)
 
     if Anhang.count(immobilie=real_estate) < REAL_ESTATE_LIMIT:
-        if Anhang.count(customer=CUSTOMER) < CUSTOMER_LIMIT:
+        if Anhang.count(customer=CUSTOMER.id) < CUSTOMER_LIMIT:
             try:
                 anhang = Anhang.from_bytes(DATA.bytes, real_estate)
             except AttachmentExists_:
