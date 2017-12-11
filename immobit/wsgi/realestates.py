@@ -234,7 +234,9 @@ def patch_real_estate(ident):
     real_estate = _get_real_estate(ident)
 
     with _transaction('UPDATE', real_estate.objektnr_extern) as log:
-        if _patch_real_estate(real_estate, DATA.json):
+        json = DATA.json
+
+        if _patch_real_estate(real_estate, json):
             log.success = True
 
     if log.success:
