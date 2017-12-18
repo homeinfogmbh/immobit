@@ -214,7 +214,7 @@ def delete_real_estate(ident):
 
     with _transaction('DELETE', real_estate.objektnr_extern) as log:
         try:
-            real_estate.remove()
+            real_estate.delete_instance()
         except OpenImmoDBError:
             raise CannotDeleteRealEstate(stacktrace=format_exc())
 

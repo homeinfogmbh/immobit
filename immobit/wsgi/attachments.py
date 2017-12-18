@@ -88,5 +88,5 @@ def patch_attachment(ident):
 def delete_attachment(ident):
     """Deletes an attachment."""
 
-    _get_attachment(ident).remove()
+    _get_attachment(ident).delete_instance()
     return AttachmentDeleted()
