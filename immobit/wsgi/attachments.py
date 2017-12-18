@@ -29,7 +29,7 @@ def _get_attachment(ident):
     except DoesNotExist:
         raise NoSuchAttachment()
 
-    if anhang.immobilie.customer == CUSTOMER.id:
+    if anhang.immobilie.customer.id == CUSTOMER.id:
         return anhang
 
     raise ForeignAttachmentAccess()
