@@ -6,7 +6,7 @@ from wsgilib import JSON
 
 from immobit.wsgi.realestates import _get_real_estates
 
-__all__ = ['ROUTES']
+__all__ = ['ENDPOINTS']
 
 
 def _get_contacts():
@@ -25,4 +25,4 @@ def get():
     return JSON([contact.to_dict() for contact in _get_contacts()])
 
 
-ROUTES = (('GET', '/contacts', get, 'get_contacts'),)
+ENDPOINTS = {'get_contacts': ('GET', '/contacts', get)}
