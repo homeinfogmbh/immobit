@@ -5,20 +5,25 @@ from wsgilib import JSON
 
 from immobit.orm import CustomerPortal
 
-__all__ = ['get_portals']
+__all__ = ['ROUTES']
 
 
 def _get_portals():
     """Yields appropriate portals."""
 
     for customer_portal in CustomerPortal.select().where(
-            CustomerPortal.customer == CUSTOMER.id):    # Must access ID here!
+            # Must compare to ID here, since LocalProxy
+            # cannot handle right handed operands.
+            CustomerPortal.customer == CUSTOMER.id):
         yield customer_portal.portal
 
 
 @authenticated
 @authorized('immobit')
-def get_portals():
+def get():
     """Returns the respective portals."""
 
     return JSON(list(_get_portals()))
+
+
+ROUTES = (('GET', '/portals', get, 'get_portals'),)

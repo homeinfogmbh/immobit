@@ -10,11 +10,7 @@ from immobit.messages import NoSuchRealEstate, AttachmentCreated, \
     AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
     AttachmentLimitExceeded, ForeignAttachmentAccess
 
-__all__ = [
-    'get_attachment',
-    'add_attachment',
-    'patch_attachment',
-    'delete_attachment']
+__all__ = ['ROUTES']
 
 
 REAL_ESTATE_LIMIT = 15
@@ -48,7 +44,7 @@ def _get_real_estate(ident):
 
 @authenticated
 @authorized('immobit')
-def get_attachment(ident):
+def get(ident):
     """Handles requests for ImmoBit."""
 
     return Binary(_get_attachment(ident).data)
@@ -56,7 +52,7 @@ def get_attachment(ident):
 
 @authenticated
 @authorized('immobit')
-def add_attachment(ident):
+def add(ident):
     """Adds a real estate for the respective attachment."""
 
     real_estate = _get_real_estate(ident)
@@ -76,7 +72,7 @@ def add_attachment(ident):
 
 @authenticated
 @authorized('immobit')
-def patch_attachment(ident):
+def patch(ident):
     """Modifies metadata of an existing attachment."""
 
     _get_attachment(ident).patch(DATA.json).save()
@@ -85,8 +81,15 @@ def patch_attachment(ident):
 
 @authenticated
 @authorized('immobit')
-def delete_attachment(ident):
+def delete(ident):
     """Deletes an attachment."""
 
     _get_attachment(ident).delete_instance()
     return AttachmentDeleted()
+
+
+ROUTES = (
+    ('GET', '/attachments/<int:ident>', get, 'get_attachment'),
+    ('POST', '/attachments/<int:ident>', add, 'add_attachment'),
+    (['PATCH', 'PUT'], '/attachments/<int:ident>', patch, 'patch_attachment'),
+    ('DELETE', '/attachments/<int:ident>', delete, 'delete_attachment'))

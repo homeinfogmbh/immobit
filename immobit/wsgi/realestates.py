@@ -17,12 +17,7 @@ from immobit.messages import NoSuchRealEstate, RealEstatedCreated, \
     CannotDeleteRealEstate, RealEstateUpdated
 from immobit.orm import TransactionLog
 
-__all__ = [
-    'get_real_estates',
-    'get_real_estate',
-    'add_real_estate',
-    'delete_real_estate',
-    'patch_real_estate']
+__all__ = ['ROUTES']
 
 
 def _transaction(action, objektnr_extern):
@@ -161,7 +156,7 @@ def _patch_real_estate(immobilie, dictionary):
 
 @authenticated
 @authorized('immobit')
-def get_real_estates():
+def lst():
     """Returns available real estates."""
 
     if request.args.get('count', False):
@@ -175,7 +170,7 @@ def get_real_estates():
 
 @authenticated
 @authorized('immobit')
-def get_real_estate(ident):
+def get(ident):
     """Returns the respective real estate."""
 
     return JSON(_get_real_estate(ident).to_dict())
@@ -183,7 +178,7 @@ def get_real_estate(ident):
 
 @authenticated
 @authorized('immobit')
-def add_real_estate():
+def add():
     """Adds a new real estate."""
 
     json = DATA.json
@@ -207,7 +202,7 @@ def add_real_estate():
 
 @authenticated
 @authorized('immobit')
-def delete_real_estate(ident):
+def delete(ident):
     """Removes a real estate."""
 
     real_estate = _get_real_estate(ident)
@@ -228,15 +223,13 @@ def delete_real_estate(ident):
 
 @authenticated
 @authorized('immobit')
-def patch_real_estate(ident):
+def patch(ident):
     """Partially updates real estates."""
 
     real_estate = _get_real_estate(ident)
 
     with _transaction('UPDATE', real_estate.objektnr_extern) as log:
-        json = DATA.json
-
-        if _patch_real_estate(real_estate, json):
+        if _patch_real_estate(real_estate, DATA.json):
             log.success = True
 
     if log.success:
@@ -246,3 +239,11 @@ def patch_real_estate(ident):
         'message': 'Could not patch real estate.',
         'stacktrace': format_exc(),
         'patch': DATA.json}, status=500)
+
+
+ROUTES = (
+    ('GET', '/realestates', lst, 'list_real_estates'),
+    ('GET', '/realestates/<int:ident>', get, 'get_real_estate'),
+    ('POST', '/realestates/', add, 'add_real_estate'),
+    ('DELETE', '/realestates/<int:ident>', delete, 'delete_real_estate'),
+    ('PATCH', '/realestates/<int:ident>', patch, 'patch_real_estate'))
