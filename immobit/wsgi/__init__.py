@@ -8,6 +8,5 @@ __all__ = ['APPLICATION']
 
 
 APPLICATION = Application('ImmoBit', debug=True, cors=True)
-APPLICATION.add_endpoints({
-    **attachments.ROUTES, **contacts.ROUTES, **portals.ROUTES,
-    **realestates.ROUTES})
+APPLICATION.add_endpoints({}.update(attachments.ROUTES).update(
+    contacts.ROUTES).update(portals.ROUTES).update(realestates.ROUTES))
