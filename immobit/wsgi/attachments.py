@@ -10,7 +10,7 @@ from immobit.messages import NoSuchRealEstate, AttachmentCreated, \
     AttachmentExists, AttachmentDeleted, NoSuchAttachment, \
     AttachmentLimitExceeded, ForeignAttachmentAccess
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ROUTES']
 
 
 REAL_ESTATE_LIMIT = 15
@@ -88,8 +88,8 @@ def delete(ident):
     return AttachmentDeleted()
 
 
-ENDPOINTS = {
-    'get_attachment': ('GET', '/attachments/<int:ident>', get),
-    'add_attachment': ('POST', '/attachments/<int:ident>', add),
-    'patch_attachment': (['PATCH', 'PUT'], '/attachments/<int:ident>', patch),
-    'delete_attachment': ('DELETE', '/attachments/<int:ident>', delete)}
+ROUTES = (
+    ('GET', '/attachments/<int:ident>', get, 'get_attachment'),
+    ('POST', '/attachments/<int:ident>', add, 'add_attachment'),
+    (['PATCH', 'PUT'], '/attachments/<int:ident>', patch, 'patch_attachment'),
+    ('DELETE', '/attachments/<int:ident>', delete, 'delete_attachment'))

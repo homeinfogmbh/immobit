@@ -5,7 +5,7 @@ from wsgilib import JSON
 
 from immobit.orm import CustomerPortal
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ROUTES']
 
 
 def _get_portals():
@@ -26,4 +26,4 @@ def get():
     return JSON(list(_get_portals()))
 
 
-ENDPOINTS = {'get_portals': ('GET', '/portals', get)}
+ROUTES = (('GET', '/portals', get, 'get_portals'),)

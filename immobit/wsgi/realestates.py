@@ -17,7 +17,7 @@ from immobit.messages import NoSuchRealEstate, RealEstatedCreated, \
     CannotDeleteRealEstate, RealEstateUpdated
 from immobit.orm import TransactionLog
 
-__all__ = ['ENDPOINTS']
+__all__ = ['ROUTES']
 
 
 def _transaction(action, objektnr_extern):
@@ -241,9 +241,9 @@ def patch(ident):
         'patch': DATA.json}, status=500)
 
 
-ENDPOINTS = {
-    'list_real_estates': ('GET', '/realestates', lst),
-    'get_real_estate': ('GET', '/realestates/<int:ident>', get),
-    'add_real_estate': ('POST', '/realestates/', add),
-    'delete_real_estate': ('DELETE', '/realestates/<int:ident>', delete),
-    'patch_real_estate': ('PATCH', '/realestates/<int:ident>', patch)}
+ROUTES = (
+    ('GET', '/realestates', lst, 'list_real_estates'),
+    ('GET', '/realestates/<int:ident>', get, 'get_real_estate'),
+    ('POST', '/realestates/', add, 'add_real_estate'),
+    ('DELETE', '/realestates/<int:ident>', delete, 'delete_real_estate'),
+    ('PATCH', '/realestates/<int:ident>', patch, 'patch_real_estate'))
