@@ -5,4 +5,4 @@ from configlib import INIParser
 __all__ = ['CONFIG']
 
 
-CONFIG = INIParser('/etc/his.d/immobit.conf')
+CONFIG = INIParser('/etc/immobit.conf')

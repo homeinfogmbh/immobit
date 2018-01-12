@@ -3,17 +3,21 @@
 from datetime import datetime
 from enum import Enum
 
-from peewee import DoesNotExist, Model, PrimaryKeyField, ForeignKeyField, \
-    CharField, DateTimeField, BooleanField
+from peewee import DoesNotExist, MySQLDatabase, Model, PrimaryKeyField, \
+    ForeignKeyField, CharField, DateTimeField, BooleanField
 
-from his import his_db, Account
+from his import Account
 from homeinfo.crm import Customer
 from peeweeplus import EnumField
+
+from immobit.config import CONFIG
 
 __all__ = ['TransactionLog', 'CustomerPortal']
 
 
-DATABASE = his_db('immobit')
+DATABASE = MySQLDatabase(
+    CONFIG['db']['db'], host=CONFIG['db']['host'], user=CONFIG['db']['user'],
+    passwd=CONFIG['db']['passwd'])
 
 
 class Action(Enum):
