@@ -3,12 +3,12 @@
 from datetime import datetime
 from enum import Enum
 
-from peewee import DoesNotExist, MySQLDatabase, Model, PrimaryKeyField, \
+from peewee import DoesNotExist, Model, PrimaryKeyField, \
     ForeignKeyField, CharField, DateTimeField, BooleanField
 
 from his import Account
 from homeinfo.crm import Customer
-from peeweeplus import EnumField
+from peeweeplus import MySQLDatabase, EnumField
 
 from immobit.config import CONFIG
 
