@@ -17,7 +17,7 @@ __all__ = ['TransactionLog', 'CustomerPortal']
 
 DATABASE = MySQLDatabase(
     CONFIG['db']['db'], host=CONFIG['db']['host'], user=CONFIG['db']['user'],
-    passwd=CONFIG['db']['passwd'])
+    passwd=CONFIG['db']['passwd'], closing=True)
 
 
 class Action(Enum):
