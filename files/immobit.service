@@ -1,6 +1,5 @@
 [Unit]
 Description=ImmoBit
-After=his.service
 Requires=his.service
 
 [Service]
@@ -9,4 +8,4 @@ Group=immobit
 ExecStart=/usr/local/bin/immobitd
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=wsgi-services.target
