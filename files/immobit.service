@@ -1,6 +1,6 @@
 [Unit]
 Description=ImmoBit
-Requires=his.service
+PartOf=wsgi-services.target
 
 [Service]
 User=immobit
