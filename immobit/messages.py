@@ -30,6 +30,7 @@ class RealEstatesMessage(Message):
     """Basic real estates message."""
 
     LOCALES = locales('/etc/his.d/locale/immobit.ini')
+    ABSTRACT = True
 
 
 class InvalidRealEstateID(RealEstatesMessage):
