@@ -1,1 +1,1 @@
-"""Real estate amangement system."""
+"""Real estate management system."""
