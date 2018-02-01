@@ -3,8 +3,8 @@
 from datetime import datetime
 from enum import Enum
 
-from peewee import DoesNotExist, Model, PrimaryKeyField, \
-    ForeignKeyField, CharField, DateTimeField, BooleanField
+from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
+    DateTimeField, BooleanField
 
 from his import Account
 from homeinfo.crm import Customer
@@ -86,7 +86,7 @@ class CustomerPortal(ImmoBitModel):
         """Adds a customer-portal mapping."""
         try:
             return cls.get((cls.customer == customer) & (cls.portal == portal))
-        except DoesNotExist:
+        except cls.DoesNotExist:
             customer_portal = cls()
             customer_portal.customer = customer
             customer_portal.portal = portal

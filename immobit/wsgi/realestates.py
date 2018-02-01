@@ -3,7 +3,6 @@
 from traceback import format_exc
 
 from flask import request
-from peewee import DoesNotExist
 
 from his import ACCOUNT, CUSTOMER, DATA, authenticated, authorized
 from his.messages.data import NotAnInteger
@@ -67,7 +66,7 @@ def _get_real_estate(ident):
     try:
         return Immobilie.get(
             (Immobilie.customer == CUSTOMER.id) & (Immobilie.id == ident))
-    except DoesNotExist:
+    except Immobilie.DoesNotExist:
         raise NoSuchRealEstate()
 
 

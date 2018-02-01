@@ -1,7 +1,5 @@
 """Attachments API."""
 
-from peewee import DoesNotExist
-
 from his import CUSTOMER, DATA, authenticated, authorized
 from openimmodb import Immobilie, Anhang, AttachmentExists as AttachmentExists_
 from wsgilib import OK, Binary
@@ -22,7 +20,7 @@ def _get_attachment(ident):
 
     try:
         anhang = Anhang.get(Anhang.id == ident)
-    except DoesNotExist:
+    except Anhang.DoesNotExist:
         raise NoSuchAttachment()
 
     if anhang.immobilie.customer.id == CUSTOMER.id:
@@ -36,9 +34,8 @@ def _get_real_estate(ident):
 
     try:
         return Immobilie.get(
-            (Immobilie.customer == CUSTOMER.id)
-            & (Immobilie.id == ident))
-    except DoesNotExist:
+            (Immobilie.customer == CUSTOMER.id) & (Immobilie.id == ident))
+    except Immobilie.DoesNotExist:
         raise NoSuchRealEstate()
 
 
