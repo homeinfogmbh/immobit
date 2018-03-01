@@ -7,6 +7,7 @@ default: | pull clean install
 install:
 	@ ./setup.py install --record $(FILE_LIST)
 	@ mkdir -p /srv/http/de/homeinfo/javascript/immobit
+	@ chmod 755 /srv/http/de/homeinfo/javascript/immobit
 	@ install -m 644 frontend/*.js /srv/http/de/homeinfo/javascript/immobit/
 
 uninstall:
