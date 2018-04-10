@@ -629,7 +629,11 @@ function setFields() {
 	if (_openImmo_json.hasOwnProperty('preise')) {
 		$("#prices_buy").val(getGermanDecimalFormat(_openImmo_json.preise.kaufpreis));
 		$("#prices_netto").val(getGermanDecimalFormat(_openImmo_json.preise.nettokaltmiete));
-		$("#prices_service_charge").val(getGermanDecimalFormat(_openImmo_json.preise.betriebskostennetto));
+		if (_openImmo_json.preise.betriebskostennetto == null) {
+		  $("#prices_service_charge").val('');
+		} else {
+		  $("#prices_service_charge").val(getGermanDecimalFormat(_openImmo_json.preise.betriebskostennetto));
+		}
 		//$("#prices_cold").val(getGermanDecimalFormat(_openImmo_json.preise.kaltmiete));
 		//$("#prices_warm").val(getGermanDecimalFormat(_openImmo_json.preise.warmmiete));
 		$("#prices_additional").val(getGermanDecimalFormat(_openImmo_json.preise.nebenkosten));
