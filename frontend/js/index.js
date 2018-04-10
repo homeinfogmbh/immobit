@@ -21,7 +21,7 @@ $(document).ready(function() {
 	//if (window.location.href.indexOf("new") != -1) // if not using defaultAndDeleteAllObjectFields() in $('.btn_new_object').click(
 		//$("#nav_create_expose").show();
 	getAccountData();// Getaccount Infos
-			
+
 	// Settings
 	$("#description_free").datepicker({
 		constrainInput: false,
@@ -45,7 +45,7 @@ $(document).ready(function() {
 				window.location.href = "login.html";
 			}
 		});
-	});	
+	});
 	// Speech
 	$('.english').click(function() {
 		holdSession();
@@ -61,7 +61,7 @@ $(document).ready(function() {
 		holdSession();
 		removeSidebarComponents($(this));
 		$("#nav_startpage").show();
-		
+
 		$.ajax({
 			url: "https://backend.immobit.de/realestates?session=" +localStorage.getItem("token"),
 			type: "GET",
@@ -74,7 +74,7 @@ $(document).ready(function() {
 					if (msg[i].verwaltung_techn.hasOwnProperty('weitergabe_positiv')) {
 						if (msg[i].verwaltung_techn.weitergabe_positiv.length > 0)
 							aktive++;
-						else 
+						else
 							inaktive++;
 					} else
 						inaktive++;
@@ -110,15 +110,15 @@ $(document).ready(function() {
 				console.log("ERROR" + msg.status);
 			}
 		});
-	*/		
-	});	
+	*/
+	});
 	$('#manage_exposes').click(function() {
 		holdSession();
 		removeSidebarComponents($(this));
 		getAllRealEstates();
 		$("#nav_manage_exposes").show();
 		$("#manage_title").html('<h1>Immobilien verwalten</h1>');
-	});	
+	});
 
 	$('.btn_active').click(function() {
 		holdSession();
@@ -126,8 +126,8 @@ $(document).ready(function() {
 	$('.btn_documents').click(function() {
 		_showedDocuments = true;
 		getImages();
-	});		
-	
+	});
+
 	// Rent
 	$('#buy_0').change(function() {
 		$('#kind_2_label').attr('style', 'pointer-events: none;');
@@ -157,8 +157,8 @@ $(document).ready(function() {
 			$("#areas_base_div").show();
 		if ($("#kind_0").is(':checked'))
 			$("#areas_floor_div").show();
-	})	
-	
+	})
+
 	// Apartments (apart)
 	$('#kind_0').change(function() {
 		hideAll();
@@ -170,12 +170,12 @@ $(document).ready(function() {
 		$(".btn_energy").show();
 		$("#limited_div").show();
 		$(".btn_limited").show();
-		$("#areas_use_complete_rooms_div").show();		
+		$("#areas_use_complete_rooms_div").show();
 		$("#description_year_state_div").show();
 		$("#areas_floor_div").show();
 		if ($("#buy_0").is(':checked'))
-			$("#areas_use_complete_div").hide();		
-	})	
+			$("#areas_use_complete_div").hide();
+	})
 	// Houses (house)
 	$('#kind_1').change(function() {
 		hideAll();
@@ -206,7 +206,7 @@ $(document).ready(function() {
 		$(".btn_limited").hide();
 		$("#areas_use_complete_rooms_div").hide();
 	})
-	
+
 	// Prices
 	$('#prices_provision_onoff').change(function() {
 		if ($("#prices_provision_onoff").is(':checked'))
@@ -214,16 +214,16 @@ $(document).ready(function() {
 		else
 			$('#prices_provision').attr('disabled', 'disabled');
 	});
-	$('#prices_heatingcosts_1').change(function() {		
+	$('#prices_heatingcosts_1').change(function() {
 		if ($("#prices_heatingcosts_1").is(':checked'))
 			$('#prices_heatingcosts').attr('disabled', 'disabled');
-	})	
+	})
 	$('#prices_heatingcosts_0').change(function() {
 		if ($("#prices_heatingcosts_0").is(':checked'))
 			$('#prices_heatingcosts').removeAttr('disabled');
-	})		
-	
-	// Checkboxes 
+	})
+
+	// Checkboxes
     $('.button-checkbox').each(function () {
         // Settings
         var $widget = $(this),
@@ -283,8 +283,8 @@ $(document).ready(function() {
         }
         init();
     });
-	
-	
+
+
 	$(".btn_save").click(function() {
 		 if (!checkData()) { // 'false' for testing
 			swal({
@@ -302,7 +302,7 @@ $(document).ready(function() {
 			$("#loader_save").show();
 			$(".btn_save").html('Immobilie wird gespeichert');
 			$(".btn_save").attr('disabled', 'disabled');
-			
+
 			if (_openImmo_json !== null) {
 				urlString = "/" + _openImmo_json.id;
 				_id = _openImmo_json.id;
@@ -367,20 +367,20 @@ $(document).ready(function() {
 	$('.btn_preview').click(function() {
 		holdSession();
 		showpreview(createRealEstateJSON(false));
-	});	
+	});
 	$('.btn_back').click(function() {
 		$(this).hide();
 		$("#manage_exposes").trigger( "click" ); //window.location.href = "index.html?new";
-	});	
+	});
 	$('.btn_change_count_realestates').change(function() {
 		var sorting = $(this).data("sorting");
 		var reverse = $(this).data("reverse");
 		getAllRealEstates(_page, sorting, reverse);
 	});
-	
+
 	$('#searchfield').on('input',function(e) {
 		loadRealEstates(_page);
-	});	
+	});
 	$('.btn_delete').click(function() {
 		swal({
 			title: "Sind Sie sicher?",
@@ -402,7 +402,7 @@ $(document).ready(function() {
 					url: "https://backend.immobit.de/realestates/" + _openImmo_json.id + "?session=" +  localStorage.getItem("token"),
 					type: "DELETE",
 					success: function (msg) {
-						$("#manage_exposes").trigger( "click" ); 
+						$("#manage_exposes").trigger( "click" );
 					},
 					error: function (msg) {
 						$("#loader_manage").hide();
@@ -447,8 +447,8 @@ $(document).ready(function() {
 					});
 				}
 			}
-		});		
-	});	
+		});
+	});
 });
 
 function getAccountData() {
@@ -489,6 +489,25 @@ function getAccountData() {
 	});
 	*/
 }
+
+function getValue(value, type, nullable) {
+  if (nullable == null) {
+    nullable = false;
+  }
+
+  if (value == '') {
+    if (nullable) {
+      return null;
+    }
+  }
+
+  if (type == null) {
+    return value;
+  }
+
+  return type(value);
+}
+
 function createRealEstateJSON(check = true) {
 	var date = new Date();
 	var date_str = date.getFullYear() + '-' + ('0'+(date.getMonth()+1)).substr(-2,2) + '-' + ('0'+date.getDate()).substr(-2,2);
@@ -509,7 +528,7 @@ function createRealEstateJSON(check = true) {
 	openimmo["preise"] = {};
 		($("#prices_buy").val().trim() == "" || $("#prices_buy_div").attr('style') == "display: none;") ?(isNull("preise.kaufpreis")) ?false :openimmo.preise["kaufpreis"] = null :(hasChanged(check,"preise","kaufpreis", $("#prices_buy").val().replace(",", "."))) ?openimmo.preise["kaufpreis"] = Number($("#prices_buy").val().replace(",", ".")) :false;
 		($("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.nettokaltmiete")) ?false :openimmo.preise["nettokaltmiete"] = null :(hasChanged(check,"preise","nettokaltmiete", $("#prices_netto").val().replace(",", "."))) ?openimmo.preise["nettokaltmiete"] = Number($("#prices_netto").val().replace(",", ".")) :false;
-		($("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.betriebskostennetto")) ?false :openimmo.preise["betriebskostennetto"] = null :(hasChanged(check,"preise","betriebskostennetto", $("#prices_service_charge").val().replace(",", "."))) ?openimmo.preise["betriebskostennetto"] = Number($("#prices_service_charge").val().replace(",", ".")) :false;
+		($("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.betriebskostennetto")) ?false :openimmo.preise["betriebskostennetto"] = null :(hasChanged(check,"preise","betriebskostennetto", $("#prices_service_charge").val().replace(",", "."))) ?openimmo.preise["betriebskostennetto"] = getValue($("#prices_service_charge").val().replace(",", "."), Number, true) :false;
 		//($("#prices_cold").val().trim() != "" && $("#prices_rent_div").attr('style') != "display: none;" && hasChanged(check,"preise","kaltmiete", $("#prices_cold").val().replace(",", "."))) ?openimmo.preise["kaltmiete"] = Number($("#prices_cold").val().replace(",", ".")) :false;
 		//($("#prices_warm").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.warmmiete")) ?false :openimmo.preise["warmmiete"] = null :(hasChanged(check,"preise","warmmiete", $("#prices_warm").val().replace(",", "."))) ?openimmo.preise["warmmiete"] = Number($("#prices_warm").val().replace(",", ".")) :false;
 		($("#prices_additional").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.nebenkosten")) ?false :openimmo.preise["nebenkosten"] = null :(hasChanged(check,"preise","nebenkosten", $("#prices_additional").val().replace(",", "."))) ?openimmo.preise["nebenkosten"] = Number( $("#prices_additional").val().replace(",", ".")) :false;
@@ -589,7 +608,7 @@ function createRealEstateJSON(check = true) {
 				openimmo.objektkategorie.objektart["grundstueck"] = [{}];
 			}
 		openimmo.objektkategorie["vermarktungsart"] = {};
-			(hasChanged(check,"objektkategorie.vermarktungsart","KAUF", $('input[name=kindmarketing]:checked').val() == "KAUF")) ?openimmo.objektkategorie.vermarktungsart["KAUF"] = ($('input[name=kindmarketing]:checked').val() == "KAUF") ?true :false :false;					
+			(hasChanged(check,"objektkategorie.vermarktungsart","KAUF", $('input[name=kindmarketing]:checked').val() == "KAUF")) ?openimmo.objektkategorie.vermarktungsart["KAUF"] = ($('input[name=kindmarketing]:checked').val() == "KAUF") ?true :false :false;
 			(hasChanged(check,"objektkategorie.vermarktungsart","MIETE_PACHT", $('input[name=kindmarketing]:checked').val() == "MIETE_PACHT")) ?openimmo.objektkategorie.vermarktungsart["MIETE_PACHT"] = ($('input[name=kindmarketing]:checked').val() == "MIETE_PACHT") ?true :false :false;
 	openimmo["verwaltung_objekt"] = {};
 		($("#description_free").val().trim() == "") ?(isNull("verwaltung_objekt.verfuegbar_ab")) ?false :openimmo.verwaltung_objekt["verfuegbar_ab"] = null :(hasChanged(check,"verwaltung_objekt","verfuegbar_ab", $("#description_free").val())) ?openimmo.verwaltung_objekt["verfuegbar_ab"] = $("#description_free").val() :false;
@@ -612,7 +631,7 @@ function createRealEstateJSON(check = true) {
 
 			openimmo.verwaltung_techn["aktiv_von"] = null;
 			openimmo.verwaltung_techn["aktiv_bis"] = null;
-			
+
 			/*
 			if (openimmo.verwaltung_techn.weitergabe_positiv.length > 0) {
 				openimmo.verwaltung_techn["aktiv_von"] = "1970-01-01";
@@ -651,11 +670,11 @@ function createRealEstateJSON(check = true) {
 	// For the preview, to show images if available
 	if (!check && _openImmo_json != null && _openImmo_json.hasOwnProperty('anhaenge'))
 		openimmo["anhaenge"] = _openImmo_json.anhaenge;
-		
+
 	//openimmo["user_defined_simplefield"] = [{}];
 	//openimmo.user_defined_simplefield[0]["feldname"] = "feld1";
 	//openimmo.user_defined_simplefield[0]["value"] = "feld1 99";
-	
+
 	//console.log("openimmo: " + JSON.stringify(openimmo));
 	// Delete empty objects {}
 	$.each(openimmo, function(key, value) {
@@ -671,21 +690,21 @@ function createRealEstateJSON(check = true) {
 	});
 	//console.log("openimmo: " + JSON.stringify(openimmo));
 	return openimmo;
-	
+
 }
 function hideAll() {
 	// Objecttype
 	$("#object_apart").hide();
 	$("#object_house").hide();
 	$("#object_base").hide();
-	
+
 	// Tabs
 	$("#areas_floor_div").hide();
 	$("#areas_apart_div").hide();
 	$("#areas_base_div").hide();
-	 
+
 	$("#description_year_state_div").hide();
-	
+
 	$("#areas_use_complete_div").show();
 }
 
@@ -709,8 +728,8 @@ function setSpeech(speech) {
 		document.getElementById("create_expose_link").innerHTML = '<i class="fa fa-circle-thin fa-fw"></i> Immobilie anlegen';
 		document.getElementById("manage_exposes_link").innerHTML = '<i class="fa fa-users fa-fw"></i> Immobilien verwalten';
 	}
-	
-	
+
+
 }
 
 function checkSession() {
@@ -770,7 +789,7 @@ function getAllContacts() {
 				value: -1,
 				text: 'Vorhandene Kontaktdaten'
 			}));
-			
+
 			var notAvailable;
 			for (var i = 0; i < msg.length; i++) {
 				notAvailable = true;
@@ -789,7 +808,7 @@ function getAllContacts() {
 			}
 			$('#contact_available').change(function() {
 				if ($(this).val() > -1) {
-					if (msg[$(this).val()].hasOwnProperty('anrede')) 
+					if (msg[$(this).val()].hasOwnProperty('anrede'))
 						$("#contact_title").val(msg[$(this).val()].anrede);
 					else
 						$("#contact_title").val("0");
@@ -831,7 +850,7 @@ function getAllRealEstates(page = 0, sorting = "normal", reverse = false) {
 				if (msg.statusText == "Kein solcher Dienst.")
 					$("#realestates").html('<font size="4" color="#FF0000">Dienst nicht aktiv, bitte versuchen Sie es später noch einmal.</font>');
 				else if (parsed.responseJSON.message == "Zugriff verweigert.")
-					$("#realestates").html('Sie haben leider nicht die Berechtigung Immobilien anzuzeigen.');				
+					$("#realestates").html('Sie haben leider nicht die Berechtigung Immobilien anzuzeigen.');
 				else
 					$("#realestates").html("Keine Immobilien vorhanden");
 			} catch (e) {
@@ -839,7 +858,7 @@ function getAllRealEstates(page = 0, sorting = "normal", reverse = false) {
 				$("#realestates").html('<font size="4" color="#FF0000">Dienst nicht aktiv, bitte versuchen Sie es später noch einmal.</font>');
 			}
 		}
-	});	
+	});
 }
 
 function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
@@ -859,7 +878,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 				counter++;
 			}
 		}
-		
+
 		// Calculate pages
 		page = (page > 0 && (openImmoFiltered.length / limit) <= page) ?page-1 :page;
 		_page = page;
@@ -875,7 +894,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 		// Sorting
 		if (sorting != "normal")
 			openImmoFiltered.sort(sortBy(sorting, reverse));
-		
+
 		// Build only visible page
 		var realEstatesForPage = limit * page;
 		var maximumRealEstates = (Number(realEstatesForPage) + Number(limit) > openImmoFiltered.length) ?openImmoFiltered.length :Number(realEstatesForPage) + Number(limit);
@@ -917,7 +936,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 					</td>\
 				</div>\
 			</tr>'
-		
+
 		for (var i = 0; i < counter; i++) {
 			var objektart;
 			var vermarktungsart;
@@ -938,7 +957,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 				vermarktungsart = "Kaufobjekt";
 			else if (msg[i].objektkategorie.vermarktungsart.MIETE_PACHT == true)
 				vermarktungsart = "Mietobjekt";
-			else 
+			else
 				vermarktungsart = "Unbekannt";
 			//if (!isOnDate(msg[i].verwaltung_techn["aktiv_von"], msg[i].verwaltung_techn["aktiv_bis"]))
 				//checked = "";
@@ -1003,7 +1022,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 				</div>\
 			</tr>'
 		}
-		
+
 		if (counter == 0)
 			$("#realestates").html("Keine Immobilien vorhanden ");
 		else
@@ -1028,7 +1047,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 		$('.sortbyAdresse').click(function() {
 			loadRealEstates(page, "geo.strasse", !reverse);
 		});
-		
+
 		$('.markrealestate').click(function(){
 			if ($(this).parent().find(".markfirst").attr("style") != "min-width:50px; text-align:center; border-radius:0; pointer-events:none; background-color:#e2e2e2;") {
 				_deleteRealEstates.push($(this).parent().find(".markrealestate").data("id"));
@@ -1037,19 +1056,19 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 			} else {
 				_deleteRealEstates.splice(_deleteRealEstates.indexOf($(this).parent().find(".markrealestate").data("id")), 1);
 				$(this).parent().find(".markfirst").attr("style","min-width:50px; text-align:center; border-radius:0; pointer-events:none; background-color:none;");
-				$(this).parent().find(".markgroup").attr("style","width:100%; text-align:left; border-radius:0; pointer-events:none; background-color: none;");				
+				$(this).parent().find(".markgroup").attr("style","width:100%; text-align:left; border-radius:0; pointer-events:none; background-color: none;");
 			}
 			if (_deleteRealEstates.length > 0)
 				$("#realestatesDelete").show();
 			else
 				$("#realestatesDelete").hide();
 		});
-		
+
 		$('.btn_manage, .btn_preview_manage').click(function() {
 			holdSession();
 			$("#loader_new").show();
 			var preview = $(this).data('preview');
-			if (preview != true) {			
+			if (preview != true) {
 				$("#content_title").html('<h1>Immobilie bearbeiten</h1>'); //$("#content_title").html('<h1>Immobilie bearbeiten</h1><font size="4" color="#FF0000">Immobilie wird geladen...');
 				defaultAndDeleteAllObjectFields();
 				$("#managedcontainer").hide();
@@ -1079,8 +1098,8 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 					$("#content_title").html('<h1>Immobilie bearbeiten</h1><font size="4" color="#FF0000">Beim Laden dieser Immobilie ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.');
 				}
 			});
-		});	
-		
+		});
+
 		$('.btn_clone_object').click(function() {
 			$("#loader_manage").show();
 			var id = msg[$(this).data("id")].id;
@@ -1109,8 +1128,8 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 							$("#manage_title").html('<h1>Immobilien verwalten</h1><font size="4" color="#FF0000">Beim Duplizieren der Immobilie ' + objektnr_extern + ' ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.</font>');
 							$("#loader_manage").hide();
 						}
-					});						
-					
+					});
+
 				},
 				error: function (msg) {
 					console.log("ERROR " + JSON.stringify(msg));
@@ -1118,12 +1137,12 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 					$("#manage_title").html('<h1>Immobilien verwalten</h1><font size="4" color="#FF0000">Beim Duplizieren der Immobilie ' + objektnr_extern + ' ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.</font>');
 				}
 			});
-		});	
-		
+		});
+
 		$('.btn_delete_object').click(function() {
 			var id = $(this).data("id");
 			var sorting = $(this).data("sorting");
-			var reverse = $(this).data("reverse");			
+			var reverse = $(this).data("reverse");
 			_openImmo_json = msg[id];
 			swal({
 				title: "Sind Sie sicher?",
@@ -1159,7 +1178,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 				}
 			});
 		});
-		
+
 		$('.btn_check_active').click(function() {
 			var openImmo_json = {};
 			openImmo_json["verwaltung_techn"] = {};
@@ -1223,7 +1242,7 @@ function getImages() {
 				initialPreviewConfigArray[i] = {caption: _openImmo_json.anhaenge.anhang[i].anhangtitel, size: "", width: "120px", key: i, showDrag: false, group: _openImmo_json.anhaenge.anhang[i].gruppe};
 				initialPreviewArray[i] = "https://backend.immobit.de/attachments/" + _openImmo_json.anhaenge.anhang[i].id + "?session=" + localStorage.getItem("token");
 			}
-				
+
 			$("#files-upload-input").html('<input id="files-upload" name="filesupload[]" type="file" multiple class="file-loading">');
 			// Source: http://plugins.krajee.com/file-advanced-usage-demo
 			_fileinput = $("#files-upload").fileinput({
