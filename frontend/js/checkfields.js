@@ -35,7 +35,7 @@
 			$("#prices_html").removeClass('erroneous-tab');
 			$('#prices_netto').removeClass('erroneous-input');
 		}
-		if ($("#prices_service_charge").val().trim() == "" || !isNumber($("#prices_service_charge").val().replace(",", "."))) {
+		if ($("#prices_service_charge").val().trim() != "" && !isNumber($("#prices_service_charge").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
 			$("#prices_html").addClass('erroneous-tab');
