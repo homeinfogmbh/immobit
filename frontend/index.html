@@ -51,7 +51,7 @@
 					</ul>
 				</li>
 			</ul>
-		</div>	
+		</div>
 
 	<!-- SIDEBAR -->
 	<div class="col-sm-3 col-md-2 sidebar">
@@ -85,7 +85,7 @@
 			<label><h2>Basisdaten</h2></label><br><br>
 			<label>Objektnummer</label>
 			<input type="text" class="form-control" id="base_objectnumber" placeholder="z. B. VE7642abc-001" style="width: 20%;"><br>
-			
+
 			<table style="border-collapse: separate;">
 				<tr>
 					<th><label>Vermarktungsart</label></th>
@@ -95,13 +95,13 @@
 						<div class="btn-group" data-toggle="buttons">
 							<label class="btn btn-default">
 								<input type="radio"	name="kindmarketing" id="buy_0" value="MIETE_PACHT">Mieten
-							</label>		
+							</label>
 							<label class="btn btn-default">
 								<input type="radio" name="kindmarketing" id="buy_1" value="KAUF">Kaufen
 							</label>
-						</div>	
+						</div>
 					</td>
-					<td>			
+					<td>
 					</td>
 				</tr>
 			</table>
@@ -110,7 +110,7 @@
 					<tr>
 						<td><label>Objektart</label></td>
 						<td><label>Typ des Objektes</label></td>
-					</tr>	
+					</tr>
 				</thead>
 				<tbody>
 					<tr>
@@ -118,7 +118,7 @@
 							<div class="btn-group" data-toggle="buttons">
 								<label class="btn btn-default">
 									<input type="radio"	name="kindexpose" id="kind_0" value="0">Wohnung
-								</label>		
+								</label>
 								<label class="btn btn-default">
 									<input type="radio" name="kindexpose" id="kind_1" value="1">Haus
 								</label>
@@ -183,8 +183,8 @@
 						</td>
 						<td width="80%">
 							<input type="text" class="form-control" id="base_location">
-						</td>			
-					</tr>		
+						</td>
+					</tr>
 				</table>
 			</section>
 			<div class="btn-group" data-toggle="buttons">
@@ -215,7 +215,7 @@
 						<li><a href="#activation" class="btn_activation btn_active" data-toggle="tab">Aktivierung</a></li>
 					</ul>
 				</div>
-				
+
 				<div class="panel-body">
 					<div class="tab-content">
 						<!-- Preise & Kosten (Preise) -->
@@ -232,16 +232,16 @@
 								</span>
 								<input type="text" class="form-control" id="prices_provision" placeholder="z.B. 436€ o. 6%" style="width: 12%;" disabled>
 							</div>
-							<div id="prices_rent_div">							
+							<div id="prices_rent_div">
 								<label>Nettokaltmiete in €</label><br>
 								<input type="text" class="form-control" id="prices_netto" placeholder="z.B. 160,76" style="width: 12%;"><br>
 								<label>Betriebskosten in €</label><br>
-								<input type="number" class="form-control" id="prices_netto" placeholder="75,25" style="width: 12%;"><br>
+								<input type="text" class="form-control" id="prices_service_charge" placeholder="z.B. 75,25" style="width: 12%;"><br>
 								<!--
 								<label>Kaltmiete in €</label><br>
-								<input type="text" class="form-control" id="prices_cold" placeholder="z.B. 160,76" style="width: 12%;"><br>							
+								<input type="text" class="form-control" id="prices_cold" placeholder="z.B. 160,76" style="width: 12%;"><br>
 								<label>Warmmiete in €</label><br>
-								<input type="text" class="form-control" id="prices_warm" placeholder="z.B. 160,76" style="width: 12%;"><br>								
+								<input type="text" class="form-control" id="prices_warm" placeholder="z.B. 160,76" style="width: 12%;"><br>
 								-->
 								<table style="border-collapse: separate;">
 									<tr>
@@ -261,11 +261,11 @@
 												<label class="btn btn-default">
 													<input type="radio"	name="prices_heatingcosts_show" id="prices_heatingcosts_0" value="false">Nein
 												</label>
-											</div>	
+											</div>
 										</td>
 										<td style="padding-left:20px">
 											<input type="text" class="form-control" id="prices_heatingcosts" placeholder="z.B. 160,76" disabled>
-										</td>				
+										</td>
 									</tr>
 								</table><br>
 								<!--<label>Gesamtmiete in €</label><br>
@@ -275,7 +275,7 @@
 								<label>Courtage inkl. ges. MwSt in %</label><br>
 								<input type="text" class="form-control" id="prices_courtage" placeholder="z.B. 5,67" style="width: 12%;"><br>-->
 								<label>Kaution oder Genossenschaftsanteile in €</label><br>
-								<input type="text" class="form-control" id="prices_caution" placeholder="z.B. 160,76" style="width: 12%;"><br>							
+								<input type="text" class="form-control" id="prices_caution" placeholder="z.B. 160,76" style="width: 12%;"><br>
 								<!--<label>Sonstiges Feld</label><br>
 								<input type="text" class="form-control" id="prices_other_text" placeholder="z.B. Wassergeld" style="width: 12%;">
 								<input type="text" class="form-control" id="prices_other" placeholder="z.B. 160,76 €" style="width: 12%;">-->
@@ -291,8 +291,8 @@
 									<input type="text" class="form-control" id="areas_total" placeholder="z.B. 80" style="width: 12%;"><br>
 								</div>
 								<label>Anzahl Zimmer</label><br>
-								<input type="text" class="form-control" id="areas_rooms" placeholder="z.B. 3" style="width: 12%;"><br>							
-							</div>						
+								<input type="text" class="form-control" id="areas_rooms" placeholder="z.B. 3" style="width: 12%;"><br>
+							</div>
 							<div id="areas_apart_div">
 								<label>Wohnfläche in m²</label><br>
 								<input type="text" class="form-control" id="areas_living" placeholder="z.B. 80" style="width: 12%;"><br>
@@ -306,7 +306,7 @@
 								<input type="text" class="form-control" id="areas_base" placeholder="z.B. 80" style="width: 12%;"><br>
 							</div>
 							<label>Verfügbar ab</label><br>
-							<input type="text" class="form-control" id="description_free" style="width: 10%;" maxlength="255" placeholder="01.01.2017"><br>							
+							<input type="text" class="form-control" id="description_free" style="width: 10%;" maxlength="255" placeholder="01.01.2017"><br>
 							<div id="description_year_state_div">
 								<label>Baujahr</label><br>
 								<input type="text" class="form-control" id="description_year" style="width: 10%;" placeholder="z. B. 2016"><br>
@@ -329,7 +329,7 @@
 									<option value="ABRISSOBJEKT">Abrissobjekt</option>
 									<option value="PROJEKTIERT">Projektiert</option>
 								</select><br><br>
-							</div>							
+							</div>
 						</div>
 						<!-- Ausstattungen -->
 						<div class="tab-pane fade in active" id="appointments">
@@ -351,7 +351,7 @@
 										<span class="button-checkbox">
 											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Kabel/Sat/TV</button>
 											<input type="checkbox" class="hidden" id="appointments_tv"/>
-										</span><br>									
+										</span><br>
 									</td>
 									<td valign="top" style="padding:0 50px 0 0">
 										<span class="button-checkbox">
@@ -369,7 +369,7 @@
 										<span class="button-checkbox">
 											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Wasch-/Trockenraum</button>
 											<input type="checkbox" class="hidden" id="appointments_wash"/>
-										</span><br>									
+										</span><br>
 									</td>
 									<td valign="top" style="padding:0 50px 0 0">
 										<span class="button-checkbox">
@@ -379,7 +379,7 @@
 										<span class="button-checkbox">
 											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Rollsstuhlgerecht</button>
 											<input type="checkbox" class="hidden" id="appointments_wheelchair"/>
-										</span>	<br>				
+										</span>	<br>
 										<span class="button-checkbox">
 											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Fahrstuhl</button>
 											<input type="checkbox" class="hidden" id="appointments_lift"/>
@@ -434,7 +434,7 @@
 									<option value="0">Keine Angabe</option>
 									<option value="90x140">Kabinengröße bis 90 x 140 cm Innenmaß</option>
 									<option value="DIN">Kabinengröße ab 90 x 140 cm Innenmaß (nach DIN-Norm)</option>
-								</select><br><br>					
+								</select><br><br>
 								<label>Badezimmer</label><br>
 								<span class="button-checkbox">
 									<button type="button" class="btn" data-color="primary">Badewanne</button>
@@ -457,7 +457,7 @@
 									<option value="walk-in">Mit bodengleicher Dusche (nach DIN-Norm)</option>
 									<option value="low">Mit flacher Duschwanne bis 7 cm (nach DIN-Norm)</option>
 									<option value="high">Mit hoher Duschwanne ab 7 cm</option>
-								</select><br><br>					
+								</select><br><br>
 								<label>Balkon</label><br>
 								<span class="button-checkbox">
 									<button type="button" class="btn" data-color="primary">Mindestbreite Balkontür 80cm</button>
@@ -471,7 +471,7 @@
 									<option value="0">Keine Angabe</option>
 									<option value="true">Mit Schwelle (Höhe 2 cm und mehr)</option>
 									<option value="false">Schwellenlos erreichbar (Absatz bis 2 cm)</option>
-								</select><br><br>						
+								</select><br><br>
 								<label>Abstellmöglichkeit für Hilfsmittel (Rollator/Rollstuhl)</label><br>
 								<select class="form-inline" style="width: 30%; height: 34px; border-radius:0;" id="barrier_freeness_balcony_wheelchairparking">
 									<option value="0">Keine Angabe</option>
@@ -486,7 +486,7 @@
 								<span class="button-checkbox">
 									<button type="button" class="btn" data-color="primary">Gegensprechanlage</button>
 									<input type="checkbox" class="hidden" id="barrier_freeness_intercom"/>
-								</span><br><br>							
+								</span><br><br>
 							</div>
 						</div>
 						<!-- Aktivierung -->
@@ -559,7 +559,7 @@
 									<option value="G">G</option>
 								</select><br><br>
 								<label>Letzte Modernisierung</label><br>
-								<input type="text" class="form-control" id="energy_last" style="width: 10%;" placeholder="z. B. 2016">					
+								<input type="text" class="form-control" id="energy_last" style="width: 10%;" placeholder="z. B. 2016">
 							</div>
 						</div>
 						<!-- Kontaktdaten -->
@@ -579,7 +579,7 @@
 											<option value="0">Keine Angabe</option>
 											<option value="Frau">Frau</option>
 											<option value="Herr">Herr</option>
-										</select>							
+										</select>
 									</td>
 									<td id="th01" style="width:36%"><input type="text" class="form-control" id="contact_firstname" style="width: 80%;"></td>
 									<td id="th01" style="width:36%"><input type="text" class="form-control" id="contact_familyname" style="width: 80%;"></td>
@@ -611,15 +611,15 @@
 								<input type="checkbox" class="hidden" id="appointments_allownote"/>
 							</span><br><br>
 							<label>Objektbeschreibung</label><br>
-							<textarea type="text" class="form-control" id="description_description" style="width: 40%;" rows="10" placeholder="z. B. Altbau"></textarea><br>							
+							<textarea type="text" class="form-control" id="description_description" style="width: 40%;" rows="10" placeholder="z. B. Altbau"></textarea><br>
 							<label>Lage</label><br>
-							<textarea type="text" class="form-control" id="description_location" style="width: 40%;" rows="10"></textarea><br>		
+							<textarea type="text" class="form-control" id="description_location" style="width: 40%;" rows="10"></textarea><br>
 							<!--
 							<label>Ausstattung</label><br>
-							<textarea type="text" class="form-control" id="description_appointments" style="width: 40%;" rows="10" placeholder="z. B. Laminat, Morgensonne"></textarea><br>		
+							<textarea type="text" class="form-control" id="description_appointments" style="width: 40%;" rows="10" placeholder="z. B. Laminat, Morgensonne"></textarea><br>
 							-->
 							<label>Sonstige Angaben</label><br>
-							<textarea type="text" class="form-control" id="description_other" style="width: 40%;" rows="10"></textarea><br>		
+							<textarea type="text" class="form-control" id="description_other" style="width: 40%;" rows="10"></textarea><br>
 						</div>
 						<!-- Bilder und Dokumente-->
 						<div class="tab-pane fade in active" id="documents">
@@ -672,10 +672,10 @@
 			</div>
 		</div>
 	</div>
-</div>	
+</div>
 
 <script type="text/javascript">
    //submitForm();
-</script>	
+</script>
 </body>
 </html>

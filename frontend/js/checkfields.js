@@ -35,6 +35,15 @@
 			$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
 			$('#prices_netto').attr('style', 'width: 12%;');
 		}
+		if ($("#prices_service_charge").val().trim() == "" || !isNumber($("#prices_service_charge").val().replace(",", "."))) {
+			done = false;
+			prices_are_complete = false;
+			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
+			$('#prices_service_charge').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+		} else {
+			$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
+			$('#prices_service_charge').attr('style', 'width: 12%;');
+		}
 		/*
 		if (!isNumber($("#prices_cold").val().replace(",", "."))) {
 			done = false;
@@ -415,7 +424,9 @@ function defaultAndDeleteAllObjectFields() {
 	$('#prices_buy').val("");
 	$('#prices_buy').attr('style', 'width: 12%;');
 	$('#prices_netto').val("");
-	$('#prices_netto').attr('style', 'width: 12%;')	
+	$('#prices_netto').attr('style', 'width: 12%;')
+	$('#prices_service_charge').val("");
+	$('#prices_service_charge').attr('style', 'width: 12%;')
 	//$('#prices_cold').val("");
 	//$('#prices_cold').attr('style', 'width: 12%;');
 	//$('#prices_warm').val("");
