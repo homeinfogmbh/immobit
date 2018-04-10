@@ -6,7 +6,7 @@
 		$('#base_objectnumber').attr('style', 'width: 20%; border: 1px solid #ff0000; border-radius: 4px;');
 	} else
 		$('#base_objectnumber').attr('style', 'width: 20%;');
-	
+
 	if ($("#base_street").val().trim() == "") {
 		done = false;
 		$('#base_street').attr('style', 'border: 1px solid #ff0000; border-radius: 4px;');
@@ -22,7 +22,7 @@
 		$('#base_location').attr('style', 'border: 1px solid #ff0000; border-radius: 4px;');
 	} else
 		$('#base_location').attr('style', '');
-	
+
 	// PRICES
 	var prices_are_complete = true;
 	if ($("#prices_rent_div").attr('style') != "display: none;") { // Just check if not visible
@@ -131,7 +131,7 @@
 			$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
 			$('#prices_buy').attr('style', 'width: 12%;');
 		}
-	
+
 		if ($("#prices_provision").val().trim() == "" && $("#prices_provision_onoff").is(':checked')) {
 			done = false;
 			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
@@ -139,11 +139,11 @@
 		} else {
 			if (prices_are_complete)
 				$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_provision').attr('style', 'width: 12%;');			
-			
+			$('#prices_provision').attr('style', 'width: 12%;');
+
 		}
-	}				
-	
+	}
+
 	// AREAS
 	var areas_are_complete = true;
 	if ($("#areas_apart_div").attr('style') != "display: none;") {
@@ -180,7 +180,7 @@
 				$("#areas_html").replaceWith('<a href="#areas" class="btn_active" id="areas_html" data-toggle="tab">Größe & Zustand</a>');
 			$('#description_floor').attr('style', 'width: 6%;');
 		}
-	}	
+	}
 	if ($("#areas_use_complete_rooms_div").attr('style') != "display: none;") {
 		if ($("#areas_rooms").val().trim() == "" || !isNumber($("#areas_rooms").val().replace(",", "."))) {
 			done = false;
@@ -210,9 +210,9 @@
 			if (areas_are_complete)
 				$("#areas_html").replaceWith('<a href="#areas" class="btn_active" id="areas_html" data-toggle="tab">Größe & Zustand</a>');
 			$('#areas_total').attr('style', 'width: 12%;');
-		}		
+		}
 	}
-	
+
 	// Contacts
 	var contacts_are_complete = true;
 	if ($("#contact").attr('style') != "display: none;") {
@@ -256,7 +256,7 @@ function hasChanged(check, path, savedKey, newKey, count = 0) {
 			}
 			if ($.isArray(completePath)) {
 				if (completePath[count][savedKey] == newKey)
-					return false;			 
+					return false;
 			} else if (completePath[savedKey] == newKey)
 				return false;
 		}
@@ -310,8 +310,8 @@ function showRealEstateBySelection(realEstate) {
 		}
 	} catch (e) {	}
 	return false;
-}			
-			
+}
+
 function sortBy(path, reverse) {
     return function (a, b) {
 		try {
@@ -330,7 +330,7 @@ function sortBy(path, reverse) {
 				else
 					completePathA = Object.keys(completePathA)[0];
 			}
-				
+
 			if (typeof completePathB === "object") {
 				if (jQuery.isEmptyObject(completePathB))
 					completePathB = "unbekannt";
@@ -359,7 +359,7 @@ function isOnDate(startDate, endDate) {
 		endDate = new Date(endDate[0], endDate[1]-1, endDate[2]);
 		return todayDate <= endDate && todayDate >= startDate;
 	} catch (e) {
-		
+
 	}
 	return true;
 }
@@ -370,7 +370,7 @@ function getGermanDecimalFormat(nr) {
 			return "";
 		else {
 			nr = String(nr);
-			nr = nr.replace(".", ",");	
+			nr = nr.replace(".", ",");
 			if (nr.indexOf(",") == -1)
 				nr += ",00";
 			else if (nr.toString().indexOf(",")+2 == nr.toString().length)
@@ -420,7 +420,7 @@ function defaultAndDeleteAllObjectFields() {
 	$('#base_location').attr('style', '');
 	$('#address_show_yes').click();
 	$('.nav-tabs a[href="#prices"]').tab('show');
-	$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');		
+	$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
 	$('#prices_buy').val("");
 	$('#prices_buy').attr('style', 'width: 12%;');
 	$('#prices_netto').val("");
@@ -459,15 +459,15 @@ function defaultAndDeleteAllObjectFields() {
 	$('#areas_rooms').val("");
 	$('#areas_rooms').attr('style', 'width: 12%;');
 	if ($('#prices_provision_onoff').is(':checked'))
-		$('#prices_provision_onoff').click();	
+		$('#prices_provision_onoff').click();
 	if ($('#appointments_ebk').is(':checked'))
 		$('#appointments_ebk').click();
 	if ($('#appointments_cellar').is(':checked'))
 		$('#appointments_cellar').click();
 	if ($('#appointments_balcony').is(':checked'))
-		$('#appointments_balcony').click();	
+		$('#appointments_balcony').click();
 	if ($('#appointments_tv').is(':checked'))
-		$('#appointments_tv').click();	
+		$('#appointments_tv').click();
 	if ($('#appointments_bath_shower').is(':checked'))
 		$('#appointments_bath_shower').click();
 	if ($('#appointments_bath_tub').is(':checked'))
@@ -475,7 +475,7 @@ function defaultAndDeleteAllObjectFields() {
 	if ($('#appointments_bath_window').is(':checked'))
 		$('#appointments_bath_window').click();
 	if ($('#appointments_wash').is(':checked'))
-		$('#appointments_wash').click();	
+		$('#appointments_wash').click();
 	if ($('#appointments_accessible').is(':checked'))
 		$('#appointments_accessible').click();
 	if ($('#appointments_wheelchair').is(':checked'))
@@ -532,7 +532,7 @@ function defaultAndDeleteAllObjectFields() {
 			getAllContacts();
 			getDataOnce = false;
 		}
-	});			
+	});
 	$("#contact_title").val(0);
 	$('#contact_firstname').val("");
 	$('#contact_familyname').val("");
@@ -626,11 +626,12 @@ function setFields() {
 		if (_openImmo_json.verwaltung_objekt.wbs_sozialwohnung == true)
 			$('#appointments_allownote').click();
 	}
-	
+
 	// Prices
 	if (_openImmo_json.hasOwnProperty('preise')) {
 		$("#prices_buy").val(getGermanDecimalFormat(_openImmo_json.preise.kaufpreis));
 		$("#prices_netto").val(getGermanDecimalFormat(_openImmo_json.preise.nettokaltmiete));
+		$("#prices_service_charge").val(getGermanDecimalFormat(_openImmo_json.preise.betriebskostennetto));
 		//$("#prices_cold").val(getGermanDecimalFormat(_openImmo_json.preise.kaltmiete));
 		//$("#prices_warm").val(getGermanDecimalFormat(_openImmo_json.preise.warmmiete));
 		$("#prices_additional").val(getGermanDecimalFormat(_openImmo_json.preise.nebenkosten));
@@ -648,7 +649,7 @@ function setFields() {
 			$('#prices_provision_onoff').click();
 		$("#prices_provision").val(_openImmo_json.preise.provisionbrutto);
 	}
-	
+
 	// Areas
 	if (_openImmo_json.hasOwnProperty('flaechen')) {
 		$("#areas_living").val(getGermanDecimalFormat(_openImmo_json.flaechen.wohnflaeche));
@@ -657,7 +658,7 @@ function setFields() {
 		$("#areas_base").val(getGermanDecimalFormat(_openImmo_json.flaechen.grundstuecksflaeche));
 		$("#areas_rooms").val(_openImmo_json.flaechen.anzahl_zimmer.toString().replace(".", ","));
 		if (_openImmo_json.flaechen.anzahl_balkone == 1)
-			$('#appointments_balcony').click();				
+			$('#appointments_balcony').click();
 	}
 
 	// Appointments
@@ -666,7 +667,7 @@ function setFields() {
 			if (_openImmo_json.ausstattung.kueche.EBK == true)
 				$('#appointments_ebk').click();
 		if (_openImmo_json.ausstattung.unterkellert == "JA")
-			$('#appointments_cellar').click();					
+			$('#appointments_cellar').click();
 		if (_openImmo_json.ausstattung.hasOwnProperty('bad')) {
 			if (_openImmo_json.ausstattung.bad.DUSCHE == true)
 				$('#appointments_bath_shower').click();
@@ -737,15 +738,15 @@ function setFields() {
 				if (_openImmo_json.barrier_freeness.balcony.wide_door == true)
 					$('#barrier_freeness_balcony_wide_door').click();
 				if (_openImmo_json.barrier_freeness.balcony.large == true)
-					$('#barrier_freeness_balcony_large').click();							
+					$('#barrier_freeness_balcony_large').click();
 				if (_openImmo_json.barrier_freeness.balcony.hasOwnProperty('threshold'))
 					$("#barrier_freeness_balcony_threshold").val(_openImmo_json.barrier_freeness.balcony.threshold.toString());
 			}
 			if (_openImmo_json.barrier_freeness.hasOwnProperty('wheelchair_parking'))
-				$("#barrier_freeness_balcony_wheelchairparking").val(_openImmo_json.barrier_freeness.wheelchair_parking);								
+				$("#barrier_freeness_balcony_wheelchairparking").val(_openImmo_json.barrier_freeness.wheelchair_parking);
 		}
 	}
-	
+
 	// Contacts
 	if (_openImmo_json.hasOwnProperty('kontaktperson')) {
 		if (_openImmo_json.kontaktperson.hasOwnProperty('anrede'))
@@ -762,8 +763,8 @@ function setFields() {
 		$("#contact_plz").val(_openImmo_json.kontaktperson.plz);
 		$("#contact_location").val(_openImmo_json.kontaktperson.ort);
 		$("#contact_url").val(_openImmo_json.kontaktperson.url);
-	}				
-	
+	}
+
 	// Descriptions
 	if (_openImmo_json.hasOwnProperty('freitexte')) {
 		$("#description_title").val(_openImmo_json.freitexte.objekttitel);
@@ -771,7 +772,7 @@ function setFields() {
 		//$("#description_appointments").val(_openImmo_json.freitexte.ausstatt_beschr);
 		$("#description_description").val(_openImmo_json.freitexte.objektbeschreibung);
 		$("#description_other").val(_openImmo_json.freitexte.sonstige_angaben);
-	}		
+	}
 
 	if (_openImmo_json.hasOwnProperty('zustand_angaben')) {
 		$("#energy_last").val(_openImmo_json.zustand_angaben.letztemodernisierung); // Energy
@@ -800,7 +801,7 @@ function setFields() {
 				$("#energy_class").val(0);
 		}
 	}
-	
+
 	// Activation
 	if (_openImmo_json.verwaltung_techn.hasOwnProperty('weitergabe_positiv')) {
 		for (var i = 0; i < _openImmo_json.verwaltung_techn.weitergabe_positiv.length; i++) {
