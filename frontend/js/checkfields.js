@@ -29,19 +29,19 @@
 		if ($("#prices_netto").val().trim() == "" || !isNumber($("#prices_netto").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
+			$("#prices_html").addClass('erroneous-tab');
 			$('#prices_netto').addClass('erroneous-input');
 		} else {
-			$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
+			$("#prices_html").removeClass('erroneous-tab');
 			$('#prices_netto').removeClass('erroneous-input');
 		}
 		if ($("#prices_service_charge").val().trim() == "" || !isNumber($("#prices_service_charge").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
+			$("#prices_html").addClass('erroneous-tab');
 			$('#prices_service_charge').addClass('erroneous-input');
 		} else {
-			$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
+			$("#prices_html").removeClass('erroneous-tab');
 			$('#prices_service_charge').removeClass('erroneous-input');
 		}
 		/*
@@ -418,7 +418,7 @@ function defaultAndDeleteAllObjectFields() {
 	$('#base_location').attr('style', '');
 	$('#address_show_yes').click();
 	$('.nav-tabs a[href="#prices"]').tab('show');
-	$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
+	$("#prices_html").removeClass('erroneous-tab');
 	$('#prices_buy').val("");
 	$('#prices_buy').attr('style', 'width: 12%;');
 	$('#prices_netto').val("");
@@ -445,7 +445,7 @@ function defaultAndDeleteAllObjectFields() {
 	//$('#prices_courtage').attr('style', 'width: 12%;');
 	$('#prices_provision').val("");
 	$('#prices_provision').attr('style', 'width: 12%;');
-	$("#areas_html").replaceWith('<a href="#areas" class="btn_active" id="areas_html" data-toggle="tab">Größe & Zustand</a>');
+	$("#areas_html").removeClass('erroneous-tab');
 	$('#areas_living').val("");
 	$('#areas_living').attr('style', 'width: 12%;');
 	$('#areas_base').val("");
@@ -524,7 +524,7 @@ function defaultAndDeleteAllObjectFields() {
 	$("#energy_deliverer").val(0);
 	$("#energy_class").val(0);
 	$('#energy_last').val("");
-	$("#contact_html").replaceWith('<a href="#contact" class="btn_active btn_contacts" id="contact_html" data-toggle="tab">Kontaktdaten</a>');
+	$("#contact_html").removeClass('erroneous-tab');
 	$('.btn_contacts').click(function() {
 		if (getDataOnce) {
 			getAllContacts();
