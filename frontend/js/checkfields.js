@@ -3,9 +3,9 @@
 	//var allowedsigns = new RegExp('[^0-9a-zA-Z äÄöÖüÜ/.+:_\-]');
 	if ($("#base_objectnumber").val().trim() == ""/* || $("#base_objectnumber").val().search(allowedsigns) > 0*/) {
 		done = false;
-		$('#base_objectnumber').attr('style', 'width: 20%; border: 1px solid #ff0000; border-radius: 4px;');
+		$('#base_objectnumber').addClass('erroneous-element');
 	} else
-		$('#base_objectnumber').attr('style', 'width: 20%;');
+		$('#base_objectnumber').removeClass('erroneous-element');
 
 	if ($("#base_street").val().trim() == "") {
 		done = false;
@@ -30,7 +30,7 @@
 			done = false;
 			prices_are_complete = false;
 			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_netto').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$('#prices_netto').attr('style', );
 		} else {
 			$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
 			$('#prices_netto').attr('style', 'width: 12%;');
