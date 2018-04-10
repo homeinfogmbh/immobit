@@ -3,25 +3,25 @@
 	//var allowedsigns = new RegExp('[^0-9a-zA-Z äÄöÖüÜ/.+:_\-]');
 	if ($("#base_objectnumber").val().trim() == ""/* || $("#base_objectnumber").val().search(allowedsigns) > 0*/) {
 		done = false;
-		$('#base_objectnumber').addClass('erroneous-element');
+		$('#base_objectnumber').addClass('erroneous-input');
 	} else
-		$('#base_objectnumber').removeClass('erroneous-element');
+		$('#base_objectnumber').removeClass('erroneous-input');
 
 	if ($("#base_street").val().trim() == "") {
 		done = false;
-		$('#base_street').attr('style', 'border: 1px solid #ff0000; border-radius: 4px;');
+		$('#base_street').addClass('erroneous-input');
 	} else
-		$('#base_street').attr('style', '');
+		$('#base_street').removeClass('erroneous-input');
 	if ($("#base_plz").val().trim() == "" || !isNumber($("#base_plz").val().replace(",", "."))) {
 		done = false;
-		$('#base_plz').attr('style', 'border: 1px solid #ff0000; border-radius: 4px;');
+		$('#base_plz').addClass('erroneous-input');
 	} else
-		$('#base_plz').attr('style', '');
+		$('#base_plz').removeClass('erroneous-input');
 	if ($("#base_location").val().trim() == "") {
 		done = false;
-		$('#base_location').attr('style', 'border: 1px solid #ff0000; border-radius: 4px;');
+		$('#base_location').addClass('erroneous-input');
 	} else
-		$('#base_location').attr('style', '');
+		$('#base_location').removeClass('erroneous-input');
 
 	// PRICES
 	var prices_are_complete = true;
@@ -30,93 +30,93 @@
 			done = false;
 			prices_are_complete = false;
 			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_netto').attr('style', );
+			$('#prices_netto').addClass('erroneous-input');
 		} else {
 			$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_netto').attr('style', 'width: 12%;');
+			$('#prices_netto').removeClass('erroneous-input');
 		}
 		if ($("#prices_service_charge").val().trim() == "" || !isNumber($("#prices_service_charge").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
 			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_service_charge').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$('#prices_service_charge').addClass('erroneous-input');
 		} else {
 			$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_service_charge').attr('style', 'width: 12%;');
+			$('#prices_service_charge').removeClass('erroneous-input');
 		}
 		/*
 		if (!isNumber($("#prices_cold").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_cold').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#prices_html").addClass('erroneous-tab');
+			$('#prices_cold').addClass('erroneous-input');
 		} else {
 			if (prices_are_complete)
-				$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_cold').attr('style', 'width: 12%;');
+				$("#prices_html").removeClass('erroneous-tab');
+			$('#prices_cold').removeClass('erroneous-input');
 		}
 		if (!isNumber($("#prices_warm").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_warm').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#prices_html").addClass('erroneous-tab');
+			$('#prices_warm').addClass('erroneous-input');
 		} else {
 			if (prices_are_complete)
-				$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_warm').attr('style', 'width: 12%;');
+				$("#prices_html").removeClass('erroneous-tab');
+			$('#prices_warm').removeClass('erroneous-input');
 		}
 		*/
 		if (!isNumber($("#prices_additional").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_additional').attr('style', 'width: 80%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#prices_html").addClass('erroneous-tab');
+			$('#prices_additional').addClass('erroneous-input');
 		} else {
 			if (prices_are_complete)
-				$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_additional').attr('style', 'width: 80%;');
+				$("#prices_html").removeClass('erroneous-tab');
+			$('#prices_additional').removeClass('erroneous-input');
 		}
 		/*
 		if (!isNumber($("#prices_business_netto").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_business_netto').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#prices_html").addClass('erroneous-tab');
+			$('#prices_business_netto').addClass('erroneous-input');
 		} else {
 			if (prices_are_complete)
-				$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_business_netto').attr('style', 'width: 12%;');
+				$("#prices_html").removeClass('erroneous-tab');
+			$('#prices_business_netto').removeClass('erroneous-input');
 		}
 		*/
 		if (!isNumber($("#prices_caution").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_caution').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#prices_html").addClass('erroneous-tab');
+			$('#prices_caution').addClass('erroneous-input');
 		} else {
 			if (prices_are_complete)
-				$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_caution').attr('style', 'width: 12%;');
+				$("#prices_html").removeClass('erroneous-tab');
+			$('#prices_caution').removeClass('erroneous-input');
 		}
 		if ($('input[name=prices_heatingcosts_show]:checked').val() == "false" && ($("#prices_heatingcosts").val().trim() == "" || !isNumber($("#prices_heatingcosts").val().replace(",", ".")))) {
 			done = false;
 			prices_are_complete = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_heatingcosts').attr('style', 'width: 80%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#prices_html").addClass('erroneous-tab');
+			$('#prices_heatingcosts').addClass('erroneous-input');
 		} else {
 			if (prices_are_complete)
-				$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_heatingcosts').attr('style', 'width: 80%;');
+				$("#prices_html").removeClass('erroneous-tab');
+			$('#prices_heatingcosts').removeClass('erroneous-input');
 		}
 		/*
 		if (!isNumber($("#prices_total").val().replace(",", "."))) {
 			done = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_total').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#prices_html").addClass('erroneous-tab');
+			$('#prices_total').addClass('erroneous-input');
 		} else {
 			if (prices_are_complete)
-				$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_total').attr('style', 'width: 12%;');
+				$("#prices_html").removeClass('erroneous-tab');
+			$('#prices_total').removeClass('erroneous-input');
 		}
 		*/
 	}
@@ -125,21 +125,21 @@
 		if ($("#prices_buy").val().trim() == "" || !isNumber($("#prices_buy").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_buy').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#prices_html").addClass('erroneous-tab');
+			$('#prices_buy').addClass('erroneous-input');
 		} else {
-			$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_buy').attr('style', 'width: 12%;');
+			$("#prices_html").removeClass('erroneous-tab');
+			$('#prices_buy').removeClass('erroneous-input');
 		}
 
 		if ($("#prices_provision").val().trim() == "" && $("#prices_provision_onoff").is(':checked')) {
 			done = false;
-			$("#prices_html").html('<font color="#ff0000">Preise & Kosten</font>');
-			$('#prices_provision').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#prices_html").addClass('erroneous-tab');
+			$('#prices_provision').addClass('erroneous-input');
 		} else {
 			if (prices_are_complete)
-				$("#prices_html").replaceWith('<a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a>');
-			$('#prices_provision').attr('style', 'width: 12%;');
+				$("#prices_html").removeClass('erroneous-tab');
+			$('#prices_provision').removeClass('erroneous-input');
 
 		}
 	}
@@ -150,66 +150,66 @@
 		if ($("#areas_living").val().trim() == "" || !isNumber($("#areas_base").val().replace(",", "."))) {
 			done = false;
 			areas_are_complete = false;
-			$("#areas_html").html('<font color="#ff0000">Größe & Zustand</font>');
-			$('#areas_living').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#areas_html").addClass('erroneous-tab');
+			$('#areas_living').addClass('erroneous-input');
 		} else {
-			$("#areas_html").replaceWith('<a href="#areas" class="btn_active" id="areas_html" data-toggle="tab">Größe & Zustand</a>');
-			$('#areas_living').attr('style', 'width: 12%;');
+			$("#areas_html").removeClass('erroneous-tab');
+			$('#areas_living').removeClass('erroneous-input');
 		}
 	}
 	if ($("#areas_base_div").attr('style') != "display: none;") {
 		if ($("#areas_base").val().trim() == "" || !isNumber($("#areas_base").val().replace(",", "."))) {
 			done = false;
 			areas_are_complete = false;
-			$("#areas_html").html('<font color="#ff0000">Größe & Zustand</font>');
-			$('#areas_base').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#areas_html").addClass('erroneous-tab');
+			$('#areas_base').addClass('erroneous-input');
 		} else {
 			if (areas_are_complete)
-				$("#areas_html").replaceWith('<a href="#areas" class="btn_active" id="areas_html" data-toggle="tab">Größe & Zustand</a>');
-			$('#areas_base').attr('style', 'width: 12%;');
+				$("#areas_html").removeClass('erroneous-tab');
+			$('#areas_base').removeClass('erroneous-input');
 		}
 	}
 	if ($("#areas_floor_div").attr('style') != "display: none;") {
 		if (!isNumber($("#description_floor").val())) {
 			done = false;
 			areas_are_complete = false;
-			$("#areas_html").html('<font color="#ff0000">Größe & Zustand</font>');
-			$('#description_floor').attr('style', 'width: 6%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#areas_html").addClass('erroneous-tab');
+			$('#description_floor').addClass('erroneous-input');
 		} else {
 			if (areas_are_complete)
-				$("#areas_html").replaceWith('<a href="#areas" class="btn_active" id="areas_html" data-toggle="tab">Größe & Zustand</a>');
-			$('#description_floor').attr('style', 'width: 6%;');
+				$("#areas_html").removeClass('erroneous-tab');
+			$('#description_floor').removeClass('erroneous-input');
 		}
 	}
 	if ($("#areas_use_complete_rooms_div").attr('style') != "display: none;") {
 		if ($("#areas_rooms").val().trim() == "" || !isNumber($("#areas_rooms").val().replace(",", "."))) {
 			done = false;
 			areas_are_complete = false;
-			$("#areas_html").html('<font color="#ff0000">Größe & Zustand</font>');
-			$('#areas_rooms').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#areas_html").addClass('erroneous-tab');
+			$('#areas_rooms').addClass('erroneous-input');
 		} else {
 			if (areas_are_complete)
-				$("#areas_html").replaceWith('<a href="#areas" class="btn_active" id="areas_html" data-toggle="tab">Größe & Zustand</a>');
-			$('#areas_rooms').attr('style', 'width: 12%;');
+				$("#areas_html").removeClass('erroneous-tab');
+			$('#areas_rooms').removeClass('erroneous-input');
 		}
 		if (!isNumber($("#areas_use").val().replace(",", "."))) {
 			done = false;
 			areas_are_complete = false;
-			$("#areas_html").html('<font color="#ff0000">Größe & Zustand</font>');
-			$('#areas_use').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#areas_html").addClass('erroneous-tab');
+			$('#areas_use').addClass('erroneous-input');
 		} else {
 			if (areas_are_complete)
-				$("#areas_html").replaceWith('<a href="#areas" class="btn_active" id="areas_html" data-toggle="tab">Größe & Zustand</a>');
-			$('#areas_use').attr('style', 'width: 12%;');
+				$("#areas_html").removeClass('erroneous-tab');
+			$('#areas_use').removeClass('erroneous-input');
 		}
 		if (!isNumber($("#areas_total").val().replace(",", "."))) {
 			done = false;
-			$("#areas_html").html('<font color="#ff0000">Größe & Zustand</font>');
-			$('#areas_total').attr('style', 'width: 12%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#areas_html").addClass('erroneous-tab');
+			$('#areas_total').addClass('erroneous-input');
 		} else {
 			if (areas_are_complete)
-				$("#areas_html").replaceWith('<a href="#areas" class="btn_active" id="areas_html" data-toggle="tab">Größe & Zustand</a>');
-			$('#areas_total').attr('style', 'width: 12%;');
+				$("#areas_html").removeClass('erroneous-tab');
+			$('#areas_total').removeClass('erroneous-input');
 		}
 	}
 
@@ -219,29 +219,27 @@
 		if ($("#contact_familyname").val().trim() == "") {
 			done = false;
 			contacts_are_complete = false;
-			$("#contact_html").html('<font color="#ff0000">Kontaktdaten</font>');
-			$('#contact_familyname').attr('style', 'width: 80%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#contact_html").addClass('erroneous-tab');
+			$('#contact_familyname').addClass('erroneous-input');
 		} else {
-			$("#contact_html").replaceWith('<a href="#contact" class="btn_active btn_contacts" id="contact_html" data-toggle="tab">Kontaktdaten</a>');
-			$('#contact_familyname').attr('style', 'width: 80%;');
+			$("#contact_html").removeClass('erroneous-tab');
+			$('#contact_familyname').removeClass('erroneous-input');
 		}
 		if ($("#contact_email").val().trim() == "" && $("#contact_phone").val().trim() == "") {
 			done = false;
-			$("#contact_html").html('<font color="#ff0000">Kontaktdaten</font>');
-			$('#contact_email').attr('style', 'width: 20%; border: 1px solid #ff0000; border-radius: 4px;');
+			$("#contact_html").addClass('erroneous-tab');
+			$('#contact_email').addClass('erroneous-input');
 		} else {
 			if (contacts_are_complete)
-				$("#contact_html").replaceWith('<a href="#contact" class="btn_active btn_contacts" id="contact_html" data-toggle="tab">Kontaktdaten</a>');
-			$('#contact_email').attr('style', 'width: 20%;');
+				$("#contact_html").removeClass('erroneous-tab');
+			$('#contact_email').removeClass('erroneous-input');
 		}
 	}
 	return done;
 }
 
 function isNumber(number) {
-	if (isNaN(Number(number)))
-		return false;
-	return true;
+	return ! isNaN(Number(number));
 }
 
 function hasChanged(check, path, savedKey, newKey, count = 0) {

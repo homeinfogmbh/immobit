@@ -90,7 +90,7 @@ img {
     border-color: #3071a9;
 }
 .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a {
-    color: #fff;   
+    color: #fff;
 }
 .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:hover,
 .with-nav-tabs.panel-primary .nav-tabs > li.dropdown .dropdown-menu > li > a:focus {
@@ -157,7 +157,11 @@ img {
   border-top-right-radius: 0;
 }
 
-.erroneous-element {
+.erroneous-input {
   border: 1px solid #ff0000;
   border-radius: 4px;
+}
+
+.erroneous-tab {
+  color: #ff0000;
 }
