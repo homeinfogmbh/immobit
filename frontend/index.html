@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>ImmoBIT</title>
+	<meta name="viewport" content="width=device-width">
+	<link rel="shortcut icon" href="img/favicon.ico" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic&subset=latin,cyrillic-ext,greek-ext,greek,vietnamese,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<link href="css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+	<script src="js/fileinput.js" type="text/javascript"></script>
+	<script src="js/locales/de.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="js/sweetalert/lib/sweet-alert.css">
+	<script src="js/sweetalert/lib/sweet-alert.min.js"></script>
+	<!--deprecated <script src="js/libs/immosearch.js"></script>
+	<script src="js/libs/lib.js"></script>!-->
+	<script src="js/index.js" type="text/javascript"></script>
+	<script src="js/crypto/core-min.js" type="text/javascript"></script>
+	<script src="js/crypto/sha256.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<div class='loader' id='pageloader' style='display:none'></div>
+<div id="page" style="display: none;">
+	<!-- HEADER -->
+	<a class="navbar-brand" href="index.html" target="_self" style='height:75px'><img src="img/homeinfologo.png"></a>
+		<ul class="nav navbar-nav navbar-right" style="margin-right:3px;">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog" aria-hidden="true"></i> <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="https://www.homeinfo.de/#kontakt" target="_blank" data-target="#reportBug" style="color:#FF0000;"><i class="fa fa-bug" aria-hidden="true"></i> Fehler melden</a></li>
+					<li class="divider"></li>
+					<li><a href="#" class="logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a></li>
+				</ul>
+			</li>
+		</ul>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right" style="margin-right:3px;">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-language" aria-hidden="true"></i> Sprache ändern <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="#" class="german"></i> Deutsch</a></li>
+						<li><a href="#" class="english"> English</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>	
+
+	<!-- SIDEBAR -->
+	<div class="col-sm-3 col-md-2 sidebar">
+		<ul class="nav nav-sidebar">
+			<li id="startpage"><a href="#" id="startpage_link"></a></li>
+			<li id="create_expose" class=""><a href="#" id="create_expose_link"></a></li>
+			<li id="manage_exposes" class=""><a href="#" id="manage_exposes_link"></a></li>
+		</ul>
+		<br><br>
+		<label id="sessiontime"></label>
+		<br><br><br>
+		<p class="text-muted credit" style="color:#9A9898; margin-bottom:30px; font-size: smaller;">Umsetzung <a href="http://www.homeinfo.de" target="_blank">HOMEINFO GmbH</a></p>
+	</div>
+
+	<!-- STARTPAGE -- source: http://www.w3schools.com/bootstrap/bootstrap_tabs_pills.asp ; http://bootsnipp.com/snippets/featured/panels-with-nav-tabs -->
+
+	<div class="col-md-10" id="nav_startpage" style="display: none;">
+		<label><h1>Startseite</h1></label><br><br>
+		<div id="startpage_info">
+		</div>
+	</div>
+
+
+	<!-- Exposé anlegen -- source: http://www.w3schools.com/bootstrap/bootstrap_tabs_pills.asp ; http://bootsnipp.com/snippets/featured/panels-with-nav-tabs -->
+	<div class="col-md-10" id="nav_create_expose" style="display: none;">
+		<label id="content_title"><h1>Immobilie anlegen</h1></label><br>
+		<button type="button" class="btn btn-success pull-left btn_back" title="Zurück zur Übersicht" data-toggle="tooltip" style="margin-right: 5px;"><i class="fa fa-arrow-left"></i></button>
+		<button type="button" class="btn btn-success pull-left btn_new_object" title="Weitere Immobilie anlegen" data-toggle="tooltip"><i class="fa fa-plus"></i></button><br><br><br>
+		<div class="loader" id="loader_new" style="display: none;"></div>
+		<div id="managedcontainer">
+			<label><h2>Basisdaten</h2></label><br><br>
+			<label>Objektnummer</label>
+			<input type="text" class="form-control" id="base_objectnumber" placeholder="z. B. VE7642abc-001" style="width: 20%;"><br>
+			
+			<table style="border-collapse: separate;">
+				<tr>
+					<th><label>Vermarktungsart</label></th>
+				</tr>
+				<tr>
+					<td>
+						<div class="btn-group" data-toggle="buttons">
+							<label class="btn btn-default">
+								<input type="radio"	name="kindmarketing" id="buy_0" value="MIETE_PACHT">Mieten
+							</label>		
+							<label class="btn btn-default">
+								<input type="radio" name="kindmarketing" id="buy_1" value="KAUF">Kaufen
+							</label>
+						</div>	
+					</td>
+					<td>			
+					</td>
+				</tr>
+			</table>
+			<table style="width: 780px; height: auto; float: left;">
+				<thead>
+					<tr>
+						<td><label>Objektart</label></td>
+						<td><label>Typ des Objektes</label></td>
+					</tr>	
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<div class="btn-group" data-toggle="buttons">
+								<label class="btn btn-default">
+									<input type="radio"	name="kindexpose" id="kind_0" value="0">Wohnung
+								</label>		
+								<label class="btn btn-default">
+									<input type="radio" name="kindexpose" id="kind_1" value="1">Haus
+								</label>
+								<label class="btn btn-default" id="kind_2_label" style="pointer-events: none;" disabled>
+									<input type="radio" name="kindexpose" id="kind_2" value="2">Grundstück
+								</label>
+							</div>
+						</td>
+						<td>
+							<select class="form-control btn_change_type" id="object_apart">
+								<option value="0">Keine Angabe</option>
+								<option value="DACHGESCHOSS">Dachgeschoss</option>
+								<option value="MAISONETTE">Maisonette</option>
+								<option value="PENTHOUSE">Penthouse</option>
+								<option value="TERRASSEN">Terrassen</option>
+								<option value="ETAGE">Etage</option>
+								<option value="ERDGESCHOSS">Erdgeschoss</option>
+								<option value="SOUTERRAIN">Souterrain</option>
+							</select>
+							<select class="form-control btn_change_group" id="object_house" style="display: none;">
+								<option value="0">Keine Angabe</option>
+								<option value="EINFAMILIENHAUS">Einfamilienhaus</option>
+								<option value="ZWEIFAMILIENHAUS">Zweifamilienhaus</option>
+								<option value="MEHRFAMILIENHAUS">Mehrfamilienhaus</option>
+								<option value="DOPPELHAUSHAELFTE">Doppelhaushälfte</option>
+								<option value="REIHENHAUS">Reihenhaus</option>
+								<option value="REIHENMITTEL">Reihenmittel</option>
+								<option value="REIHENECK">Reiheneck</option>
+							</select>
+							<select class="form-control btn_change_group" id="object_base" style="display: none;" disabled>
+								<option value="0">Keine Angabe</option>
+							</select>
+						</td>
+					</tr>
+				</tbody><br>
+			</table><br><br><br><br>
+			<label>Adresse</label>
+			<table style="margin: 0 0 0 0px;" width="400px">
+				<tr>
+					<td width="90%"><label>Straße</label></td>
+					<td width="10%"><label>Hausnummer</label></td>
+				</tr>
+				<tr>
+					<td>
+						<input type="text" class="form-control" id="base_street">
+					</td>
+					<td >
+						<input type="text" class="form-control" id="base_housenumber">
+					</td>
+				</tr>
+			</table>
+
+			<section style="width: 500px; height: auto; float: left;">
+				<table style="margin: 0 0 0 0px;" width="400px">
+					<tr>
+						<td><label>PLZ</label></td>
+						<td><label>Ort</label></td>
+					</tr>
+					<tr>
+						<td width="20%">
+							<input type="text" class="form-control" id="base_plz">
+						</td>
+						<td width="80%">
+							<input type="text" class="form-control" id="base_location">
+						</td>			
+					</tr>		
+				</table>
+			</section>
+			<div class="btn-group" data-toggle="buttons">
+				<label>Adresse freigeben</label><br>
+				<label class="btn btn-default active">
+					<input type="radio" id="address_show_yes" name="address_show" value="true" checked>Ja
+				</label>
+				<label class="btn btn-default">
+					<input type="radio"id="address_show_no" name="address_show" value="false" value="0">Nein
+				</label>
+			</div><br>
+			<button type="button" class="btn btn-success pull-right btn_save" style="min-width:150px; margin-right: 5px; text-align:middle;" title="Immobiliendaten speichern" data-toggle="tooltip"></button>
+			<button type="button" class="btn btn-success pull-right btn_preview" title="Vorschau öffnen" style="margin-right: 5px" data-toggle="tooltip"><i class="fa fa-eye"></i></button>
+			<button type="button" class="btn btn-danger pull-right btn_delete" data-id="actual" title="Immobilie löschen" style="margin-right: 5px;" data-toggle="tooltip"><i class="fa fa-trash"></i></button>
+			<br><br><br>
+			<!-- TABS -->
+			<div class="panel with-nav-tabs panel-primary">
+				<div class="panel-heading">
+					<ul class="nav nav-tabs">
+						<li><a href="#prices" class="btn_active" id="prices_html" data-toggle="tab">Preise & Kosten</a></li>
+						<li><a href="#areas" class="btn_active" id="areas_html" data-toggle="tab">Größe & Zustand</a></li>
+						<li><a href="#appointments" class="btn_appointments btn_active" data-toggle="tab">Ausstattungen</a></li>
+						<li><a href="#description" class="btn_active" data-toggle="tab">Beschreibungen</a></li>
+						<li><a href="#energy" class="btn_energy btn_active" data-toggle="tab">Energieangaben</a></li>
+						<li><a href="#contact" class="btn_active btn_contacts" id="contact_html" data-toggle="tab">Kontaktdaten</a></li>
+						<li><a href="#documents" class="btn_active btn_documents" data-toggle="tab">Bilder und Dokumente</a></li>
+						<li><a href="#limited" class="btn_limited btn_active" data-toggle="tab">Barrierefrei</a></li>
+						<li><a href="#activation" class="btn_activation btn_active" data-toggle="tab">Aktivierung</a></li>
+					</ul>
+				</div>
+				
+				<div class="panel-body">
+					<div class="tab-content">
+						<!-- Preise & Kosten (Preise) -->
+						<div class="tab-pane fade in active" id="prices">
+							<div id="prices_buy_div" style="display: none;">
+								<label>Kaufpreis in €</label><br>
+								<input type="text" class="form-control" id="prices_buy" placeholder="z.B. 6160,50" style="width: 12%;"><br>
+							</div>
+							<div id="prices_provision_div" style="display: none;">
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Provision</button>
+									<input type="checkbox" class="hidden" id="prices_provision_onoff"/>
+									<span class="fa fa-info-circle" data-toggle="tooltip" title="Wählen Sie dieses Feld aus, wenn Ihr Angebot NICHT provisionsfrei ist und geben Sie die Provisionshöhe inkl. MwSt. an. Die Angabe der Netto-Provision ist ein Verstoß gegen die PAngVO." style="cursor: pointer;"></span>
+								</span>
+								<input type="text" class="form-control" id="prices_provision" placeholder="z.B. 436€ o. 6%" style="width: 12%;" disabled>
+							</div>
+							<div id="prices_rent_div">							
+								<label>Nettokaltmiete in €</label><br>
+								<input type="text" class="form-control" id="prices_netto" placeholder="z.B. 160,76" style="width: 12%;"><br>
+								<!--
+								<label>Kaltmiete in €</label><br>
+								<input type="text" class="form-control" id="prices_cold" placeholder="z.B. 160,76" style="width: 12%;"><br>							
+								<label>Warmmiete in €</label><br>
+								<input type="text" class="form-control" id="prices_warm" placeholder="z.B. 160,76" style="width: 12%;"><br>								
+								-->
+								<table style="border-collapse: separate;">
+									<tr>
+										<th><label>Nebenkosten in €</label></th>
+										<th><label>Heizkosten sind in den<br>Nebenkosten enthalten</label></th>
+										<th style="padding-left:20px"><label>Heizkosten in €</label></th>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" class="form-control" id="prices_additional" placeholder="z.B. 160,76" style="width: 80%;">
+										</td>
+										<td>
+											<div class="btn-group" data-toggle="buttons">
+												<label class="btn btn-default active">
+													<input type="radio" name="prices_heatingcosts_show" id="prices_heatingcosts_1" value="true" checked>Ja
+												</label>
+												<label class="btn btn-default">
+													<input type="radio"	name="prices_heatingcosts_show" id="prices_heatingcosts_0" value="false">Nein
+												</label>
+											</div>	
+										</td>
+										<td style="padding-left:20px">
+											<input type="text" class="form-control" id="prices_heatingcosts" placeholder="z.B. 160,76" disabled>
+										</td>				
+									</tr>
+								</table><br>
+								<!--<label>Gesamtmiete in €</label><br>
+								<input type="text" class="form-control" id="prices_total" placeholder="z.B. 160,76" style="width: 12%;"><br>
+								<label>Betriebskosten in €</label><br>
+								<input type="text" class="form-control" id="prices_business_netto" placeholder="z.B. 160,76" style="width: 12%;"><br>
+								<label>Courtage inkl. ges. MwSt in %</label><br>
+								<input type="text" class="form-control" id="prices_courtage" placeholder="z.B. 5,67" style="width: 12%;"><br>-->
+								<label>Kaution oder Genossenschaftsanteile in €</label><br>
+								<input type="text" class="form-control" id="prices_caution" placeholder="z.B. 160,76" style="width: 12%;"><br>							
+								<!--<label>Sonstiges Feld</label><br>
+								<input type="text" class="form-control" id="prices_other_text" placeholder="z.B. Wassergeld" style="width: 12%;">
+								<input type="text" class="form-control" id="prices_other" placeholder="z.B. 160,76 €" style="width: 12%;">-->
+							</div>
+						</div>
+						<!-- Größe & Zustand< (Flächen) -->
+						<div class="tab-pane fade in active" id="areas">
+							<div id="areas_use_complete_rooms_div">
+								<div id ="areas_use_complete_div">
+									<label>Nutzfläche in m²</label><br>
+									<input type="text" class="form-control" id="areas_use" placeholder="z.B. 80" style="width: 12%;"><br>
+									<label>Gesamtfläche in m²</label><br>
+									<input type="text" class="form-control" id="areas_total" placeholder="z.B. 80" style="width: 12%;"><br>
+								</div>
+								<label>Anzahl Zimmer</label><br>
+								<input type="text" class="form-control" id="areas_rooms" placeholder="z.B. 3" style="width: 12%;"><br>							
+							</div>						
+							<div id="areas_apart_div">
+								<label>Wohnfläche in m²</label><br>
+								<input type="text" class="form-control" id="areas_living" placeholder="z.B. 80" style="width: 12%;"><br>
+							</div>
+							<div id="areas_floor_div">
+								<label>Etage</label><br>
+								<input type="text" class="form-control" id="description_floor" style="width: 6%;" maxlength="4" placeholder="z.B. 3"><br>
+							</div>
+							<div id="areas_base_div" style="display: none;">
+								<label>Grundstücksfläche in m²</label><br>
+								<input type="text" class="form-control" id="areas_base" placeholder="z.B. 80" style="width: 12%;"><br>
+							</div>
+							<label>Verfügbar ab</label><br>
+							<input type="text" class="form-control" id="description_free" style="width: 10%;" maxlength="255" placeholder="01.01.2017"><br>							
+							<div id="description_year_state_div">
+								<label>Baujahr</label><br>
+								<input type="text" class="form-control" id="description_year" style="width: 10%;" placeholder="z. B. 2016"><br>
+								<label>Zustand</label><br>
+								<select class="form-inline btn_change_group" id="description_state" style="width: 15%; height: 34px; border-radius:0;">
+									<option value="0">Keine Angabe</option>
+									<option value="ERSTBEZUG">Erstbezug</option>
+									<option value="TEIL_VOLLRENOVIERUNGSBED">Teil-/Vollrenovierungsbedürftig</option>
+									<option value="NEUWERTIG">Neuwertig</option>
+									<option value="TEIL_VOLLRENOVIERT">Teil-/Vollrenoviert</option>
+									<option value="TEIL_SANIERT">Teilsaniert</option>
+									<option value="VOLL_SANIERT">Vollsaniert</option>
+									<option value="SANIERUNGSBEDUERFTIG">Sanierungsbedürftig</option>
+									<option value="BAUFAELLIG">Baufällig</option>
+									<option value="NACH_VEREINBARUNG">Nach Vereinbarung</option>
+									<option value="MODERNISIERT">Modernisiert</option>
+									<option value="GEPFLEGT">Gepflegt</option>
+									<option value="ROHBAU">Rohbau</option>
+									<option value="ENTKERNT">Entkernt</option>
+									<option value="ABRISSOBJEKT">Abrissobjekt</option>
+									<option value="PROJEKTIERT">Projektiert</option>
+								</select><br><br>
+							</div>							
+						</div>
+						<!-- Ausstattungen -->
+						<div class="tab-pane fade in active" id="appointments">
+							<div id="appintsments_div">
+								<table >
+									<td valign="top" style="padding:0 50px 0 0">
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Einbauküche</button>
+											<input type="checkbox" class="hidden" id="appointments_ebk"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Keller</button>
+											<input type="checkbox" class="hidden"  id="appointments_cellar" value="JA"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Balkon/Terrasse</button>
+											<input type="checkbox" class="hidden" id="appointments_balcony"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Kabel/Sat/TV</button>
+											<input type="checkbox" class="hidden" id="appointments_tv"/>
+										</span><br>									
+									</td>
+									<td valign="top" style="padding:0 50px 0 0">
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Dusche</button>
+											<input type="checkbox" class="hidden" id="appointments_bath_shower"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Badewanne</button>
+											<input type="checkbox" class="hidden" id="appointments_bath_tub"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Fenster im Bad</button>
+											<input type="checkbox" class="hidden" id="appointments_bath_window"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Wasch-/Trockenraum</button>
+											<input type="checkbox" class="hidden" id="appointments_wash"/>
+										</span><br>									
+									</td>
+									<td valign="top" style="padding:0 50px 0 0">
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Barrierefrei</button>
+											<input type="checkbox" class="hidden" id="appointments_accessible"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Rollsstuhlgerecht</button>
+											<input type="checkbox" class="hidden" id="appointments_wheelchair"/>
+										</span>	<br>				
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Fahrstuhl</button>
+											<input type="checkbox" class="hidden" id="appointments_lift"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Stellplatz</button>
+											<input type="checkbox" class="hidden" id="appointments_pitch"/>
+										</span><br>
+									</td>
+								</table>
+							</div>
+						</div>
+						<!-- Barrierefrei -->
+						<div class="tab-pane fade in active" id="limited">
+							<div id="limited_div">
+								<label>Treppenstufen bis zum Wohnungseingang</label><br>
+								<select class="form-inline" style="width: 30%; height: 34px; border-radius:0;" id="barrier_freeness_stairs">
+									<option value="-1">Keine Angabe</option>
+									<option value="0">Keine Treppenstufen</option>
+									<option value="0-1">Maximal 1 (inkl. Podest)</option>
+									<option value="2-8">2 bis 8 (inkl. Podest)</option>
+								</select><br><br>
+								<label>Rampe</label><br>
+								<select class="form-inline" style="width: 30%; height: 34px; border-radius:0;" id="barrier_freeness_entry_ramp">
+									<option value="0">Keine Angabe</option>
+									<option value="true">Mit bis zu 6 % Gefälle (nach DIN-Norm)</option>
+									<option value="false">Mit Über 6 % Gefälle</option>
+								</select><br><br>
+								<label>Türen</label><br>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Mindestbreite der Wohnungseingangstür 90 cm</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_wide_door"/>
+								</span>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Keine Türschwellen > 2 cm (außer Balkon)</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_low_thresholds"/>
+								</span>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Mindestbreite aller Wohnungstüren 80 cm (außer Abstellraum und Balkon)</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_wide_doors"/>
+								</span>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Automatische Türöffner Haustür vorhanden</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_door_opener"/>
+								</span><br><br>
+								<label>Aufzug</label><br>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Mindestbreite der Aufzugstür 80 cm</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_liftsize"/>
+								</span>
+								<select class="form-inline" style="width: 30%; height: 34px; border-radius:0;" id="barrier_freeness_liftcarsize">
+									<option value="0">Keine Angabe</option>
+									<option value="90x140">Kabinengröße bis 90 x 140 cm Innenmaß</option>
+									<option value="DIN">Kabinengröße ab 90 x 140 cm Innenmaß (nach DIN-Norm)</option>
+								</select><br><br>					
+								<label>Badezimmer</label><br>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Badewanne</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_bath_tub"/>
+								</span>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Dusche</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_bath_shower"/>
+								</span>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Durchgangsbreite Vorderseite Sanitärobjekt zur Wand mind. 120 cm</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_bath_wide"/>
+								</span>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Größe des Badezimmers ab 3 m²</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_bath_large"/>
+								</span>
+								<select class="form-inline" style="width: 30%; height: 34px; border-radius:0;" id="barrier_freeness_bath_shower_tray">
+									<option value="0">Keine Angabe</option>
+									<option value="walk-in">Mit bodengleicher Dusche (nach DIN-Norm)</option>
+									<option value="low">Mit flacher Duschwanne bis 7 cm (nach DIN-Norm)</option>
+									<option value="high">Mit hoher Duschwanne ab 7 cm</option>
+								</select><br><br>					
+								<label>Balkon</label><br>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Mindestbreite Balkontür 80cm</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_balcony_wide_door"/>
+								</span>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Balkongröße Über 2,5 m²</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_balcony_large"/>
+								</span>
+								<select class="form-inline" style="width: 30%; height: 34px; border-radius:0;" id="barrier_freeness_balcony_threshold">
+									<option value="0">Keine Angabe</option>
+									<option value="true">Mit Schwelle (Höhe 2 cm und mehr)</option>
+									<option value="false">Schwellenlos erreichbar (Absatz bis 2 cm)</option>
+								</select><br><br>						
+								<label>Abstellmöglichkeit für Hilfsmittel (Rollator/Rollstuhl)</label><br>
+								<select class="form-inline" style="width: 30%; height: 34px; border-radius:0;" id="barrier_freeness_balcony_wheelchairparking">
+									<option value="0">Keine Angabe</option>
+									<option value="indoors">Innerhalb der Wohnung 1,90 x 3 m (nach DIN-Norm für den E-Rolli)</option>
+									<option value="outdoors">Außerhalb der Wohnung 1,90 x 3 m zzgl. Stromanschluß (nach DIN-Norm för den E-Rolli)</option>
+								</select><br><br>
+								<label>Eingangsbereich</label><br>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Klingeltableau behindertengerecht (große Tasten, Höhe, große Ziffern, Höhe +/- 85 cm)</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_entry_bell" />
+								</span>
+								<span class="button-checkbox">
+									<button type="button" class="btn" data-color="primary">Gegensprechanlage</button>
+									<input type="checkbox" class="hidden" id="barrier_freeness_intercom"/>
+								</span><br><br>							
+							</div>
+						</div>
+						<!-- Aktivierung -->
+						<div class="tab-pane fade in active" id="activation">
+							<span id='info_activation' class="fa fa-info-circle" data-toggle="tooltip" title="Sind Sie bei den Portalen schon registiert? Sprechen Sie uns an!" style="cursor: pointer; margin-left: 5px"></span><br>
+							<span class="button-checkbox" id='homepage'>
+								<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Homepage</button>
+								<input type="checkbox" class="hidden" id="activation_homepage"/>
+								<br>
+							</span>
+							<span class="button-checkbox" id='immoscout'>
+								<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px"><font color="#ff7500">ImmobilienScout 24</font></button>
+								<input type="checkbox" class="hidden" id="activation_immoscout"/>
+								<br>
+							</span>
+							<span class="button-checkbox" id='immowelt'>
+								<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px"><font color="#00aae1">Immowelt</font></button>
+								<input type="checkbox" class="hidden" id="activation_immowelt"/>
+								<br>
+							</span>
+							<span class="button-checkbox" id='hba'>
+								<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px"><font color="#00aae1">Barrierefrei Hannover</font></button>
+								<input type="checkbox" class="hidden" id="activation_hba"/>
+								<br>
+							</span>
+							<span class="button-checkbox" id='breba'>
+								<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px"><font color="#00aae1">Barrierefrei Bremen</font></button>
+								<input type="checkbox" class="hidden" id="activation_breba"/>
+								<br>
+							</span>
+						</div>
+						<!-- Energieangaben (Energieausweis) -->
+						<div class="tab-pane fade in active" id="energy">
+							<div id="energy_div">
+								<label>Energieausweistyp</label><br>
+								<select class="form-inline btn_change_group" id="energy_type" style="width: 20%; height: 34px; border-radius:0;">
+									<option value="0">Keine Angabe</option>
+									<option value="BEDARF">Bedarfsausweis</option>
+									<option value="VERBRAUCH">Verbrauchsausweis</option>
+								</select><br><br>
+								<label>Kennwert in kWh/(m²*a)</label><br>
+								<input type="text" class="form-control" id="energy_kwh" style="width: 20%;"><br>
+								<label>Wesentlicher Energieträger</label><br>
+								<select class="form-inline btn_change_group" id="energy_deliverer" style="width: 20%; height: 34px; border-radius:0;" placeholder="z. B. 132,55">
+									<option value="0">Keine Angabe</option>
+									<option value="OEL">Öl</option>
+									<option value="GAS">Gas</option>
+									<option value="ELEKTRO">Elektro</option>
+									<option value="ALTERNATIV">Alternativ</option>
+									<option value="SOLAR">Solar</option>
+									<option value="ERDWAERME">Erdwärme</option>
+									<option value="LUFTWP">Luftwärmepumpe</option>
+									<option value="FERN">Fernwärme</option>
+									<option value="BLOCK">Blockheizkraftwerk</option>
+									<option value="WASSER-ELEKTRO">Wasser-Elektro</option>
+									<option value="PELLET">Pellet</option>
+									<option value="KOHLE">Kohle</option>
+									<option value="HOLZ">Holz</option>
+									<option value="FLUESSIGGAS">Fluessiggas</option>
+								</select><br><br>
+								<label>Effizienzklasse</label><br>
+								<select class="form-inline btn_change_group" id="energy_class" style="width: 15%; height: 34px; border-radius:0;">
+									<option value="0">Keine Angabe</option>
+									<option value="A">A</option>
+									<option value="B">B</option>
+									<option value="C">C</option>
+									<option value="D">D</option>
+									<option value="E">E</option>
+									<option value="F">F</option>
+									<option value="G">G</option>
+								</select><br><br>
+								<label>Letzte Modernisierung</label><br>
+								<input type="text" class="form-control" id="energy_last" style="width: 10%;" placeholder="z. B. 2016">					
+							</div>
+						</div>
+						<!-- Kontaktdaten -->
+						<div class="tab-pane fade in active btn_contacts" id="contact">
+							<select class="form-control btn_change_contact" id="contact_available" style="width:20%">
+								<option>Keine Kontaktdaten vorhanden</option>
+							</select><br>
+							<table id="t01">
+								<tr id="th01">
+									<th id="th01"><label>Anrede</label></th>
+									<th id="th01"><label>Vorname</label></th>
+									<th id="th01"><label>Name</label></th>
+								</tr>
+								<tr id="th01">
+									<td id="th01" style="width:28%">
+										<select class="form-inline btn_change_group" id="contact_title" style="width: 80%; height: 34px; border-radius:0;">
+											<option value="0">Keine Angabe</option>
+											<option value="Frau">Frau</option>
+											<option value="Herr">Herr</option>
+										</select>							
+									</td>
+									<td id="th01" style="width:36%"><input type="text" class="form-control" id="contact_firstname" style="width: 80%;"></td>
+									<td id="th01" style="width:36%"><input type="text" class="form-control" id="contact_familyname" style="width: 80%;"></td>
+								<tr>
+							</table><br>
+							<label>E-Mail</label><br>
+							<input type="text" class="form-control" id="contact_email" style="width: 20%;"><br>
+							<label>Telefon</label><br>
+							<input type="text" class="form-control" id="contact_phone" style="width: 20%;"><br>
+							<label>Unternehmen</label><br>
+							<input type="text" class="form-control" id="contact_company" style="width: 20%;"><br>
+							<label>Straße</label><br>
+							<input type="text" class="form-control" id="contact_street" style="width: 20%;"><br>
+							<label>Hausnummer</label><br>
+							<input type="text" class="form-control" id="contact_housenumber" style="width: 20%;"><br>
+							<label>PLZ</label><br>
+							<input type="text" class="form-control" id="contact_plz" style="width: 20%;"><br>
+							<label>Ort</label><br>
+							<input type="text" class="form-control" id="contact_location" style="width: 20%;"><br>
+							<label>Internetaddresse</label><br>
+							<input type="text" class="form-control" id="contact_url" style="width: 20%;" placeholder="z. B. http://www.homeinfo.de"><br>
+						</div>
+						<!-- Beschreibungen -->
+						<div class="tab-pane fade in active" id="description">
+							<label>Objekttitel</label><br>
+							<input type="text" class="form-control" id="description_title" style="width: 40%; float: left; margin-right: 20px" maxlength="255" placeholder="Maximal 255 Zeichen">
+							<span class="button-checkbox">
+								<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Wohnberechtigungsschein</button>
+								<input type="checkbox" class="hidden" id="appointments_allownote"/>
+							</span><br><br>
+							<label>Objektbeschreibung</label><br>
+							<textarea type="text" class="form-control" id="description_description" style="width: 40%;" rows="10" placeholder="z. B. Altbau"></textarea><br>							
+							<label>Lage</label><br>
+							<textarea type="text" class="form-control" id="description_location" style="width: 40%;" rows="10"></textarea><br>		
+							<!--
+							<label>Ausstattung</label><br>
+							<textarea type="text" class="form-control" id="description_appointments" style="width: 40%;" rows="10" placeholder="z. B. Laminat, Morgensonne"></textarea><br>		
+							-->
+							<label>Sonstige Angaben</label><br>
+							<textarea type="text" class="form-control" id="description_other" style="width: 40%;" rows="10"></textarea><br>		
+						</div>
+						<!-- Bilder und Dokumente-->
+						<div class="tab-pane fade in active" id="documents">
+							<label class="control-label">Anhänge</label>
+							<div class="form-group" id="files-upload-input"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="loader" id="loader_save" style="display: none; float:right;"></div>
+			<button type="button" class="btn btn-success pull-right btn_save" style="min-width:150px; margin-right: 5px; text-align:middle;" title="Immobiliendaten speichern" data-toggle="tooltip">Immobilie speichern</button>
+			<button type="button" class="btn btn-success pull-right btn_preview" title="Vorschau öffnen" style="margin-right: 5px" data-toggle="tooltip"><i class="fa fa-eye"></i></button>
+			<button type="button" class="btn btn-danger pull-right btn_delete" data-id="actual" title="Immobilie löschen" style="margin-right:5px; data-toggle="tooltip"><i class="fa fa-trash"></i></button><br><br><br>
+			<br><br>
+		</div>
+	</div>
+	<!-- Immobilien verwalten -->
+	<div class="nav">
+		<div class="col-md-10" id="nav_manage_exposes" style="display: none;">
+			<label id="manage_title"><h1>Immobilien verwalten</h1></label><br>
+			<div class="loader" id="loader_manage" style="display: none;"></div><br>
+				<div class="col-xs-4" style='padding:0px'>
+					<label>Anzahl: </label>
+					<select class="form-control btn_change_count_realestates" id="count_realestates" style="width:100px">
+						<option value="25">25</option>
+						<option value="50">50</option>
+						<option value="100">100</option>
+						<option value="200">200</option>
+						<option value="500">500</option>
+						<option value="all">Alle</option>
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label>Suchfeld</label><span class="fa fa-info-circle" data-toggle="tooltip" title="Suchen Sie nach einem bestimmten Begriff, z.B.: Wohnung" style="cursor: pointer; margin-left: 5px"></span>
+					<input type="text" class="form-control" id="searchfield" style="width:250px">
+				</div>
+				<div class="col-md-4">
+				<label>Anzeigen: </label>
+					<select class="form-control btn_change_count_realestates" id="show_realestates" style="width:120px">
+						<option value="all">Alle</option>
+						<option value="active">Aktiv</option>
+						<option value="not_active">Nicht aktiv</option>
+					</select>
+				</div><br><br><br><br>
+			<div id="realestates">
+			</div>
+			<div id="realestatesDelete" style="display:none; text-align:center;">
+				<button type="button" class="btn btn-danger btn_delete_several" title="Immobilien löschen" style="margin-left:0px; margin-right:0px; border-radius:0;"> Alle markierten Immobilien löschen <span class="fa fa-trash"></span></button>
+				<br><br>
+			</div>
+		</div>
+	</div>
+</div>	
+
+<script type="text/javascript">
+   //submitForm();
+</script>	
+</body>
+</html>
