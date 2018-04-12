@@ -50,9 +50,15 @@ immobit.dom.addContent = function (element, content) {
 
 immobit.dom.ListElementButton = function (content, class_, style) {
   var button = document.createElement('button');
+  immobit.dom.addContent(button, content);
 
   if (class_ != null) {
     button.setAttribute('class', class_);
+  }
+
+  if (style != null) {
+    column.setAttribute('style', style);
+  }
 }
 
 
@@ -85,10 +91,11 @@ immobit.dom.ListElement = function (index) {
   var div = document.createElement('div');
   div.setAttribute('class', 'input-group');
 
-  // TODO.
+  // TODO: implement.
   return row;
 }
 
+/*
 <tr>\
 				<div class="input-group">\
 					<td class="markrealestate" style="white-space: nowrap;" data-id="' + i + '">\
@@ -118,3 +125,4 @@ immobit.dom.ListElement = function (index) {
 					<td style="white-space: nowrap; padding-left:5px">' + customerPortals + '</td>\
 				</div>\
 			</tr>'
+*/
