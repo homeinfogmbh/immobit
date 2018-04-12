@@ -20,6 +20,7 @@
 
   Requires:
     * immobit.js
+    * diff.js
 */
 "use strict";
 
@@ -93,4 +94,32 @@ immobit.realEstates.patch = function (id, realEstatePatch, args) {
   var url = immobit.realEstates.getUrl(id);
   var data = JSON.stringify(realEstatePatch);
   return his.auth.patch(url, data, args);
+}
+
+
+/*
+  ImmoBit real estate class.
+*/
+immobit.realEstates.RealEstate = function (json) {
+  for (var prop in json) {
+    if (json.hasOwnProperty(prop)) {
+        this[prop] = json[prop];
+    }
+  }
+
+  this.diff = function (other) {
+    return immobit.diff.resolve(this, other);
+  }
+
+  this.toString = function () {
+    return JSON.stringify(this);
+  }
+}
+
+
+/*
+  Constructor class method.
+*/
+immobit.realEstates.RealEstate.fromString = function (str) {
+  return new immobit.dom.RealEstate(JSON.parse(str));
 }
