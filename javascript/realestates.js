@@ -121,5 +121,5 @@ immobit.realEstates.RealEstate = function (json) {
   Constructor class method.
 */
 immobit.realEstates.RealEstate.fromString = function (str) {
-  return new immobit.dom.RealEstate(JSON.parse(str));
+  return new immobit.realEstates.RealEstate(JSON.parse(str));
 }
