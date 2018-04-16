@@ -41,7 +41,8 @@
 			$("#prices_html").addClass('erroneous-tab');
 			$('#prices_service_charge').addClass('erroneous-input');
 		} else {
-			$("#prices_html").removeClass('erroneous-tab');
+			if (prices_are_complete)
+				$("#prices_html").removeClass('erroneous-tab');
 			$('#prices_service_charge').removeClass('erroneous-input');
 		}
 		/*
@@ -516,7 +517,7 @@ function defaultAndDeleteAllObjectFields() {
 	$('#description_floor').val("");
 	$('#description_title').val("");
 	$('#description_location').val("");
-	//$('#description_appointments').val("");
+	$('#description_appointments').val("");
 	$('#description_description').val("");
 	$('#description_other').val("");
 	$("#energy_type").val(0);
@@ -771,7 +772,7 @@ function setFields() {
 	if (_openImmo_json.hasOwnProperty('freitexte')) {
 		$("#description_title").val(_openImmo_json.freitexte.objekttitel);
 		$("#description_location").val(_openImmo_json.freitexte.lage);
-		//$("#description_appointments").val(_openImmo_json.freitexte.ausstatt_beschr);
+		$("#description_appointments").val(_openImmo_json.freitexte.ausstatt_beschr);
 		$("#description_description").val(_openImmo_json.freitexte.objektbeschreibung);
 		$("#description_other").val(_openImmo_json.freitexte.sonstige_angaben);
 	}

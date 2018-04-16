@@ -490,24 +490,6 @@ function getAccountData() {
 	*/
 }
 
-function getValue(value, type, nullable) {
-  if (nullable == null) {
-    nullable = false;
-  }
-
-  if (value == '') {
-    if (nullable) {
-      return null;
-    }
-  }
-
-  if (type == null) {
-    return value;
-  }
-
-  return type(value);
-}
-
 function createRealEstateJSON(check = true) {
 	var date = new Date();
 	var date_str = date.getFullYear() + '-' + ('0'+(date.getMonth()+1)).substr(-2,2) + '-' + ('0'+date.getDate()).substr(-2,2);
@@ -528,7 +510,7 @@ function createRealEstateJSON(check = true) {
 	openimmo["preise"] = {};
 		($("#prices_buy").val().trim() == "" || $("#prices_buy_div").attr('style') == "display: none;") ?(isNull("preise.kaufpreis")) ?false :openimmo.preise["kaufpreis"] = null :(hasChanged(check,"preise","kaufpreis", $("#prices_buy").val().replace(",", "."))) ?openimmo.preise["kaufpreis"] = Number($("#prices_buy").val().replace(",", ".")) :false;
 		($("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.nettokaltmiete")) ?false :openimmo.preise["nettokaltmiete"] = null :(hasChanged(check,"preise","nettokaltmiete", $("#prices_netto").val().replace(",", "."))) ?openimmo.preise["nettokaltmiete"] = Number($("#prices_netto").val().replace(",", ".")) :false;
-		($("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.betriebskostennetto")) ?false :openimmo.preise["betriebskostennetto"] = null :(hasChanged(check,"preise","betriebskostennetto", $("#prices_service_charge").val().replace(",", "."))) ?openimmo.preise["betriebskostennetto"] = getValue($("#prices_service_charge").val().replace(",", "."), Number, true) :false;
+		($("#prices_service_charge").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.betriebskostennetto")) ?false :openimmo.preise["betriebskostennetto"] = null :(hasChanged(check,"preise","betriebskostennetto", $("#prices_service_charge").val().replace(",", "."))) ?openimmo.preise["betriebskostennetto"] = Number($("#prices_service_charge").val().replace(",", ".")) :false;
 		//($("#prices_cold").val().trim() != "" && $("#prices_rent_div").attr('style') != "display: none;" && hasChanged(check,"preise","kaltmiete", $("#prices_cold").val().replace(",", "."))) ?openimmo.preise["kaltmiete"] = Number($("#prices_cold").val().replace(",", ".")) :false;
 		//($("#prices_warm").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.warmmiete")) ?false :openimmo.preise["warmmiete"] = null :(hasChanged(check,"preise","warmmiete", $("#prices_warm").val().replace(",", "."))) ?openimmo.preise["warmmiete"] = Number($("#prices_warm").val().replace(",", ".")) :false;
 		($("#prices_additional").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.nebenkosten")) ?false :openimmo.preise["nebenkosten"] = null :(hasChanged(check,"preise","nebenkosten", $("#prices_additional").val().replace(",", "."))) ?openimmo.preise["nebenkosten"] = Number( $("#prices_additional").val().replace(",", ".")) :false;
@@ -586,7 +568,7 @@ function createRealEstateJSON(check = true) {
 	openimmo["freitexte"] = {};
 		($("#description_title").val().trim() == "") ?(isNull("freitexte.objekttitel")) ?false :openimmo.freitexte["objekttitel"] = null :(hasChanged(check,"freitexte","objekttitel", $("#description_title").val())) ?openimmo.freitexte["objekttitel"] = $("#description_title").val() :false;
 		($("#description_location").val().trim() == "") ?(isNull("freitexte.lage")) ?false :openimmo.freitexte["lage"] = null :(hasChanged(check,"freitexte","lage", $("#description_location").val())) ?openimmo.freitexte["lage"] = $("#description_location").val() :false;
-		//($("#description_appointments").val().trim() == "") ?(isNull("freitexte.ausstatt_beschr")) ?false :openimmo.freitexte["ausstatt_beschr"] = null :(hasChanged(check,"freitexte","ausstatt_beschr", $("#description_appointments").val())) ?openimmo.freitexte["ausstatt_beschr"] = $("#description_appointments").val() :false;
+		($("#description_appointments").val().trim() == "") ?(isNull("freitexte.ausstatt_beschr")) ?false :openimmo.freitexte["ausstatt_beschr"] = null :(hasChanged(check,"freitexte","ausstatt_beschr", $("#description_appointments").val())) ?openimmo.freitexte["ausstatt_beschr"] = $("#description_appointments").val() :false;
 		($("#description_description").val().trim() == "") ?(isNull("freitexte.objektbeschreibung")) ?false :openimmo.freitexte["objektbeschreibung"] = null :(hasChanged(check,"freitexte","objektbeschreibung", $("#description_description").val())) ?openimmo.freitexte["objektbeschreibung"] = $("#description_description").val() :false;
 		 ($("#description_other").val().trim() == "") ?(isNull("freitexte.sonstige_angaben")) ?false :openimmo.freitexte["sonstige_angaben"] = null :(hasChanged(check,"freitexte","sonstige_angaben", $("#description_other").val())) ?openimmo.freitexte["sonstige_angaben"] = $("#description_other").val() :false;
 	openimmo["objektkategorie"] = {};
@@ -676,6 +658,7 @@ function createRealEstateJSON(check = true) {
 	//openimmo.user_defined_simplefield[0]["value"] = "feld1 99";
 
 	//console.log("openimmo: " + JSON.stringify(openimmo));
+	console.log(openimmo);
 	// Delete empty objects {}
 	$.each(openimmo, function(key, value) {
 		$.each(openimmo[key], function(key2, value2) { // Delete subkeys; problem: it's deleting normal key/values in each subnode
