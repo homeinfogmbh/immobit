@@ -658,7 +658,7 @@ function createRealEstateJSON(check = true) {
 	//openimmo.user_defined_simplefield[0]["value"] = "feld1 99";
 
 	//console.log("openimmo: " + JSON.stringify(openimmo));
-	console.log(openimmo);
+	//console.log(openimmo);
 	// Delete empty objects {}
 	$.each(openimmo, function(key, value) {
 		$.each(openimmo[key], function(key2, value2) { // Delete subkeys; problem: it's deleting normal key/values in each subnode
