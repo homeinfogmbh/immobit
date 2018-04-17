@@ -290,8 +290,24 @@
 									<label>Gesamtfläche in m²</label><br>
 									<input type="text" class="form-control" id="areas_total" placeholder="z.B. 80" style="width: 12%;"><br>
 								</div>
-								<label>Anzahl Zimmer</label><br>
-								<input type="text" class="form-control" id="areas_rooms" placeholder="z.B. 3" style="width: 12%;"><br>
+								<table style="border-collapse: separate;">
+									<tr>
+										<th><label>Anzahl Zimmer</label></th>
+										<th><label>Anzahl Badezimmer</label></th>
+										<th><label>Anzahl Schlafzimmer</label></th>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" class="form-control" id="areas_rooms" placeholder="z.B. 3" style="width: 80%;">
+										</td>
+										<td>
+											<input type="text" class="form-control" id="areas_bathrooms" placeholder="z.B. 2" style="width: 80%;">
+										</td>
+										<td>
+											<input type="text" class="form-control" id="areas_bedrooms" placeholder="z.B. 1" style="width: 80%;">
+										</td>
+									</tr>
+								</table><br>
 							</div>
 							<div id="areas_apart_div">
 								<label>Wohnfläche in m²</label><br>
@@ -388,6 +404,16 @@
 											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Stellplatz</button>
 											<input type="checkbox" class="hidden" id="appointments_pitch"/>
 										</span><br>
+									</td>
+									<td valign="top" style="padding:0 50px 0 0">
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Gartennutzung</button>
+											<input type="checkbox" class="hidden" id="appointments_garden"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Tierhaltung</button>
+											<input type="checkbox" class="hidden" id="appointments_animals"/>
+										</span>	<br>
 									</td>
 								</table>
 							</div>
@@ -545,7 +571,7 @@
 									<option value="PELLET">Pellet</option>
 									<option value="KOHLE">Kohle</option>
 									<option value="HOLZ">Holz</option>
-									<option value="FLUESSIGGAS">Fluessiggas</option>
+									<option value="FLUESSIGGAS">Flüssiggas</option>
 								</select><br><br>
 								<label>Effizienzklasse</label><br>
 								<select class="form-inline btn_change_group" id="energy_class" style="width: 15%; height: 34px; border-radius:0;">
@@ -612,10 +638,10 @@
 							</span><br><br>
 							<label>Objektbeschreibung</label><br>
 							<textarea type="text" class="form-control" id="description_description" style="width: 40%;" rows="10" placeholder="z. B. Altbau"></textarea><br>
-							<label>Lage</label><br>
-							<textarea type="text" class="form-control" id="description_location" style="width: 40%;" rows="10"></textarea><br>
 							<label>Ausstattung</label><br>
 							<textarea type="text" class="form-control" id="description_appointments" style="width: 40%;" rows="10" placeholder="z. B. Laminat, Morgensonne"></textarea><br>
+							<label>Lage</label><br>
+							<textarea type="text" class="form-control" id="description_location" style="width: 40%;" rows="10"></textarea><br>
 							<label>Sonstige Angaben</label><br>
 							<textarea type="text" class="form-control" id="description_other" style="width: 40%;" rows="10"></textarea><br>
 						</div>

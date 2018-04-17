@@ -193,6 +193,26 @@
 				$("#areas_html").removeClass('erroneous-tab');
 			$('#areas_rooms').removeClass('erroneous-input');
 		}
+		if (!isNumber($("#areas_bathrooms").val().replace(",", "."))) {
+			done = false;
+			areas_are_complete = false;
+			$("#areas_html").addClass('erroneous-tab');
+			$('#areas_bathrooms').addClass('erroneous-input');
+		} else {
+			if (areas_are_complete)
+				$("#areas_html").removeClass('erroneous-tab');
+			$('#areas_bathrooms').removeClass('erroneous-input');
+		}
+		if (!isNumber($("#areas_bedrooms").val().replace(",", "."))) {
+			done = false;
+			areas_are_complete = false;
+			$("#areas_html").addClass('erroneous-tab');
+			$('#areas_bedrooms').addClass('erroneous-input');
+		} else {
+			if (areas_are_complete)
+				$("#areas_html").removeClass('erroneous-tab');
+			$('#areas_bedrooms').removeClass('erroneous-input');
+		}
 		if (!isNumber($("#areas_use").val().replace(",", "."))) {
 			done = false;
 			areas_are_complete = false;
@@ -456,7 +476,11 @@ function defaultAndDeleteAllObjectFields() {
 	$('#areas_total').val("");
 	$('#areas_total').attr('style', 'width: 12%;');
 	$('#areas_rooms').val("");
-	$('#areas_rooms').attr('style', 'width: 12%;');
+	$('#areas_rooms').attr('style', 'width: 80%;');
+	$('#areas_bathrooms').val("");
+	$('#areas_bathrooms').attr('style', 'width: 80%;');
+	$('#areas_bedrooms').val("");
+	$('#areas_bedrooms').attr('style', 'width: 80%;');
 	if ($('#prices_provision_onoff').is(':checked'))
 		$('#prices_provision_onoff').click();
 	if ($('#appointments_ebk').is(':checked'))
@@ -483,6 +507,10 @@ function defaultAndDeleteAllObjectFields() {
 		$('#appointments_lift').click();
 	if ($('#appointments_pitch').is(':checked'))
 		$('#appointments_pitch').click();
+	if ($('#appointments_animals').is(':checked'))
+		$('#appointments_animals').click();
+	if ($('#appointments_garden').is(':checked'))
+		$('#appointments_garden').click();
 	if ($('#appointments_allownote').is(':checked'))
 		$('#appointments_allownote').click();
 	if ($('#barrier_freeness_entry_bell').is(':checked'))
@@ -624,6 +652,8 @@ function setFields() {
 			$('#address_show_no').click();
 		if (_openImmo_json.verwaltung_objekt.wbs_sozialwohnung == true)
 			$('#appointments_allownote').click();
+		if (_openImmo_json.verwaltung_objekt.haustiere == true)
+			$('#appointments_animals').click();
 	}
 
 	// Prices
@@ -660,6 +690,10 @@ function setFields() {
 		$("#areas_total").val(getGermanDecimalFormat(_openImmo_json.flaechen.gesamtflaeche));
 		$("#areas_base").val(getGermanDecimalFormat(_openImmo_json.flaechen.grundstuecksflaeche));
 		$("#areas_rooms").val(_openImmo_json.flaechen.anzahl_zimmer.toString().replace(".", ","));
+		if (_openImmo_json.flaechen.hasOwnProperty('anzahl_badezimmer'))
+			$("#areas_bathrooms").val(_openImmo_json.flaechen.anzahl_badezimmer.toString().replace(".", ","));
+		if (_openImmo_json.flaechen.hasOwnProperty('anzahl_schlafzimmer'))
+			$("#areas_bedrooms").val(_openImmo_json.flaechen.anzahl_schlafzimmer.toString().replace(".", ","));
 		if (_openImmo_json.flaechen.anzahl_balkone == 1)
 			$('#appointments_balcony').click();
 	}
@@ -693,6 +727,8 @@ function setFields() {
 			$('#appointments_tv').click();
 		if (_openImmo_json.ausstattung.wasch_trockenraum == true)
 			$('#appointments_wash').click();
+		if (_openImmo_json.ausstattung.gartennutzung == true)
+			$('#appointments_garden').click();
 
 		// Barrier freeness
 		if (_openImmo_json.hasOwnProperty('barrier_freeness')) {
