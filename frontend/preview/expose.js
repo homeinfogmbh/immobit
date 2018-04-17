@@ -132,6 +132,7 @@ function elements() {
     objectId: $('#objectId'),
     objectTitle: $('#objectTitle'),
     coldRent: $('#coldRent'),
+	operationalCosts: $('#operationalCosts'),
     serviceCharge: $('#serviceCharge'),
     heatingCosts: $('#heatingCosts'),
     heatingCostsInServiceCharge: $('#heatingCostsInServiceCharge'),
@@ -194,6 +195,9 @@ function elements() {
 function render(realEstate) {
   setupGalleries(realEstate);
   realEstate.render(elements());
+  
+  if ($("#amenitiesList").text() == '–')
+	  $("#amenitiesList").html('<ul class="ib-amenities-list"><ul>');
   if (realEstate.gardenUsage()) {
 	  $(".ib-amenities-list").append('<li>Gartennutzung</li>');
   }
