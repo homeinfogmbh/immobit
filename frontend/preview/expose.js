@@ -126,7 +126,6 @@ function setupGalleries(realEstate) {
   }
 }
 
-
 function elements() {
   return {
     objectId: $('#objectId'),
