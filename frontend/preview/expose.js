@@ -27,7 +27,8 @@ var args = new homeinfo.QueryString();
 // XXX: Change config for appropriate productive setting
 var mailer = new immobrowse.Mailer('homeinfo-testing');
 var objectId = args.object_id;
-var realEstate = args.real_estate;
+//var realEstate = args.real_estate;
+var realEstate = localStorage.getItem("immobrowse.preview");
 var sessionId = args.session;
 var imageGallery;
 var floorplanGallery;

@@ -1312,7 +1312,9 @@ function saveMetaDataForImages(id) { // null means all the old images, otherwise
 }
 
 function showpreview(JSONdata) {
-	var win = window.open('https://immobit.de/preview/expose.html?real_estate=' + encodeURIComponent(JSON.stringify(JSONdata)) + '&session=' + localStorage.getItem("token"), '_blank');
+	localStorage.setItem("immobrowse.preview", JSON.stringify(JSONdata));
+	//var win = window.open('https://immobit.de/preview/expose.html?real_estate=' + encodeURIComponent(JSON.stringify(JSONdata)) + '&session=' + localStorage.getItem("token"), '_blank');
+	var win = window.open('https://immobit.de/preview/expose.html?session=' + localStorage.getItem("token"), '_blank');
 	if (win)
 		win.focus();
 }
