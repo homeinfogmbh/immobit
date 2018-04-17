@@ -138,7 +138,7 @@
 								<option value="ERDGESCHOSS">Erdgeschoss</option>
 								<option value="SOUTERRAIN">Souterrain</option>
 							</select>
-							<select class="form-control btn_change_group" id="object_house" style="display: none;">
+							<select class="form-control" id="object_house" style="display: none;">
 								<option value="0">Keine Angabe</option>
 								<option value="EINFAMILIENHAUS">Einfamilienhaus</option>
 								<option value="ZWEIFAMILIENHAUS">Zweifamilienhaus</option>
@@ -148,7 +148,7 @@
 								<option value="REIHENMITTEL">Reihenmittel</option>
 								<option value="REIHENECK">Reiheneck</option>
 							</select>
-							<select class="form-control btn_change_group" id="object_base" style="display: none;" disabled>
+							<select class="form-control" id="object_base" style="display: none;" disabled>
 								<option value="0">Keine Angabe</option>
 							</select>
 						</td>
@@ -327,7 +327,7 @@
 								<label>Baujahr</label><br>
 								<input type="text" class="form-control" id="description_year" style="width: 10%;" placeholder="z. B. 2016"><br>
 								<label>Zustand</label><br>
-								<select class="form-inline btn_change_group" id="description_state" style="width: 15%; height: 34px; border-radius:0;">
+								<select class="form-inline" id="description_state" style="width: 15%; height: 34px; border-radius:0;">
 									<option value="0">Keine Angabe</option>
 									<option value="ERSTBEZUG">Erstbezug</option>
 									<option value="TEIL_VOLLRENOVIERUNGSBED">Teil-/Vollrenovierungsbedürftig</option>
@@ -413,7 +413,29 @@
 										<span class="button-checkbox">
 											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Tierhaltung</button>
 											<input type="checkbox" class="hidden" id="appointments_animals"/>
-										</span>	<br>
+										</span><br>
+									</td>
+									<td valign="top" style="padding:0 50px 0 0">
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Ofen</button>
+											<input type="checkbox" class="hidden" id="appointments_oven"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Etagenheizung</button>
+											<input type="checkbox" class="hidden" id="appointments_floor"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Zentralheizung</button>
+											<input type="checkbox" class="hidden" id="appointments_central"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Fernwärme</button>
+											<input type="checkbox" class="hidden" id="appointments_away"/>
+										</span><br>
+										<span class="button-checkbox">
+											<button type="button" class="btn" data-color="primary" style="margin-bottom: 10px">Fußbodenheizung</button>
+											<input type="checkbox" class="hidden" id="appointments_foot"/>
+										</span><br>
 									</td>
 								</table>
 							</div>
@@ -548,7 +570,7 @@
 						<div class="tab-pane fade in active" id="energy">
 							<div id="energy_div">
 								<label>Energieausweistyp</label><br>
-								<select class="form-inline btn_change_group" id="energy_type" style="width: 20%; height: 34px; border-radius:0;">
+								<select class="form-inline" id="energy_type" style="width: 20%; height: 34px; border-radius:0;">
 									<option value="0">Keine Angabe</option>
 									<option value="BEDARF">Bedarfsausweis</option>
 									<option value="VERBRAUCH">Verbrauchsausweis</option>
@@ -556,7 +578,7 @@
 								<label>Kennwert in kWh/(m²*a)</label><br>
 								<input type="text" class="form-control" id="energy_kwh" style="width: 20%;"><br>
 								<label>Wesentlicher Energieträger</label><br>
-								<select class="form-inline btn_change_group" id="energy_deliverer" style="width: 20%; height: 34px; border-radius:0;" placeholder="z. B. 132,55">
+								<select class="form-inline" id="energy_deliverer" style="width: 20%; height: 34px; border-radius:0;">
 									<option value="0">Keine Angabe</option>
 									<option value="OEL">Öl</option>
 									<option value="GAS">Gas</option>
@@ -574,7 +596,7 @@
 									<option value="FLUESSIGGAS">Flüssiggas</option>
 								</select><br><br>
 								<label>Effizienzklasse</label><br>
-								<select class="form-inline btn_change_group" id="energy_class" style="width: 15%; height: 34px; border-radius:0;">
+								<select class="form-inline" id="energy_class" style="width: 15%; height: 34px; border-radius:0;">
 									<option value="0">Keine Angabe</option>
 									<option value="A">A</option>
 									<option value="B">B</option>
@@ -601,7 +623,7 @@
 								</tr>
 								<tr id="th01">
 									<td id="th01" style="width:28%">
-										<select class="form-inline btn_change_group" id="contact_title" style="width: 80%; height: 34px; border-radius:0;">
+										<select class="form-inline" id="contact_title" style="width: 80%; height: 34px; border-radius:0;">
 											<option value="0">Keine Angabe</option>
 											<option value="Frau">Frau</option>
 											<option value="Herr">Herr</option>

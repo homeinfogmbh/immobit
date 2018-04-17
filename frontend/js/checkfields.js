@@ -513,6 +513,16 @@ function defaultAndDeleteAllObjectFields() {
 		$('#appointments_garden').click();
 	if ($('#appointments_allownote').is(':checked'))
 		$('#appointments_allownote').click();
+	if ($('#appointments_oven').is(':checked'))
+		$('#appointments_oven').click();
+	if ($('#appointments_floor').is(':checked'))
+		$('#appointments_floor').click();
+	if ($('#appointments_central').is(':checked'))
+		$('#appointments_central').click();
+	if ($('#appointments_away').is(':checked'))
+		$('#appointments_away').click();
+	if ($('#appointments_foot').is(':checked'))
+		$('#appointments_foot').click();
 	if ($('#barrier_freeness_entry_bell').is(':checked'))
 		$('#barrier_freeness_entry_bell').click();
 	if ($('#barrier_freeness_door_opener').is(':checked'))
@@ -729,7 +739,19 @@ function setFields() {
 			$('#appointments_wash').click();
 		if (_openImmo_json.ausstattung.gartennutzung == true)
 			$('#appointments_garden').click();
-
+		if (_openImmo_json.ausstattung.hasOwnProperty('heizungsart')) {
+			if (_openImmo_json.ausstattung.heizungsart.OFEN == true)
+				$('#appointments_oven').click();
+			if (_openImmo_json.ausstattung.heizungsart.ETAGE == true)
+				$('#appointments_floor').click();
+			if (_openImmo_json.ausstattung.heizungsart.ZENTRAL == true)
+				$('#appointments_central').click();
+			if (_openImmo_json.ausstattung.heizungsart.FERN == true)
+				$('#appointments_away').click();
+			if (_openImmo_json.ausstattung.heizungsart.FUSSBODEN == true)
+				$('#appointments_foot').click();
+		}
+			
 		// Barrier freeness
 		if (_openImmo_json.hasOwnProperty('barrier_freeness')) {
 			if (_openImmo_json.barrier_freeness.hasOwnProperty('stairs'))

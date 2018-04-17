@@ -548,6 +548,12 @@ function createRealEstateJSON(check = true) {
 		(hasChanged(check,"ausstattung", "kabel_sat_tv", ($("#appointments_tv").is(':checked')) ?true :null)) ?(openimmo.ausstattung["kabel_sat_tv"] = ($("#appointments_tv").is(':checked')) ?true :null) :false;
 		(hasChanged(check,"ausstattung", "wasch_trockenraum", ($("#appointments_wash").is(':checked')) ?true :null)) ?(openimmo.ausstattung["wasch_trockenraum"] = ($("#appointments_wash").is(':checked')) ?true :null) :false; // Wohnberechtigungs / appointments_allownote under 'verwaltung_objekt'
 		(hasChanged(check,"ausstattung", "gartennutzung", ($("#appointments_garden").is(':checked')) ?true :null)) ?(openimmo.ausstattung["gartennutzung"] = ($("#appointments_garden").is(':checked')) ?true :null) :false;
+		openimmo.ausstattung["heizungsart"] = {};
+			(hasChanged(check,"ausstattung.heizungsart", "OFEN", ($("#appointments_oven").is(':checked')) ?true :null)) ?(openimmo.ausstattung.heizungsart["OFEN"] = ($("#appointments_oven").is(':checked')) ?true :null) :false;
+			(hasChanged(check,"ausstattung.heizungsart", "ETAGE", ($("#appointments_floor").is(':checked')) ?true :null)) ?(openimmo.ausstattung.heizungsart["ETAGE"] = ($("#appointments_floor").is(':checked')) ?true :null) :false;
+			(hasChanged(check,"ausstattung.heizungsart", "ZENTRAL", ($("#appointments_central").is(':checked')) ?true :null)) ?(openimmo.ausstattung.heizungsart["ZENTRAL"] = ($("#appointments_central").is(':checked')) ?true :null) :false;
+			(hasChanged(check,"ausstattung.heizungsart", "FERN", ($("#appointments_away").is(':checked')) ?true :null)) ?(openimmo.ausstattung.heizungsart["FERN"] = ($("#appointments_away").is(':checked')) ?true :null) :false;
+			(hasChanged(check,"ausstattung.heizungsart", "FUSSBODEN", ($("#appointments_foot").is(':checked')) ?true :null)) ?(openimmo.ausstattung.heizungsart["FUSSBODEN"] = ($("#appointments_foot").is(':checked')) ?true :null) :false;
 	openimmo["geo"] = {};
 		(hasChanged(check,"geo","strasse", $("#base_street").val())) ?openimmo.geo["strasse"] = $("#base_street").val() :false;
 		($("#base_housenumber").val().trim() == "") ?(isNull("geo.hausnummer")) ?false :openimmo.geo["hausnummer"] = null :(hasChanged(check,"geo","hausnummer", $("#base_housenumber").val())) ?openimmo.geo["hausnummer"] = $("#base_housenumber").val() :false;
