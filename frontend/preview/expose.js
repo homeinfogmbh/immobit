@@ -139,6 +139,8 @@ function elements() {
     subjectToCommission: $('#subjectToCommission'),
     livingArea: $('#livingArea'),
     rooms: $('#rooms'),
+	bathrooms: $('#bathrooms'),
+	bedrooms: $('#bedrooms'),
     floor: $('#floor'),
     availableFrom: $('#availableFrom'),
     councilFlat: $('#councilFlat'),
@@ -159,6 +161,7 @@ function elements() {
       valueClass: $('#valueClass')
     },
     description: $('#description'),
+	amenities: $('#appointment'),
     exposure: $('#exposure'),
     miscellanea: $('#miscellanea'),
     salutation: $('#salutation'),
@@ -191,6 +194,17 @@ function elements() {
 function render(realEstate) {
   setupGalleries(realEstate);
   realEstate.render(elements());
+  if (realEstate.gardenUsage()) {
+	  $(".ib-amenities-list").append('<li>Gartennutzung</li>');
+  }
+  if (realEstate.petsAllowed()) {
+	  $(".ib-amenities-list").append('<li>Tierhaltung</li>');
+  }
+  var heatingtypes = realEstate.heatingTypes();
+  for (var heatings = 0; heatings < heatingtypes.length; heatings++) {
+	$(".ib-amenities-list").append('<li>' + heatingtypes[heatings] + '</li>');
+  }
+	  
   $('#angebotsnummerPrint').text(realEstate.objectId());
   var title = 'Angebots-Nr. ' + realEstate.objectId();
 

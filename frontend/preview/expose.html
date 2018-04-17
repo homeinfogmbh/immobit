@@ -36,31 +36,12 @@
   <script src="gallery.js"></script>
 </head>
 <div class="container">
-  <div id="header" class="row row-centered ib-header no-print">
-    <div class="col-md-2 col-centered ib-centered">
-      <button type="button" class="btn btn-default disabled">
-        « Zur&uuml;ck
-      </button>
-    </div>
+  <div id="header" class="row row-centered ib-header">
     <div id="objectTitle" class="col-md-5 col-centered ib-title">
       Objekttitel
     </div>
     <div class="col-md-2 col-centered ib-id">
       Angebots Nr. <span id="objectId"></span>
-    </div>
-    <div class="col-md-1 col-centered">
-      <div class="ib-detail-print ib-centered">
-        <button type="button" class="btn btn-info" onclick="print();">
-          Drucken
-        </button>
-      </div>
-    </div>
-    <div class="col-md-2 col-centered">
-      <div class="ib-detail-contactform ib-centered">
-        <button type="button" class="btn btn-success disabled">
-          Kontaktformular
-        </button>
-      </div>
     </div>
   </div>
   <div class="row row-centered">
@@ -141,9 +122,21 @@
           </div>
           <div class="row row-centered">
             <div class="col-xs-6 ib-price-caption">
-              Zimmer
+              Anzahl Zimmer
             </div>
             <div id="rooms" class="col-xs-6"></div>
+          </div>
+          <div class="row row-centered">
+            <div class="col-xs-6 ib-price-caption">
+              Anzahl Badezimmer
+            </div>
+            <div id="bathrooms" class="col-xs-6"></div>
+          </div>
+          <div class="row row-centered">
+            <div class="col-xs-6 ib-price-caption">
+              Anzahl Schlafzimmer
+            </div>
+            <div id="bedrooms" class="col-xs-6"></div>
           </div>
           <div class="row row-centered">
             <div class="col-xs-6 ib-price-caption">
@@ -220,6 +213,14 @@
             Objektbeschreibung
           </div>
           <div id="description" class="row row-centered ib-justified"></div>
+        </div>
+      </div>
+      <div class="row row-centered ib-expose-data-row">
+        <div class="col-md-12 ib-expose-data-col">
+          <div class="row row-centered ib-section-caption">
+            Ausstattung
+          </div>
+          <div id="appointment" class="row row-centered ib-justified"></div>
         </div>
       </div>
       <div class="row row-centered ib-expose-data-row">
