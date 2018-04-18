@@ -15,6 +15,8 @@ $(document).keypress(function(e) {
 
 function loginAjax() {
 	$('#pageloader').show();
+	his.session.login($("#username").val(), $("#password").val()).then(loginSuccess, loginError);
+	/*
 	$.ajax({
 		timeout: 3000,
 		url: "https://his.homeinfo.de/session", //&duration=5 // max 5min - 30min
@@ -48,9 +50,41 @@ function loginAjax() {
 			}
 		}
 	});
+	*/
+}
+function loginSuccess(msg) {
+	//console.log("Success " + msg.token)
+	if (typeof(Storage) !== "undefined") {
+		localStorage.setItem("token", msg.token);
+		//console.log("Storage TOKEN: " + localStorage.getItem("token"));
+		window.location.href = "index.html";
+	} else {
+		//document.getElementById("warning").innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Dieser Browser unterstützt keine Cookies, dadurch kann die Seite leider nicht benutzt werden.';
+		$("#warning").show();
+	}
+}
+function loginError(msg) {
+	try {
+		console.log(msg);
+		$('#pageloader').hide();
+		if (msg.responseJSON.message == "Ungültiger Benutzername und / oder Passwort.") {
+			document.getElementById("warning").innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> LogIn Daten sind falsch.';
+			$("#warning").show();
+		} else if(msg.responseJSON.message == "Benutzername und / oder Passwort nicht angegeben.") {
+			document.getElementById("warning").innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Bitte geben Sie Benutzernamen und Passwort ein.';
+			$("#warning").show();
+		} else {
+			document.getElementById("warning").innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Leider war der LogIn nicht erfolgreich. Bitte versuchen Sie es später noch einmal.';
+			$("#warning").show();
+		}
+	} catch(e) {
+		document.getElementById("warning").innerHTML = '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Leider war der LogIn nicht erfolgreich. Bitte versuchen Sie es später noch einmal.';
+		$("#warning").show();
+	}
 }
 
 function checkSession() {
+	//console.log(his.getSessionToken());TODO
 	if (localStorage.getItem("token") != null) {
 		$('#pageloader').show();
 		$.ajax({

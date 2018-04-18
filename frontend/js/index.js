@@ -452,7 +452,7 @@ $(document).ready(function() {
 });
 
 function getAccountData() {
-		$.ajax({
+	$.ajax({
 		url: "https://backend.immobit.de/portals?session=" + localStorage.getItem("token"),
 		type: "GET",
 		complete: function (msg) {
@@ -1312,9 +1312,9 @@ function saveMetaDataForImages(id) { // null means all the old images, otherwise
 }
 
 function showpreview(JSONdata) {
+	holdSession();
 	localStorage.setItem("immobrowse.preview", JSON.stringify(JSONdata));
-	//var win = window.open('https://immobit.de/preview/expose.html?real_estate=' + encodeURIComponent(JSON.stringify(JSONdata)) + '&session=' + localStorage.getItem("token"), '_blank');
-	var win = window.open('https://immobit.de/preview/expose.html?session=' + localStorage.getItem("token"), '_blank');
+	var win = window.open('https://immobit.de/preview/expose.html?session=' + localStorage.getItem("token"), '_blank'); 	//var win = window.open('file:///C:/Users/Raphael-PC/Desktop/homeinfo/ImmoBIT/preview/expose.html?session=' + localStorage.getItem("token"), '_blank');
 	if (win)
 		win.focus();
 }
