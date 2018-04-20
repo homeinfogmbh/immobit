@@ -77,18 +77,6 @@
 				$("#prices_html").removeClass('erroneous-tab');
 			$('#prices_additional').removeClass('erroneous-input');
 		}
-		/*
-		if (!isNumber($("#prices_business_netto").val().replace(",", "."))) {
-			done = false;
-			prices_are_complete = false;
-			$("#prices_html").addClass('erroneous-tab');
-			$('#prices_business_netto').addClass('erroneous-input');
-		} else {
-			if (prices_are_complete)
-				$("#prices_html").removeClass('erroneous-tab');
-			$('#prices_business_netto').removeClass('erroneous-input');
-		}
-		*/
 		if (!isNumber($("#prices_caution").val().replace(",", "."))) {
 			done = false;
 			prices_are_complete = false;
@@ -109,7 +97,6 @@
 				$("#prices_html").removeClass('erroneous-tab');
 			$('#prices_heatingcosts').removeClass('erroneous-input');
 		}
-		/*
 		if (!isNumber($("#prices_total").val().replace(",", "."))) {
 			done = false;
 			$("#prices_html").addClass('erroneous-tab');
@@ -119,7 +106,6 @@
 				$("#prices_html").removeClass('erroneous-tab');
 			$('#prices_total').removeClass('erroneous-input');
 		}
-		*/
 	}
 
 	if ($("#prices_buy_div").attr('style') != "display: none;") {
@@ -443,9 +429,9 @@ function defaultAndDeleteAllObjectFields() {
 	$('#prices_buy').val("");
 	$('#prices_buy').attr('style', 'width: 12%;');
 	$('#prices_netto').val("");
-	$('#prices_netto').attr('style', 'width: 12%;')
+	$('#prices_netto').attr('style', 'width: 80%;')
 	$('#prices_service_charge').val("");
-	$('#prices_service_charge').attr('style', 'width: 12%;')
+	$('#prices_service_charge').attr('style', 'width: 80%;')
 	//$('#prices_cold').val("");
 	//$('#prices_cold').attr('style', 'width: 12%;');
 	//$('#prices_warm').val("");
@@ -453,15 +439,13 @@ function defaultAndDeleteAllObjectFields() {
 	$('#prices_heatingcosts_1').click();
 	$('#prices_additional').val("");
 	$('#prices_additional').attr('style', 'width: 80%;');
-	//$('#prices_business_netto').val("");
-	//$('#prices_business_netto').attr('style', 'width: 12%;');
 	$('#prices_caution').val("");
-	$('#prices_caution').attr('style', 'width: 12%;');
+	$('#prices_caution').attr('style', 'width: 80%;');
 	$('#prices_other_text').val("");
 	$('#prices_heatingcosts').val("");
 	$('#prices_heatingcosts').attr('style', 'width: 80%;');
-	//$('#prices_total').val("");
-	//$('#prices_total').attr('style', 'width: 12%;');
+	$('#prices_total').val("");
+	$('#prices_total').attr('style', 'width: 80%;');
 	//$('#prices_courtage').val("");
 	//$('#prices_courtage').attr('style', 'width: 12%;');
 	$('#prices_provision').val("");
@@ -684,8 +668,7 @@ function setFields() {
 			$('#prices_heatingcosts_0').click();
 			$("#prices_heatingcosts").val(getGermanDecimalFormat(_openImmo_json.preise.heizkosten));
 		}
-		//$("#prices_total").val(getGermanDecimalFormat(_openImmo_json.preise.gesamtmietenetto));
-		//$("#prices_business_netto").val(getGermanDecimalFormat(_openImmo_json.preise.betriebskostennetto));
+		$("#prices_total").val(getGermanDecimalFormat(_openImmo_json.preise.gesamtmietenetto));
 		//$("#prices_courtage").val(_openImmo_json.preise.aussen_courtage);
 		$("#prices_caution").val(getGermanDecimalFormat(_openImmo_json.preise.kaution));
 		if (_openImmo_json.preise.provisionspflichtig == true)
@@ -846,7 +829,9 @@ function setFields() {
 		if (_openImmo_json.zustand_angaben.hasOwnProperty('energiepass')) {
 			if (_openImmo_json.zustand_angaben.energiepass[0].hasOwnProperty('epart'))
 				$("#energy_type").val(_openImmo_json.zustand_angaben.energiepass[0].epart);
-			else
+			else if (_openImmo_json.hasOwnProperty('verwaltung_objekt') && _openImmo_json.verwaltung_objekt.denkmalgeschuetzt == true) {
+				$("#energy_type").val('true');
+			} else
 				$("#energy_type").val(0);
 			if ($("#energy_type").val() === "BEDARF" )
 				$("#energy_kwh").val(_openImmo_json.zustand_angaben.energiepass[0].endenergiebedarf);

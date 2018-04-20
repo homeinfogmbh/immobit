@@ -195,7 +195,7 @@
 				</label>
 			</div><br>
 			<button type="button" class="btn btn-success pull-right btn_save" style="min-width:150px; margin-right: 5px; text-align:middle;" title="Immobiliendaten speichern" data-toggle="tooltip"></button>
-			<button type="button" class="btn btn-success pull-right btn_preview" title="Vorschau öffnen" style="margin-right: 5px" data-toggle="tooltip"><i class="fa fa-eye"></i></button>
+			<button type="button" class="btn btn-success pull-right btn_preview" title="Vorschau öffnen" style="margin-right: 5px; display:none" data-toggle="tooltip"><i class="fa fa-eye"></i></button>
 			<button type="button" class="btn btn-danger pull-right btn_delete" data-id="actual" title="Immobilie löschen" style="margin-right: 5px;" data-toggle="tooltip"><i class="fa fa-trash"></i></button>
 			<br><br><br>
 			<!-- TABS -->
@@ -231,10 +231,6 @@
 								<input type="text" class="form-control" id="prices_provision" placeholder="z.B. 436€ o. 6%" style="width: 12%;" disabled>
 							</div>
 							<div id="prices_rent_div">
-								<label>Nettokaltmiete in €</label><br>
-								<input type="text" class="form-control" id="prices_netto" placeholder="z.B. 160,76" style="width: 12%;"><br>
-								<label>Betriebskosten in €</label><br>
-								<input type="text" class="form-control" id="prices_service_charge" placeholder="z.B. 75,25" style="width: 12%;"><br>
 								<!--
 								<label>Kaltmiete in €</label><br>
 								<input type="text" class="form-control" id="prices_cold" placeholder="z.B. 160,76" style="width: 12%;"><br>
@@ -243,14 +239,28 @@
 								-->
 								<table style="border-collapse: separate;">
 									<tr>
-										<th><label>Nebenkosten in €</label></th>
-										<th><label>Heizkosten sind in den<br>Nebenkosten enthalten</label></th>
-										<th style="padding-left:20px"><label>Heizkosten in €</label></th>
+										<td>
+											<label>Nettokaltmiete in €</label>
+											<input type="text" class="form-control" id="prices_netto" placeholder="z.B. 160,76" style="width: 80%;">
+										</td>
+										<td>
+											<label>Gesamtmiete in €</label>
+											<input type="text" class="form-control" id="prices_total" placeholder="z.B. 160,76" style="width: 80%;">
+										</td>
 									</tr>
 									<tr>
 										<td>
-											<input type="text" class="form-control" id="prices_additional" placeholder="z.B. 160,76" style="width: 80%;">
+											<br><label>Betriebskosten in €</label><br>
+											<input type="text" class="form-control" id="prices_service_charge" placeholder="z.B. 75,25" style="width: 80%;">
 										</td>
+									</tr>
+									<tr>
+										<th><label>Nebenkosten in €</label></th>
+										<th><label>Heizkosten sind in den<br>Nebenkosten enthalten</label></th>
+										<th><label>Heizkosten in €</label></th>
+									</tr>
+									<tr>
+										<td><input type="text" class="form-control" id="prices_additional" placeholder="z.B. 160,76" style="width: 80%;"></td>
 										<td>
 											<div class="btn-group" data-toggle="buttons">
 												<label class="btn btn-default active">
@@ -261,19 +271,17 @@
 												</label>
 											</div>
 										</td>
-										<td style="padding-left:20px">
-											<input type="text" class="form-control" id="prices_heatingcosts" placeholder="z.B. 160,76" disabled>
+										<td><input type="text" class="form-control" id="prices_heatingcosts" placeholder="z.B. 160,76" disabled></td>
+									</tr>
+									<tr>
+										<td>
+											<br><label>Kaution oder <br>Genossenschaftsanteile in €</label>
+											<input type="text" class="form-control" id="prices_caution" placeholder="z.B. 160,76" style="width: 80%;">
 										</td>
 									</tr>
 								</table><br>
-								<!--<label>Gesamtmiete in €</label><br>
-								<input type="text" class="form-control" id="prices_total" placeholder="z.B. 160,76" style="width: 12%;"><br>
-								<label>Betriebskosten in €</label><br>
-								<input type="text" class="form-control" id="prices_business_netto" placeholder="z.B. 160,76" style="width: 12%;"><br>
-								<label>Courtage inkl. ges. MwSt in %</label><br>
+								<!--<label>Courtage inkl. ges. MwSt in %</label><br>
 								<input type="text" class="form-control" id="prices_courtage" placeholder="z.B. 5,67" style="width: 12%;"><br>-->
-								<label>Kaution oder Genossenschaftsanteile in €</label><br>
-								<input type="text" class="form-control" id="prices_caution" placeholder="z.B. 160,76" style="width: 12%;"><br>
 								<!--<label>Sonstiges Feld</label><br>
 								<input type="text" class="form-control" id="prices_other_text" placeholder="z.B. Wassergeld" style="width: 12%;">
 								<input type="text" class="form-control" id="prices_other" placeholder="z.B. 160,76 €" style="width: 12%;">-->
@@ -572,6 +580,7 @@
 									<option value="0">Keine Angabe</option>
 									<option value="BEDARF">Bedarfsausweis</option>
 									<option value="VERBRAUCH">Verbrauchsausweis</option>
+									<option value="true">Denkmalgeschützt</option>
 								</select><br><br>
 								<label>Kennwert in kWh/(m²*a)</label><br>
 								<input type="text" class="form-control" id="energy_kwh" style="width: 20%;"><br>
@@ -675,7 +684,7 @@
 			</div>
 			<div class="loader" id="loader_save" style="display: none; float:right;"></div>
 			<button type="button" class="btn btn-success pull-right btn_save" style="min-width:150px; margin-right: 5px; text-align:middle;" title="Immobiliendaten speichern" data-toggle="tooltip">Immobilie speichern</button>
-			<button type="button" class="btn btn-success pull-right btn_preview" title="Vorschau öffnen" style="margin-right: 5px" data-toggle="tooltip"><i class="fa fa-eye"></i></button>
+			<button type="button" class="btn btn-success pull-right btn_preview" title="Vorschau öffnen" style="margin-right: 5px; display:none" data-toggle="tooltip"><i class="fa fa-eye"></i></button>
 			<button type="button" class="btn btn-danger pull-right btn_delete" data-id="actual" title="Immobilie löschen" style="margin-right:5px; data-toggle="tooltip"><i class="fa fa-trash"></i></button><br><br><br>
 			<br><br>
 		</div>
