@@ -565,7 +565,7 @@ function createRealEstateJSON(check = true) {
 		($("#description_state").val() == "0" || $("#description_year_state_div").attr('style') == "display: none;") ?(isNull("zustand_angaben.zustand")) ?false :openimmo.zustand_angaben["zustand"] = null :(hasChanged(check,"zustand_angaben", "zustand", $("#description_state").val())) ?openimmo.zustand_angaben["zustand"] = $("#description_state").val() :false;
 		if (hasChanged(check,"zustand_angaben.energiepass","epart", $("#energy_type").val()) || hasChanged(check,"zustand_angaben.energiepass","energieverbrauchkennwert", $("#energy_kwh").val()) || hasChanged(check,"zustand_angaben.energiepass","endenergiebedarf", $("#energy_kwh").val()) || hasChanged(check,"zustand_angaben.energiepass","primaerenergietraeger", $("#energy_deliverer").val()) || hasChanged(check,"zustand_angaben.energiepass","wertklasse", $("#energy_class").val())) {
 			openimmo.zustand_angaben["energiepass"] = [{}];
-				($("#energy_type").val() == "0") ?openimmo.zustand_angaben.energiepass[0]["epart"] = null :openimmo.zustand_angaben.energiepass[0]["epart"] = $("#energy_type").val();
+				($("#energy_type").val() == "0" || $("#energy_type").val() == "true") ?openimmo.zustand_angaben.energiepass[0]["epart"] = null :openimmo.zustand_angaben.energiepass[0]["epart"] = $("#energy_type").val();
 				if ($("#energy_type").val() === "BEDARF" )
 					openimmo.zustand_angaben.energiepass[0]["endenergiebedarf"] = $("#energy_kwh").val();
 				else if ($("#energy_type").val() === "VERBRAUCH" )
