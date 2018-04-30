@@ -2,18 +2,18 @@ checkSession();
 $(document).ready(function(){
 	$("#warning").hide();
     $("#login").click(function(){
-		loginAjax();
+		login();
     });
 	if (localStorage.getItem("token") == null)
 		$("#container_style").show();
 });
 $(document).keypress(function(e) {
     if(e.which == 13) { // 'enter'
-        loginAjax();
+        login();
     }
 });
 
-function loginAjax() {
+function login() {
 	$('#pageloader').show();
 	his.session.login($("#username").val(), $("#password").val()).then(loginSuccess, loginError);
 	/*
@@ -89,7 +89,7 @@ function checkSession() {
 		$('#pageloader').show();
 		$.ajax({
 			timeout: 3000,
-			url: "https://his.homeinfo.de/session/" +  localStorage.getItem("token"),
+			url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token"),
 			type: "GET",
 			success: function (msg) {
 				//console.log("Success " + msg);

@@ -37,7 +37,7 @@ $(document).ready(function() {
 	$('.logout').click(function() {
 		$('#pageloader').show();
 		$.ajax({
-			url: "https://his.homeinfo.de/session/" +  localStorage.getItem("token"),
+			url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token"),
 			type: "DELETE",
 			complete: function (msg) {
 				$('#pageloader').hide();
@@ -667,7 +667,7 @@ function createRealEstateJSON(check = true) {
 	//openimmo.user_defined_simplefield[0]["value"] = "feld1 99";
 
 	//console.log("openimmo: " + JSON.stringify(openimmo));
-	//console.log(openimmo);
+	console.log(openimmo);
 	// Delete empty objects {}
 	$.each(openimmo, function(key, value) {
 		$.each(openimmo[key], function(key2, value2) { // Delete subkeys; problem: it's deleting normal key/values in each subnode
@@ -728,7 +728,7 @@ function checkSession() {
 	$('#pageloader').show();
 	$.ajax({
 		timeout: 5000,
-		url: "https://his.homeinfo.de/session/" +  localStorage.getItem("token"),
+		url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token"),
 		type: "GET",
 		success: function (msg) {
 			//console.log("Success " + msg);
@@ -754,7 +754,7 @@ function checkSession() {
 function holdSession() {
 	$('#pageloader').show();
 	$.ajax({
-		url: "https://his.homeinfo.de/session/" +  localStorage.getItem("token") + '?duration=30', //?duration=5 // max 5min - 30min; default: 15min
+		url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token") + '?duration=30', //?duration=5 // max 5min - 30min; default: 15min
 		type: "PUT",
 		success: function (msg) {
 			localStorage.setItem("token", msg.token);
