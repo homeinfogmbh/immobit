@@ -754,7 +754,7 @@ function checkSession() {
 function holdSession() {
 	$('#pageloader').show();
 	$.ajax({
-		url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token") + '?duration=30', //?duration=5 // max 5min - 30min; default: 15min
+		url: "https://his.homeinfo.de/session/" +  localStorage.getItem("token") + '?duration=30', //?duration=5 // max 5min - 30min; default: 15min
 		type: "PUT",
 		success: function (msg) {
 			localStorage.setItem("token", msg.token);
