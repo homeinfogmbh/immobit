@@ -37,7 +37,7 @@ $(document).ready(function() {
 	$('.logout').click(function() {
 		$('#pageloader').show();
 		$.ajax({
-			url: "https://his.homeinfo.de/session/" +  localStorage.getItem("token"),
+			url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token"),
 			type: "DELETE",
 			complete: function (msg) {
 				$('#pageloader').hide();
@@ -452,7 +452,7 @@ $(document).ready(function() {
 });
 
 function getAccountData() {
-		$.ajax({
+	$.ajax({
 		url: "https://backend.immobit.de/portals?session=" + localStorage.getItem("token"),
 		type: "GET",
 		complete: function (msg) {
@@ -514,10 +514,9 @@ function createRealEstateJSON(check = true) {
 		//($("#prices_cold").val().trim() != "" && $("#prices_rent_div").attr('style') != "display: none;" && hasChanged(check,"preise","kaltmiete", $("#prices_cold").val().replace(",", "."))) ?openimmo.preise["kaltmiete"] = Number($("#prices_cold").val().replace(",", ".")) :false;
 		//($("#prices_warm").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.warmmiete")) ?false :openimmo.preise["warmmiete"] = null :(hasChanged(check,"preise","warmmiete", $("#prices_warm").val().replace(",", "."))) ?openimmo.preise["warmmiete"] = Number($("#prices_warm").val().replace(",", ".")) :false;
 		($("#prices_additional").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.nebenkosten")) ?false :openimmo.preise["nebenkosten"] = null :(hasChanged(check,"preise","nebenkosten", $("#prices_additional").val().replace(",", "."))) ?openimmo.preise["nebenkosten"] = Number( $("#prices_additional").val().replace(",", ".")) :false;
-		//($("#prices_business_netto").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.betriebskostennetto")) ?false :openimmo.preise["betriebskostennetto"] = null :(hasChanged(check,"preise","betriebskostennetto", $("#prices_business_netto").val().replace(",", "."))) ?openimmo.preise["betriebskostennetto"] = Number($("#prices_business_netto").val().replace(",", ".")) :false;
 		($("#prices_caution").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.kaution")) ?false :openimmo.preise["kaution"] = null :(hasChanged(check,"preise","kaution", $("#prices_caution").val().replace(",", "."))) ?openimmo.preise["kaution"] = Number($("#prices_caution").val().replace(",", ".")) :false;
 		($("#prices_heatingcosts").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.heizkosten")) ?false :openimmo.preise["heizkosten"] = null :(hasChanged(check,"preise","heizkosten", $("#prices_heatingcosts").val().replace(",", "."))) ?openimmo.preise["heizkosten"] = Number($("#prices_heatingcosts").val().replace(",", ".")) :false;
-		//($("#prices_total").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.gesamtmietenetto")) ?false :openimmo.preise["gesamtmietenetto"] = null :(hasChanged(check,"preise","gesamtmietenetto", $("#prices_total").val().replace(",", "."))) ?openimmo.preise["gesamtmietenetto"] = Number($("#prices_total").val().replace(",", ".")) :false;
+		($("#prices_total").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.gesamtmietenetto")) ?false :openimmo.preise["gesamtmietenetto"] = null :(hasChanged(check,"preise","gesamtmietenetto", $("#prices_total").val().replace(",", "."))) ?openimmo.preise["gesamtmietenetto"] = Number($("#prices_total").val().replace(",", ".")) :false;
 		//($("#prices_courtage").val().trim() == "" || $("#prices_rent_div").attr('style') == "display: none;") ?(isNull("preise.aussen_courtage")) ?false :openimmo.preise["aussen_courtage"] = null :(hasChanged(check,"preise","aussen_courtage", $("#prices_courtage").val())) ?openimmo.preise["aussen_courtage"] = $("#prices_courtage").val() :false;
 		($("#prices_provision_div").attr('style') == "display: none;") ?(isNull("preise.provisionspflichtig")) ?false :openimmo.preise["provisionspflichtig"] = null :(hasChanged(check,"preise","provisionspflichtig", $("#prices_provision_onoff").is(':checked'))) ?openimmo.preise["provisionspflichtig"] = $("#prices_provision_onoff").is(':checked') :false;
 		(!$("#prices_provision_onoff").is(':checked') || $("#prices_provision_div").attr('style') == "display: none;") ?(isNull("preise.provisionbrutto")) ?false :openimmo.preise["provisionbrutto"] = null :(hasChanged(check,"preise","provisionbrutto", $("#prices_provision").val().replace(",", "."))) ?openimmo.preise["provisionbrutto"] = Number($("#prices_provision").val().replace(",", ".")) :false;
@@ -566,7 +565,7 @@ function createRealEstateJSON(check = true) {
 		($("#description_state").val() == "0" || $("#description_year_state_div").attr('style') == "display: none;") ?(isNull("zustand_angaben.zustand")) ?false :openimmo.zustand_angaben["zustand"] = null :(hasChanged(check,"zustand_angaben", "zustand", $("#description_state").val())) ?openimmo.zustand_angaben["zustand"] = $("#description_state").val() :false;
 		if (hasChanged(check,"zustand_angaben.energiepass","epart", $("#energy_type").val()) || hasChanged(check,"zustand_angaben.energiepass","energieverbrauchkennwert", $("#energy_kwh").val()) || hasChanged(check,"zustand_angaben.energiepass","endenergiebedarf", $("#energy_kwh").val()) || hasChanged(check,"zustand_angaben.energiepass","primaerenergietraeger", $("#energy_deliverer").val()) || hasChanged(check,"zustand_angaben.energiepass","wertklasse", $("#energy_class").val())) {
 			openimmo.zustand_angaben["energiepass"] = [{}];
-				($("#energy_type").val() == "0") ?openimmo.zustand_angaben.energiepass[0]["epart"] = null :openimmo.zustand_angaben.energiepass[0]["epart"] = $("#energy_type").val();
+				($("#energy_type").val() == "0" || $("#energy_type").val() == "true") ?openimmo.zustand_angaben.energiepass[0]["epart"] = null :openimmo.zustand_angaben.energiepass[0]["epart"] = $("#energy_type").val();
 				if ($("#energy_type").val() === "BEDARF" )
 					openimmo.zustand_angaben.energiepass[0]["endenergiebedarf"] = $("#energy_kwh").val();
 				else if ($("#energy_type").val() === "VERBRAUCH" )
@@ -620,7 +619,7 @@ function createRealEstateJSON(check = true) {
 				openimmo.verwaltung_techn.weitergabe_positiv.push('hba');
 			if ($("#activation_breba").is(':checked'))
 				openimmo.verwaltung_techn.weitergabe_positiv.push('breba');
-
+			(hasChanged(check,"verwaltung_objekt","denkmalgeschuetzt", $("#energy_type").val())) ?($("#energy_type").val() != "true") ?(openimmo.verwaltung_objekt["denkmalgeschuetzt"] = null) :openimmo.verwaltung_objekt["denkmalgeschuetzt"] = true :false;
 			openimmo.verwaltung_techn["aktiv_von"] = null;
 			openimmo.verwaltung_techn["aktiv_bis"] = null;
 
@@ -652,7 +651,7 @@ function createRealEstateJSON(check = true) {
 			//(hasChanged(check,"barrier_freeness.bath","shower", $("#barrier_freeness_bath_shower").is(':checked'))) ?openimmo.barrier_freeness.bath["shower"] = $("#barrier_freeness_bath_shower").is(':checked') :false;
 			(hasChanged(check,"barrier_freeness.bath","wide", $("#barrier_freeness_bath_wide").is(':checked'))) ?openimmo.barrier_freeness.bath["wide"] = $("#barrier_freeness_bath_wide").is(':checked') :false;
 			(hasChanged(check,"barrier_freeness.bath","large", $("#barrier_freeness_bath_large").is(':checked'))) ?openimmo.barrier_freeness.bath["large"] = $("#barrier_freeness_bath_large").is(':checked') :false;
-			($("#barrier_freeness_bath_shower").is(':checked') == false) ?(isNull("barrier_freeness.bath.shower_tray")) ?false :openimmo.barrier_freeness.bath["shower_tray"] = null :(hasChanged(check,"barrier_freeness.bath","shower_tray", $("#barrier_freeness_bath_shower_tray").val())) ?openimmo.barrier_freeness.bath["shower_tray"] = $("#barrier_freeness_bath_shower_tray").val() :false;
+			(hasChanged(check,"barrier_freeness.bath","shower_tray", ($("#barrier_freeness_bath_shower_tray").val() == '0') ?null :$("#barrier_freeness_bath_shower_tray").val())) ?openimmo.barrier_freeness.bath["shower_tray"] = (($("#barrier_freeness_bath_shower_tray").val() == '0') ?null :$("#barrier_freeness_bath_shower_tray").val()) :false;
 		openimmo.barrier_freeness["balcony"] = {};
 			(hasChanged(check,"barrier_freeness.balcony","wide_door", $("#barrier_freeness_balcony_wide_door").is(':checked'))) ?openimmo.barrier_freeness.balcony["wide_door"] = $("#barrier_freeness_balcony_wide_door").is(':checked') :false;
 			(hasChanged(check,"barrier_freeness.balcony","large", $("#barrier_freeness_balcony_large").is(':checked'))) ?openimmo.barrier_freeness.balcony["large"] = $("#barrier_freeness_balcony_large").is(':checked') :false;
@@ -729,7 +728,7 @@ function checkSession() {
 	$('#pageloader').show();
 	$.ajax({
 		timeout: 5000,
-		url: "https://his.homeinfo.de/session/" +  localStorage.getItem("token"),
+		url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token"),
 		type: "GET",
 		success: function (msg) {
 			//console.log("Success " + msg);
@@ -755,7 +754,7 @@ function checkSession() {
 function holdSession() {
 	$('#pageloader').show();
 	$.ajax({
-		url: "https://his.homeinfo.de/session/" +  localStorage.getItem("token") + '?duration=30', //?duration=5 // max 5min - 30min; default: 15min
+		url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token") + '&duration=30', //?duration=5 // max 5min - 30min; default: 15min
 		type: "PUT",
 		success: function (msg) {
 			localStorage.setItem("token", msg.token);
@@ -1006,7 +1005,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 						<button type="button" class="btn btn-default markgroup" style="width:100%; text-align:left; border-radius:0; pointer-events:none">' + msg[i].verwaltung_techn.stand_vom + '</button>\
 					</td>\
 					<td style="white-space: nowrap;">\
-					<button type="button" class="btn btn-default btn_preview_manage" title="Vorschau öffnen" data-id="' + i + '" data-preview="true" style="margin-left:5px; margin-right:0px; border-radius:0;"><i class="fa fa-eye"></i></button>\
+					<button type="button" class="btn btn-default btn_preview_manage" title="Vorschau öffnen" data-id="' + i + '" data-preview="true" style="margin-left:5px; margin-right:0px; border-radius:0; display:none"><i class="fa fa-eye"></i></button>\
 						<button type="button" class="btn btn-success btn_manage" title="Immobilie bearbeiten" data-id="' + i + '" style="margin-left:0px; margin-right:0px; border-radius:0; width:100px;"><i class="fa fa-pencil"></i></button>\
 						<button type="button" class="btn btn-default btn_clone_object" data-placement="top" title="Immobilie duplizieren" data-id="' + i + '" data-sorting="' + sorting + '" data-reverse="' + reverse + '" style="margin-left:0px; margin-right:0px; border-radius:0;"><i class="fa fa-files-o"></i></button>\
 						<button type="button" class="btn btn-danger btn_delete_object" data-id="' + i + '" data-sorting="' + sorting + '" data-reverse="' + reverse + '" data-toggle="modal" data-placement="top" title="Immobilie löschen" style="margin-left:0px; margin-right:0px; border-radius:0;"><span class="fa fa-trash"></span></button>\
@@ -1075,7 +1074,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 				url: "https://backend.immobit.de/realestates/" + id + "?session=" +  localStorage.getItem("token"),
 				type: "GET",
 				success: function (msg) {
-					//console.log(JSON.stringify(msg));
+					//console.log(msg);
 					$("#loader_new").hide(); //$("#content_title").html('<h1>Immobilie bearbeiten</h1>');
 					_openImmo_json = msg;
 					if (preview == true) {
@@ -1312,9 +1311,9 @@ function saveMetaDataForImages(id) { // null means all the old images, otherwise
 }
 
 function showpreview(JSONdata) {
+	holdSession();
 	localStorage.setItem("immobrowse.preview", JSON.stringify(JSONdata));
-	//var win = window.open('https://immobit.de/preview/expose.html?real_estate=' + encodeURIComponent(JSON.stringify(JSONdata)) + '&session=' + localStorage.getItem("token"), '_blank');
-	var win = window.open('https://immobit.de/preview/expose.html?session=' + localStorage.getItem("token"), '_blank');
+	var win = window.open('https://immobit.de/preview/expose.html?session=' + localStorage.getItem("token"), '_blank'); 	//var win = window.open('file:///C:/Users/Raphael-PC/Desktop/homeinfo/ImmoBIT/preview/expose.html?session=' + localStorage.getItem("token"), '_blank');
 	if (win)
 		win.focus();
 }

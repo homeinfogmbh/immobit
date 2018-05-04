@@ -131,23 +131,74 @@ function elements() {
   return {
     objectId: $('#objectId'),
     objectTitle: $('#objectTitle'),
-    coldRent: $('#coldRent'),
-	operationalCosts: $('#operationalCosts'),
-    serviceCharge: $('#serviceCharge'),
-    heatingCosts: $('#heatingCosts'),
-    heatingCostsInServiceCharge: $('#heatingCostsInServiceCharge'),
-    securityDeposit: $('#securityDeposit'),
-    subjectToCommission: $('#subjectToCommission'),
-    livingArea: $('#livingArea'),
-    rooms: $('#rooms'),
-	bathrooms: $('#bathrooms'),
-	bedrooms: $('#bedrooms'),
-    floor: $('#floor'),
-    availableFrom: $('#availableFrom'),
-    councilFlat: $('#councilFlat'),
-    constructionYear: $('#constructionYear'),
-    state: $('#state'),
-    lastModernization: $('#lastModernization'),
+    coldRent: {
+        value: $('#coldRent'),
+        container: $('#coldRentContainer')
+	},
+	operationalCosts: {
+        value: $('#operationalCosts'),
+        container: $('#operationalCostsContainer')
+	},
+    serviceCharge: {
+        value: $('#serviceCharge'),
+        container: $('#serviceChargeContainer')
+	},
+    heatingCosts: {
+        value: $('#heatingCosts'),
+        container: $('#heatingCostsContainer')
+	},
+    heatingCostsInServiceCharge: {
+        value: $('#heatingCostsInServiceCharge'),
+        container: $('#heatingCostsInServiceChargeContainer')
+	},
+    securityDeposit: {
+        value: $('#securityDeposit'),
+        container: $('#securityDepositContainer')
+	},
+    subjectToCommission: {
+        value: $('#subjectToCommission'),
+        container: $('#subjectToCommissionContainer')
+	},
+    livingArea: {
+        value: $('#livingArea'),
+        container: $('#livingAreaContainer')
+	},
+    rooms: {
+        value: $('#rooms'),
+        container: $('#roomsContainer')
+	},
+	bathrooms: {
+        value: $('#bathrooms'),
+        container: $('#bathroomsContainer')
+	},
+	bedrooms: {
+        value: $('#bedrooms'),
+        container: $('#bedroomsContainer')
+	},
+    floor: {
+        value: $('#floor'),
+        container: $('#floorContainer')
+	},
+    availableFrom: {
+        value: $('#availableFrom'),
+        container: $('#availableFromContainer')
+	},
+    councilFlat: {
+        value: $('#councilFlat'),
+        container: $('#councilFlatContainer')
+	},
+    constructionYear: {
+        value: $('#constructionYear'),
+        container: $('#constructionYearContainer')
+	},
+    state: {
+        value: $('#state'),
+        container: $('#stateContainer')
+	},
+    lastModernization: {
+        value: $('#lastModernization'),
+        container: $('#lastModernizationContainer')
+	},
     energyCertificate: {
       type: $('#energyCertificateType'),
       consumption: {
@@ -198,12 +249,6 @@ function render(realEstate) {
   
   if ($("#amenitiesList").text() == '–')
 	  $("#amenitiesList").html('<ul class="ib-amenities-list"><ul>');
-  if (realEstate.gardenUsage()) {
-	  $(".ib-amenities-list").append('<li>Gartennutzung</li>');
-  }
-  if (realEstate.petsAllowed()) {
-	  $(".ib-amenities-list").append('<li>Tierhaltung</li>');
-  }
   var heatingtypes = realEstate.heatingTypes();
   for (var heatings = 0; heatings < heatingtypes.length; heatings++) {
 	$(".ib-amenities-list").append('<li>' + heatingtypes[heatings] + '</li>');
