@@ -120,9 +120,9 @@ def _add_real_estate(dictionary):
     except RealEstateExists_:
         raise RealEstateExists()
     except IncompleteDataError as incomplete_data_error:
-        raise Error(str(incomplete_data_error), status=422)
-    except ConsistencyError:
-        raise Error('Data inconsistent.', status=422)
+        raise JSON(incomplete_data_error.to_dict(), status=422)
+    except ConsistencyError as consistency_error:
+        raise Error(str(consistency_error), status=422)
     except OpenImmoDBError:
         raise JSON({
             'message': 'Unspecified database error.',
@@ -138,13 +138,13 @@ def _patch_real_estate(immobilie, dictionary):
         with Transaction() as transaction:
             transaction.patch(immobilie, dictionary=dictionary)
     except IncompleteDataError as incomplete_data_error:
-        raise Error(str(incomplete_data_error), status=422)
+        raise JSON(incomplete_data_error.to_dict(), status=422)
     except InvalidDataError as invalid_data_error:
-        raise Error(str(invalid_data_error), status=422)
+        raise JSON(invalid_data_error.to_dict(), status=422)
     except RealEstateExists_:
         raise RealEstateExists()
-    except ConsistencyError:
-        raise Error('Data inconsistent.', status=422)
+    except ConsistencyError as consistency_error:
+        raise Error(str(consistency_error), status=422)
     except OpenImmoDBError:
         raise JSON({
             'message': 'Unspecified database error.',
