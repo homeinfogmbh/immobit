@@ -523,8 +523,8 @@ function defaultAndDeleteAllObjectFields() {
 		$('#barrier_freeness_liftsize').click();
 	if ($('#barrier_freeness_bath_tub').is(':checked'))
 		$('#barrier_freeness_bath_tub').click();
-	if ($('#barrier_freeness_bath_shower').is(':checked'))
-		$('#barrier_freeness_bath_shower').click();
+	//if ($('#barrier_freeness_bath_shower').is(':checked'))
+		//$('#barrier_freeness_bath_shower').click();
 	if ($('#barrier_freeness_bath_wide').is(':checked'))
 		$('#barrier_freeness_bath_wide').click();
 	if ($('#barrier_freeness_bath_large').is(':checked'))
@@ -774,7 +774,7 @@ function setFields() {
 				if (_openImmo_json.barrier_freeness.bath.large == true)
 					$('#barrier_freeness_bath_large').click();
 				if (_openImmo_json.barrier_freeness.bath.hasOwnProperty('shower_tray')) {
-					$('#barrier_freeness_bath_shower').click();
+					//$('#barrier_freeness_bath_shower').click();
 					$("#barrier_freeness_bath_shower_tray").val(_openImmo_json.barrier_freeness.bath.shower_tray);
 				}
 			}

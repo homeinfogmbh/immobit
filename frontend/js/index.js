@@ -651,7 +651,7 @@ function createRealEstateJSON(check = true) {
 			//(hasChanged(check,"barrier_freeness.bath","shower", $("#barrier_freeness_bath_shower").is(':checked'))) ?openimmo.barrier_freeness.bath["shower"] = $("#barrier_freeness_bath_shower").is(':checked') :false;
 			(hasChanged(check,"barrier_freeness.bath","wide", $("#barrier_freeness_bath_wide").is(':checked'))) ?openimmo.barrier_freeness.bath["wide"] = $("#barrier_freeness_bath_wide").is(':checked') :false;
 			(hasChanged(check,"barrier_freeness.bath","large", $("#barrier_freeness_bath_large").is(':checked'))) ?openimmo.barrier_freeness.bath["large"] = $("#barrier_freeness_bath_large").is(':checked') :false;
-			($("#barrier_freeness_bath_shower").is(':checked') == false) ?(isNull("barrier_freeness.bath.shower_tray")) ?false :openimmo.barrier_freeness.bath["shower_tray"] = null :(hasChanged(check,"barrier_freeness.bath","shower_tray", $("#barrier_freeness_bath_shower_tray").val())) ?openimmo.barrier_freeness.bath["shower_tray"] = $("#barrier_freeness_bath_shower_tray").val() :false;
+			(hasChanged(check,"barrier_freeness.bath","shower_tray", ($("#barrier_freeness_bath_shower_tray").val() == '0') ?null :$("#barrier_freeness_bath_shower_tray").val())) ?openimmo.barrier_freeness.bath["shower_tray"] = (($("#barrier_freeness_bath_shower_tray").val() == '0') ?null :$("#barrier_freeness_bath_shower_tray").val()) :false;
 		openimmo.barrier_freeness["balcony"] = {};
 			(hasChanged(check,"barrier_freeness.balcony","wide_door", $("#barrier_freeness_balcony_wide_door").is(':checked'))) ?openimmo.barrier_freeness.balcony["wide_door"] = $("#barrier_freeness_balcony_wide_door").is(':checked') :false;
 			(hasChanged(check,"barrier_freeness.balcony","large", $("#barrier_freeness_balcony_large").is(':checked'))) ?openimmo.barrier_freeness.balcony["large"] = $("#barrier_freeness_balcony_large").is(':checked') :false;
@@ -667,7 +667,7 @@ function createRealEstateJSON(check = true) {
 	//openimmo.user_defined_simplefield[0]["value"] = "feld1 99";
 
 	//console.log("openimmo: " + JSON.stringify(openimmo));
-	console.log(openimmo);
+	//console.log(openimmo);
 	// Delete empty objects {}
 	$.each(openimmo, function(key, value) {
 		$.each(openimmo[key], function(key2, value2) { // Delete subkeys; problem: it's deleting normal key/values in each subnode
@@ -1074,7 +1074,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 				url: "https://backend.immobit.de/realestates/" + id + "?session=" +  localStorage.getItem("token"),
 				type: "GET",
 				success: function (msg) {
-					//console.log(JSON.stringify(msg));
+					//console.log(msg);
 					$("#loader_new").hide(); //$("#content_title").html('<h1>Immobilie bearbeiten</h1>');
 					_openImmo_json = msg;
 					if (preview == true) {
