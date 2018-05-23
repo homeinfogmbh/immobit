@@ -15,9 +15,7 @@ from immobit.config import CONFIG
 __all__ = ['TransactionLog', 'CustomerPortal']
 
 
-DATABASE = MySQLDatabase(
-    CONFIG['db']['db'], host=CONFIG['db']['host'], user=CONFIG['db']['user'],
-    passwd=CONFIG['db']['passwd'], closing=True)
+DATABASE = MySQLDatabase.from_config(CONFIG['db'])
 
 
 class Action(Enum):
