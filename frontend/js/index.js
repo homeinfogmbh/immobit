@@ -1265,7 +1265,7 @@ function getImages() {
 	}
 }
 
-function saveMetaDataForImages(id) { // null means all the old images, otherwise the new image
+function saveMetaDataForImages(id, counter = 0) { // null means all the old images, otherwise the new image
 	try {
 		var count = 1;
 		var position = 0;
@@ -1278,8 +1278,8 @@ function saveMetaDataForImages(id) { // null means all the old images, otherwise
 			position =  _openImmo_json.anhaenge.anhang.length;
 
 		for (var i = 0; i < count; i++) {
-			title = $('#imagetitle' + (position+i)).val();
-			group = $('#imagegroup' + (position+i) + ' option:selected').val();
+			title = $('#imagetitle' + (position+counter)).val();
+			group = $('#imagegroup' + (position+counter) + ' option:selected').val();
 			metadata = {};
 			//console.log(i + ' // ' + id + ' // ' + position + ' // ' + _imagesTitles.length + ' // ' + title + ' // ' + group);
 			if (id == null)

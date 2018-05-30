@@ -1817,7 +1817,7 @@
                 }
             };
             fnSuccess = function (data, textStatus, jqXHR) {
-				saveMetaDataForImages(data.id);
+				saveMetaDataForImages(data.id, i);
                 var pid = self.showPreview && $thumb.attr('id') ? $thumb.attr('id') : previewId;
                 outData = self._getOutData(jqXHR, data);
                 $.extend(true, params, outData);
