@@ -1,6 +1,6 @@
 """Error message definitions."""
 
-from his import locales, Message
+from his import Message
 
 
 __all__ = [
@@ -29,8 +29,7 @@ __all__ = [
 class RealEstatesMessage(Message):
     """Basic real estates message."""
 
-    LOCALES = locales('/etc/his.d/locale/immobit.ini')
-    ABSTRACT = True
+    LOCALES = '/etc/his.d/locale/immobit.ini'
 
 
 class InvalidRealEstateID(RealEstatesMessage):
