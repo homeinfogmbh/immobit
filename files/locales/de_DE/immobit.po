@@ -1,0 +1,71 @@
+# Translations template for ImmoBit.
+# Copyright (C) 2018 HOMEINFO Digitale Informationssysteme GmbH.
+# This file is distributed under the same license as the ImmoBit project.
+# Richard Neumann <r.neumann@homeinfo.de>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: latest\n"
+"Report-Msgid-Bugs-To: info@homeinfo.de\n"
+"POT-Creation-Date: 2018-06-20 11:58+0100\n"
+"PO-Revision-Date: 2018-06-20 11:58+0100\n"
+"Last-Translator: Richard Neumann <r.neumann@homeinfo.de>\n"
+"Language-Team: German <info@homeinfo.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Hand\n"
+
+msgid "InvalidRealEstateID"
+msgstr "Ungültige Objekt-ID."
+
+msgid "NoSuchRealEstate"
+msgstr "Keine solche Immobilie."
+
+msgid "RealEstatedCreated"
+msgstr "Immobilie erstellt."
+
+msgid "CannotAddRealEstate"
+msgstr "Immobilie konnte nicht gespeichert werden."
+
+msgid "RealEstateExists"
+msgstr "Immobilie existiert bereits."
+
+msgid "NoRealEstateSpecified"
+msgstr "Keine Immobilie angegeben."
+
+msgid "CannotDeleteRealEstate"
+msgstr "Immobilie konnte nicht gelöscht werden."
+
+msgid "NoRealEstateDataProvided"
+msgstr "Keine Immobiliendaten übergeben."
+
+msgid "RealEstateUpdated"
+msgstr "Immobilie aktualisiert."
+
+msgid "RealEstateDeleted"
+msgstr "Immobilie gelöscht."
+
+msgid "NoAttachmentSpecified"
+msgstr "Kein Anhang angegeben."
+
+msgid "NoSuchAttachment"
+msgstr "Kein solcher Anhang."
+
+msgid "AttachmentCreated"
+msgstr "Anhang erstellt."
+
+msgid "AttachmentDeleted"
+msgstr "Anhang gelöscht."
+
+msgid "NoDataForAttachment"
+msgstr "Keine Daten für Anhang."
+
+msgid "AttachmentExists"
+msgstr "Anhang existiert bereits."
+
+msgid "AttachmentLimitExceeded"
+msgstr "Zu viele Anhänge."
+
+msgid "ForeignAttachmentAccess"
+msgstr "Versuchter Zugriff auf fremden Anhang."
