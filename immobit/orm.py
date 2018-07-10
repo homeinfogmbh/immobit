@@ -7,7 +7,7 @@ from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
     DateTimeField, BooleanField
 
 from his import Account
-from homeinfo.crm import Customer
+from mdb import Customer
 from peeweeplus import MySQLDatabase, EnumField
 
 from immobit.config import CONFIG
