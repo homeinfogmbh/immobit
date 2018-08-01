@@ -1,6 +1,8 @@
 """Attachments API."""
 
-from his import CUSTOMER, DATA, authenticated, authorized
+from flask import request
+
+from his import CUSTOMER, authenticated, authorized
 from openimmodb import Immobilie, Anhang, AttachmentExists as AttachmentExists_
 from wsgilib import OK, Binary
 
@@ -57,7 +59,7 @@ def add(ident):
     if Anhang.count(immobilie=real_estate) < REAL_ESTATE_LIMIT:
         if Anhang.count(customer=CUSTOMER.id) < CUSTOMER_LIMIT:
             try:
-                anhang = Anhang.from_bytes(DATA.bytes, real_estate)
+                anhang = Anhang.from_bytes(request.data, real_estate)
             except AttachmentExists_:
                 raise AttachmentExists()
 
@@ -72,7 +74,7 @@ def add(ident):
 def patch(ident):
     """Modifies metadata of an existing attachment."""
 
-    _get_attachment(ident).patch(DATA.json).save()
+    _get_attachment(ident).patch(request.json).save()
     return OK()
 
 

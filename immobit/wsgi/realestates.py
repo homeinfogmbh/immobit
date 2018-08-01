@@ -4,7 +4,7 @@ from traceback import format_exc
 
 from flask import request
 
-from his import ACCOUNT, CUSTOMER, DATA, authenticated, authorized
+from his import ACCOUNT, CUSTOMER, authenticated, authorized
 from his.messages.data import NotAnInteger
 from openimmodb import OpenImmoDBError, IncompleteDataError, InvalidDataError,\
     ConsistencyError, Transaction, Immobilie, \
@@ -180,15 +180,13 @@ def get(ident):
 def add():
     """Adds a new real estate."""
 
-    json = DATA.json
-
     try:
-        objektnr_extern = json['verwaltung_techn']['objektnr_extern']
+        objektnr_extern = request.json['verwaltung_techn']['objektnr_extern']
     except (KeyError, TypeError):
         objektnr_extern = None
 
     with _transaction('CREATE', objektnr_extern) as log:
-        transaction, ident = _add_real_estate(json)
+        transaction, ident = _add_real_estate(request.json)
 
         if transaction:
             log.success = True
@@ -228,7 +226,7 @@ def patch(ident):
     real_estate = _get_real_estate(ident)
 
     with _transaction('UPDATE', real_estate.objektnr_extern) as log:
-        if _patch_real_estate(real_estate, DATA.json):
+        if _patch_real_estate(real_estate, request.json):
             log.success = True
 
     if log.success:
@@ -237,7 +235,7 @@ def patch(ident):
     raise JSON({
         'message': 'Could not patch real estate.',
         'stacktrace': format_exc(),
-        'patch': DATA.json}, status=500)
+        'patch': request.json}, status=500)
 
 
 ROUTES = (
