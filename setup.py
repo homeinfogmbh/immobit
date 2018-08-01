@@ -12,5 +12,4 @@ setup(
     maintainer_email='<r dot neumann at homeinfo period de>',
     requires=['his'],
     packages=['immobit', 'immobit.wsgi'],
-    data_files=[('/etc/his.d/locale', ['files/immobit.ini'])],
     description='Immobit')

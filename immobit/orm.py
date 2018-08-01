@@ -7,7 +7,7 @@ from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
     DateTimeField, BooleanField
 
 from his import Account
-from homeinfo.crm import Customer
+from mdb import Customer
 from peeweeplus import MySQLDatabase, EnumField
 
 from immobit.config import CONFIG
@@ -41,10 +41,10 @@ class TransactionLog(ImmoBitModel):
     """Stores real estate transactions."""
 
     class Meta:
-        db_table = 'transaction_log'
+        table_name = 'transaction_log'
 
-    account = ForeignKeyField(Account, db_column='account')
-    customer = ForeignKeyField(Customer, db_column='customer')
+    account = ForeignKeyField(Account, column_name='account')
+    customer = ForeignKeyField(Customer, column_name='customer')
     objektnr_extern = CharField(255)
     action = EnumField(Action)
     success = BooleanField(default=False)
@@ -74,9 +74,9 @@ class CustomerPortal(ImmoBitModel):
     """Configures customer-portal mappings."""
 
     class Meta:
-        db_table = 'customer_portal'
+        table_name = 'customer_portal'
 
-    customer = ForeignKeyField(Customer, db_column='customer')
+    customer = ForeignKeyField(Customer, column_name='customer')
     portal = CharField(32)
 
     @classmethod

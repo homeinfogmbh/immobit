@@ -9,6 +9,7 @@ install:
 	@ mkdir -p /srv/http/de/homeinfo/javascript/immobit
 	@ chmod 755 /srv/http/de/homeinfo/javascript/immobit
 	@ install -m 644 javascript/*.js /srv/http/de/homeinfo/javascript/immobit/
+	@ install_locales
 
 uninstall:
 	@ while read FILE; do echo "Removing: $$FILE"; rm "$$FILE"; done < $(FILE_LIST)
