@@ -1111,6 +1111,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 						url: "https://backend.immobit.de/realestates?session=" + localStorage.getItem("token"),
 						type:  "POST",
 						data: JSON.stringify(_openImmo_json),
+				        contentType: 'application/json',
 						success: function (msg) {
 							$("#manage_title").html('<h1>Immobilien verwalten</h1><font size="4" color="#000">Die Immobilie <font size="4" color="#159f18">' + objektnr_extern + '</font> wurde erfolgreich unter der Nummer: <font size="4" color="#159f18">' + _openImmo_json.verwaltung_techn.objektnr_extern + '</font> dupliziert.');
 							holdSession();
