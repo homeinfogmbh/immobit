@@ -315,6 +315,7 @@ $(document).ready(function() {
 				url: "https://backend.immobit.de/realestates" + urlString + "?session=" + localStorage.getItem("token"),
 				type: typeString,
 				data: JSON.stringify(openImmo),
+				contentType: 'application/json',
 				success: function (msg) {
 					if (msg.hasOwnProperty("id"))
 						_id = msg.id;
@@ -1211,6 +1212,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 				url: "https://backend.immobit.de/realestates/" + id + "?session=" + localStorage.getItem("token"),
 				type:  "PATCH",
 				data: JSON.stringify(openImmo_json),
+				contentType: 'application/json',
 				success: function (msg) {
 				},
 				error: function (msg) {
@@ -1235,11 +1237,14 @@ function getImages() {
 				initialPreviewArray[i] = "https://backend.immobit.de/attachments/" + _openImmo_json.anhaenge.anhang[i].id + "?session=" + localStorage.getItem("token");
 			}
 
+			//$("#files-upload-input").html('<input id="files-upload" name="filesupload[]" type="file" multiple class="file-loading">');
 			$("#files-upload-input").html('<input id="files-upload" name="filesupload[]" type="file" multiple class="file-loading">');
 			// Source: http://plugins.krajee.com/file-advanced-usage-demo
 			_fileinput = $("#files-upload").fileinput({
 				language: "de",
 				uploadUrl: "https://backend.immobit.de/attachments/",
+				//uploadUrl: "https://testing.homeinfo.de/wsgi/",
+                                ajaxSettings: {contentType: "application/octet-stream"},
 				token: "?session=",
 				maxFileSize: 15000,
 				allowedFileExtensions: ["jpg", "png", "gif", "jpeg"],
@@ -1256,7 +1261,9 @@ function getImages() {
 				$("#files-upload-input").html('<input id="files-upload" name="filesupload[]" type="file" multiple class="file-loading">');
 			_fileinput = $("#files-upload").fileinput({
 				language: "de",
-				uploadUrl: "https://backend.immobit.de/attachments/", //uploadUrl: "https://his.homeinfo.de/fs/",
+				uploadUrl: "https://backend.immobit.de/attachments/",
+				//uploadUrl: "https://testing.homeinfo.de/wsgi/",
+                                ajaxSettings: {contentType: "application/octet-stream"},
 				token: "?session=",
 				maxFileSize: 15000,
 				allowedFileExtensions: ["jpg", "png", "gif", "jpeg"]
@@ -1296,6 +1303,7 @@ function saveMetaDataForImages(id, counter = 0) { // null means all the old imag
 					url: 'https://backend.immobit.de/attachments/' + ((id === null) ?_openImmo_json.anhaenge.anhang[i].id :id) + '?session=' + localStorage.getItem("token"),
 					type: "PATCH",
 					data: JSON.stringify(metadata),
+					contentType: 'application/json',
 					success: function (msg) {
 						$(".btn_save").html('Immobilie wurde erfolgreich gespeichert');
 					},
