@@ -3,8 +3,8 @@
 from datetime import datetime
 from enum import Enum
 
-from peewee import Model, PrimaryKeyField, ForeignKeyField, CharField, \
-    DateTimeField, BooleanField
+from peewee import Model, ForeignKeyField, CharField, DateTimeField, \
+    BooleanField
 
 from his import Account
 from mdb import Customer
@@ -29,8 +29,6 @@ class Action(Enum):
 
 class ImmoBitModel(Model):
     """Basic immobit model."""
-
-    id = PrimaryKeyField()
 
     class Meta:
         database = DATABASE
