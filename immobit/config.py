@@ -1,8 +1,9 @@
 """ImmoBit's main configuration."""
 
-from configlib import INIParser
+from configlib import loadcfg
+
 
 __all__ = ['CONFIG']
 
 
-CONFIG = INIParser('/etc/immobit.conf')
+CONFIG = loadcfg('immobit.conf')
