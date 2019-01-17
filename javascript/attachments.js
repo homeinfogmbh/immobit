@@ -21,7 +21,7 @@
   Requires:
     * immobit.js
 */
-"use strict";
+'use strict';
 
 /*
   ImmoBit core namespace.
@@ -39,56 +39,56 @@ immobit.attachments = immobit.attachments || {};
   Returns the respective endpoint URL.
 */
 immobit.attachments.getUrl = function (endpoint) {
-  var url = immobit.getUrl('attachments');
+    const url = immobit.getUrl('attachments');
 
-  if (endpoint != null) {
-    return url += '/' + endpoint;
-  }
+    if (endpoint != null) {
+        return url + '/' + endpoint;
+    }
 
-  return url;
-}
+    return url;
+};
 
 
 /*
   Gets the respective attachment.
 */
 immobit.attachments.get = function (id, args) {
-  var url = immobit.attachments.getUrl(id);
-  return his.auth.get(url, args);
-}
+    const url = immobit.attachments.getUrl(id);
+    return his.get(url, args);
+};
 
 
 /*
   Adds the provided attachment.
 */
 immobit.attachments.add = function (data, args) {
-  var url = immobit.attachments.getUrl();
-  return his.auth.post(url, data, args);
-}
+    const url = immobit.attachments.getUrl();
+    return his.post(url, data, args);
+};
 
 
 /*
   Patches the respective attachment.
 */
 immobit.attachments.patch = function (id, data, args) {
-  var url = immobit.attachments.getUrl(id);
-  return his.auth.patch(url, data, args);
-}
+    const url = immobit.attachments.getUrl(id);
+    return his.patch(url, data, args);
+};
 
 
 /*
   Replaces the respective attachment.
 */
 immobit.attachments.put = function (id, data, args) {
-  var url = immobit.attachments.getUrl(id);
-  return his.auth.put(url, data, args);
-}
+    const url = immobit.attachments.getUrl(id);
+    return his.put(url, data, args);
+};
 
 
 /*
   Deletes the respective attachment.
 */
 immobit.attachments.delete = function (id, args) {
-  var url = immobit.attachments.getUrl(id);
-  return his.auth.delete(url, args);
-}
+    const url = immobit.attachments.getUrl(id);
+    return his.delete(url, args);
+};

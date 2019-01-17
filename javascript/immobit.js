@@ -21,7 +21,7 @@
   Requires:
     * his.js
 */
-"use strict";
+'use strict';
 
 /*
   ImmoBit core namespace.
@@ -35,9 +35,9 @@ immobit.BASE_URL = 'https://backend.immobit.de'
   Returns the respective endpoint URL.
 */
 immobit.getUrl = function (endpoint) {
-  if (endpoint != null) {
-    return immobit.BASE_URL += '/' + endpoint;
-  }
+    if (endpoint != null) {
+        return immobit.BASE_URL + '/' + endpoint;
+    }
 
-  return immobit.BASE_URL;
-}
+    return immobit.BASE_URL;
+};

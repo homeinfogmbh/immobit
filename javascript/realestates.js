@@ -22,7 +22,7 @@
     * immobit.js
     * diff.js
 */
-"use strict";
+'use strict';
 
 /*
   ImmoBit core namespace.
@@ -40,86 +40,88 @@ immobit.realEstates = immobit.realEstates || {};
   Returns the respective endpoint URL.
 */
 immobit.realEstates.getUrl = function (endpoint) {
-  var url = immobit.getUrl('realestates');
+    const url = immobit.getUrl('realestates');
 
-  if (endpoint != null) {
-    return url += '/' + endpoint;
-  }
+    if (endpoint != null) {
+        return url + '/' + endpoint;
+    }
 
-  return url;
-}
+    return url;
+};
 
 
 /*
   Lists the respective real estates.
 */
 immobit.realEstates.list = function (args) {
-  var url = immobit.realEstates.getUrl();
-  return his.auth.get(url, args);
-}
+    const url = immobit.realEstates.getUrl();
+    return his.get(url, args);
+};
 
 
 /*
   Gets the respective real estate.
 */
 immobit.realEstates.get = function (id, args) {
-  var url = immobit.realEstates.getUrl(id);
-  return his.auth.get(url, args);
-}
+    const url = immobit.realEstates.getUrl(id);
+    return his.get(url, args);
+};
 
 
 /*
   Adds the provided real estate.
 */
 immobit.realEstates.add = function (realEstate, args) {
-  var url = immobit.realEstates.getUrl();
-  var data = JSON.stringify(realEstate);
-  return his.auth.post(url, data, args);
-}
+    const url = immobit.realEstates.getUrl();
+    const data = JSON.stringify(realEstate);
+    return his.post(url, data, args);
+};
 
 
 /*
   Deletes the respective real estate.
 */
 immobit.realEstates.delete = function (id, args) {
-  var url = immobit.realEstates.getUrl(id);
-  return his.auth.delete(url, args);
-}
+    const url = immobit.realEstates.getUrl(id);
+    return his.delete(url, args);
+};
 
 
 /*
   Patches the respective real estate.
 */
 immobit.realEstates.patch = function (id, realEstatePatch, args) {
-  var url = immobit.realEstates.getUrl(id);
-  var data = JSON.stringify(realEstatePatch);
-  return his.auth.patch(url, data, args);
-}
+    const url = immobit.realEstates.getUrl(id);
+    const data = JSON.stringify(realEstatePatch);
+    return his.patch(url, data, args);
+};
 
 
 /*
   ImmoBit real estate class.
 */
-immobit.realEstates.RealEstate = function (json) {
-  for (var prop in json) {
-    if (json.hasOwnProperty(prop)) {
-        this[prop] = json[prop];
+immobit.realEstates.RealEstate = class {
+    constructor (json) {
+        for (var prop in json) {
+            if (json.hasOwnProperty(prop)) {
+                this[prop] = json[prop];
+            }
+        }
     }
-  }
 
-  this.diff = function (other) {
-    return immobit.diff.resolve(this, other);
-  }
+    diff (other) {
+        return immobit.diff.resolve(this, other);
+    }
 
-  this.toString = function () {
-    return JSON.stringify(this);
-  }
-}
+    toString () {
+        return JSON.stringify(this);
+    }
+};
 
 
 /*
   Constructor class method.
 */
 immobit.realEstates.RealEstate.fromString = function (str) {
-  return new immobit.realEstates.RealEstate(JSON.parse(str));
-}
+    return new immobit.realEstates.RealEstate(JSON.parse(str));
+};

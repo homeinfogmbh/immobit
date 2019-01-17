@@ -18,7 +18,7 @@
 
   Maintainer: Richard Neumann <r dot neumann at homeinfo period de>
 */
-"use strict";
+'use strict';
 
 /*
   ImmoBit core namespace.
@@ -36,72 +36,78 @@ immobit.diff = immobit.diff || {};
   Determines whether the respective object is a JSON object.
 */
 immobit.diff.isObject = function (obj) {
-  return typeof obj == 'object' && ! Array.isArray(obj);
-}
+    return typeof obj == 'object' && ! Array.isArray(obj);
+};
 
 
 /*
   Resolves simple type values.
 */
 immobit.diff.resolve = function (old, new_) {
-  if (new_ === undefined || old === new_) {
-    return undefined;
-  } else if (new_ === null) {
-    return null;
-  } else if (immobit.diff.isObject(old) && immobit.diff.isObject(new_)) {
-    var resolved = {};
-    var properties  = [];
-    var prop;
+    if (new_ === undefined || old === new_) {
+        return undefined;
+    }
+
+    if (new_ === null) {
+        return null;
+    }
+
+    const bothObjects = immobit.diff.isObject(old) && immobit.diff.isObject(new_);
+
+    if (! bothObjects) {
+        return new_;
+    }
+
+    const resolved = {};
+    const properties  = [];
+    let prop;
 
     for (prop in old) {
-      if (old.hasOwnProperty(prop)) {
-        properties.push(prop);
-      }
+        if (old.hasOwnProperty(prop)) {
+            properties.push(prop);
+        }
     }
 
     for (prop in new_) {
-      if (new_.hasOwnProperty(prop)) {
-        // Skip duplicates.
-        if (properties.indexOf(prop) == -1) {
-          properties.push(prop);
+        if (new_.hasOwnProperty(prop)) {
+            if (properties.includes(prop)) {    // Skip duplicates.
+                continue;
+            }
+
+            properties.push(prop);
         }
-      }
     }
 
-    for (var i = 0; i < properties.length; i++) {
-      prop = properties[i];
-      var oldVal = undefined;
-      var newVal = undefined;
+    for (prop of properties) {
+        let oldVal = undefined;
+        let newVal = undefined;
 
-      if (old.hasOwnProperty(prop)) {
-        oldVal = old[prop];
-      }
+        if (old.hasOwnProperty(prop)) {
+            oldVal = old[prop];
+        }
 
-      if (new_.hasOwnProperty(prop)) {
-        newVal = new_[prop];
-      }
+        if (new_.hasOwnProperty(prop)) {
+            newVal = new_[prop];
+        }
 
-      resolved[prop] = immobit.diff.resolve(oldVal, newVal);
+        resolved[prop] = immobit.diff.resolve(oldVal, newVal);
     }
 
     // Test if resolved object is empty.
-    var empty = true;
+    let empty = true;
 
     for (prop in resolved) {
-      if (resolved.hasOwnProperty(prop)) {
-        if (resolved[prop] !== undefined) {
-          empty = false;
-          break;
+        if (resolved.hasOwnProperty(prop)) {
+            if (resolved[prop] !== undefined) {
+                empty = false;
+                break;
+            }
         }
-      }
     }
 
     if (empty) {
-      return null;
+        return null;
     }
 
     return resolved;
-  }
-
-  return new_;
-}
+};

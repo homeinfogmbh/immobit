@@ -21,7 +21,7 @@
   Requires:
     * diff.js
 */
-"use strict";
+'use strict';
 
 /*
   ImmoBit core namespace.
@@ -36,64 +36,64 @@ immobit.dom = immobit.dom || {};
 
 
 immobit.dom.addContent = function (element, content) {
-  if (content != null) {
-    if (Array.isArray(content)) {
-      for (var i = 0; i < content.length; i++) {
-        element.appendChild(content[i]);
-      }
-    } else {
-      element.appendChild(content);
+    if (content != null) {
+        if (Array.isArray(content)) {
+            for (let item of content) {
+                element.appendChild(item);
+            }
+        } else {
+            element.appendChild(content);
+        }
     }
-  }
-}
+};
 
 
 immobit.dom.ListElementButton = function (content, class_, style) {
-  var button = document.createElement('button');
-  immobit.dom.addContent(button, content);
+    const button = document.createElement('button');
+    immobit.dom.addContent(button, content);
 
-  if (class_ != null) {
-    button.setAttribute('class', class_);
-  }
+    if (class_ != null) {
+        button.setAttribute('class', class_);
+    }
 
-  if (style != null) {
-    column.setAttribute('style', style);
-  }
-}
+    if (style != null) {
+        button.setAttribute('style', style);
+    }
+};
 
 
 immobit.dom.ListElementColumn = function (index, content, class_, width, style) {
-  var column = document.createElement('td');
-  column.setAttribute('data-id', index);
-  immobit.dom.addContent(column, content);
+    const column = document.createElement('td');
+    column.setAttribute('data-id', index);
+    immobit.dom.addContent(column, content);
 
-  if (class_ != null) {
-    column.setAttribute('class', class_);
-  }
+    if (class_ != null) {
+        column.setAttribute('class', class_);
+    }
 
-  if (width != null) {
-    column.setAttribute('width', width);
-  }
+    if (width != null) {
+        column.setAttribute('width', width);
+    }
 
-  if (style != null) {
-    column.setAttribute('style', style);
-  }
+    if (style != null) {
+        column.setAttribute('style', style);
+    }
 
-  return column;
-}
+    return column;
+};
 
 
 /*
   Real estate list element DOM.
 */
 immobit.dom.ListElement = function (index) {
-  var row = document.createElement('tr');
-  var div = document.createElement('div');
-  div.setAttribute('class', 'input-group');
+    const row = document.createElement('tr');
+    const div = document.createElement('div');
+    div.setAttribute('class', 'input-group');
 
-  // TODO: implement.
-  return row;
-}
+    // TODO: implement.
+    return row;
+};
 
 /*
 <tr>\

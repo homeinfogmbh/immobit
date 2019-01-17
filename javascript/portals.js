@@ -21,7 +21,7 @@
   Requires:
     * immobit.js
 */
-"use strict";
+'use strict';
 
 /*
   ImmoBit core namespace.
@@ -39,20 +39,20 @@ immobit.portals = immobit.portals || {};
   Returns the respective endpoint URL.
 */
 immobit.portals.getUrl = function (endpoint) {
-  var url = immobit.getUrl('portals');
+    const url = immobit.getUrl('portals');
 
-  if (endpoint != null) {
-    return url += '/' + endpoint;
-  }
+    if (endpoint != null) {
+        return url + '/' + endpoint;
+    }
 
-  return url;
-}
+    return url;
+};
 
 
 /*
   Lists the respective portals.
 */
 immobit.portals.list = function (args) {
-  var url = immobit.portals.getUrl();
-  return his.auth.get(url, args);
-}
+    const url = immobit.portals.getUrl();
+    return his.get(url, args);
+};

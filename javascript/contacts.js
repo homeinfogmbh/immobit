@@ -21,7 +21,7 @@
   Requires:
     * immobit.js
 */
-"use strict";
+'use strict';
 
 /*
   ImmoBit core namespace.
@@ -39,20 +39,20 @@ immobit.contacts = immobit.contacts || {};
   Returns the respective endpoint URL.
 */
 immobit.contacts.getUrl = function (endpoint) {
-  var url = immobit.getUrl('contacts');
+    const url = immobit.getUrl('contacts');
 
-  if (endpoint != null) {
-    return url += '/' + endpoint;
-  }
+    if (endpoint != null) {
+        return url + '/' + endpoint;
+    }
 
-  return url;
-}
+    return url;
+};
 
 
 /*
   Lists the respective contacts.
 */
 immobit.contacts.list = function (args) {
-  var url = immobit.contacts.getUrl();
-  return his.auth.get(url, args);
-}
+    const url = immobit.contacts.getUrl();
+    return his.get(url, args);
+};
