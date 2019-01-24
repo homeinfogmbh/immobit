@@ -16,56 +16,54 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Hand\n"
 
-msgid "InvalidRealEstateID"
+#: messages.py:24
+msgid "Invalid real estate ID."
 msgstr "Ungültige Objekt-ID."
 
-msgid "NoSuchRealEstate"
-msgstr "Keine solche Immobilie."
+#: messages.py:25
+msgid "The requested real estate does not exist."
+msgstr "Die angegebene Immobilie existiert nicht."
 
-msgid "RealEstatedCreated"
-msgstr "Immobilie erstellt."
+#: messages.py:27
+msgid "The real estate has been created."
+msgstr "Die Immobilie wurde angelegt."
 
-msgid "CannotAddRealEstate"
-msgstr "Immobilie konnte nicht gespeichert werden."
+#: messages.py:29
+msgid "Could not add the real estate."
+msgstr "Die Immobilie konnte nicht angelegt werden."
 
-msgid "RealEstateExists"
-msgstr "Immobilie existiert bereits."
+#: messages.py:31
+msgid "The real estate already exists"
+msgstr "Die Immobilie existiert bereits."
 
-msgid "NoRealEstateSpecified"
-msgstr "Keine Immobilie angegeben."
+#: messages.py:33
+msgid "The real estate could not be delted."
+msgstr "Die Immobilie konnte nicht gelöscht werden."
 
-msgid "CannotDeleteRealEstate"
-msgstr "Immobilie konnte nicht gelöscht werden."
+#: messages.py:35
+msgid "The real estate has been updated."
+msgstr "Die Immobilie wurde aktualisiert."
 
-msgid "NoRealEstateDataProvided"
-msgstr "Keine Immobiliendaten übergeben."
+#: messages.py:37
+msgid "The real estate has been deleted."
+msgstr "Die Immobilie wurde gelöscht."
 
-msgid "RealEstateUpdated"
-msgstr "Immobilie aktualisiert."
+#: messages.py:39
+msgid "The requested attachment does not exist."
+msgstr "Der gewünschte Anhang existiert nicht."
 
-msgid "RealEstateDeleted"
-msgstr "Immobilie gelöscht."
+#: messages.py:41
+msgid "The attachment has been created."
+msgstr "Der Anhang wurde erstellt."
 
-msgid "NoAttachmentSpecified"
-msgstr "Kein Anhang angegeben."
+#: messages.py:43
+msgid "The attachment has been deleted."
+msgstr "Der Anhang wurde gelöscht."
 
-msgid "NoSuchAttachment"
-msgstr "Kein solcher Anhang."
+#: messages.py:45
+msgid "The attachment already exists."
+msgstr "Der Anhang existiert bereits."
 
-msgid "AttachmentCreated"
-msgstr "Anhang erstellt."
-
-msgid "AttachmentDeleted"
-msgstr "Anhang gelöscht."
-
-msgid "NoDataForAttachment"
-msgstr "Keine Daten für Anhang."
-
-msgid "AttachmentExists"
-msgstr "Anhang existiert bereits."
-
-msgid "AttachmentLimitExceeded"
-msgstr "Zu viele Anhänge."
-
-msgid "ForeignAttachmentAccess"
-msgstr "Versuchter Zugriff auf fremden Anhang."
+#: messages.py:47
+msgid "You have reached your attachment quota."
+msgstr "Sie haben die maximal zugelassene Menge von Anhängen erreicht."
