@@ -37,7 +37,7 @@ msgid "The real estate already exists"
 msgstr "Die Immobilie existiert bereits."
 
 #: messages.py:33
-msgid "The real estate could not be delted."
+msgid "The real estate could not be deleted."
 msgstr "Die Immobilie konnte nicht gelöscht werden."
 
 #: messages.py:35
