@@ -1,142 +1,48 @@
 """Error message definitions."""
 
-from his import Message
+from his import HIS_MESSAGE_FACILITY
 
 
 __all__ = [
-    'RealEstatesMessage',
-
-    'InvalidRealEstateID',
-    'NoSuchRealEstate',
-    'RealEstatedCreated',
-    'CannotAddRealEstate',
-    'RealEstateExists',
-    'NoRealEstateSpecified',
-    'CannotDeleteRealEstate',
-    'NoRealEstateDataProvided',
-    'RealEstateUpdated',
-    'RealEstateDeleted',
-
-    'NoAttachmentSpecified',
-    'AttachmentCreated',
-    'NoDataForAttachment',
-    'NoSuchAttachment',
-    'AttachmentExists',
-    'AttachmentLimitExceeded',
-    'ForeignAttachmentAccess']
+    'INVALID_REAL_ESTATE_ID',
+    'NO_SUCH_REAL_ESTATE',
+    'REAL_ESTATE_CREATED',
+    'CANNOT_ADD_REAL_ESTATE',
+    'REAL_ESTATE_EXISTS',
+    'CANNOT_DELETE_REAL_ESTATE',
+    'REAL_ESTATE_UPDATED',
+    'REAL_ESTATE_DELETED',
+    'NO_SUCH_ATTACHMENT',
+    'ATTACHMENT_CREATED',
+    'ATTACHMENT_DELETED',
+    'ATTACHMENT_EXISTS',
+    'ATTACHMENT_LIMIT_EXCEEDED']
 
 
-class ImmoBitMessage(Message):
-    """Basic real estates message."""
-
-    DOMAIN = 'immobit'
-
-
-class InvalidRealEstateID(ImmoBitMessage):
-    """Indicates that the provided data is not a valid real estate ID."""
-
-    STATUS = 422
-
-
-class NoSuchRealEstate(ImmoBitMessage):
-    """Indicates that the requested real estate does not exist."""
-
-    STATUS = 404
-
-
-class RealEstatedCreated(ImmoBitMessage):
-    """Indicates that the real estate was successfully created."""
-
-    STATUS = 201
-
-
-class CannotAddRealEstate(ImmoBitMessage):
-    """Indicates that the respective real estate could not be added."""
-
-    STATUS = 500
-
-
-class RealEstateExists(ImmoBitMessage):
-    """Indicates that the respective real estate already exists."""
-
-    STATUS = 409
-
-
-class NoRealEstateSpecified(ImmoBitMessage):
-    """Indicates that no real estate was specified."""
-
-    STATUS = 400
-
-
-class CannotDeleteRealEstate(ImmoBitMessage):
-    """Indicates that the respective real estate could not be deleted."""
-
-    STATUS = 500
-
-
-class NoRealEstateDataProvided(ImmoBitMessage):
-    """Indicates that real estate data was expected but not provieded."""
-
-    STATUS = 400
-
-
-class RealEstateUpdated(ImmoBitMessage):
-    """Indicates that the real estate has been updated."""
-
-    STATUS = 200
-
-
-class RealEstateDeleted(ImmoBitMessage):
-    """Indicates that the real estate has been deleted."""
-
-    STATUS = 200
-
-
-class NoAttachmentSpecified(ImmoBitMessage):
-    """Indicates that no attachment was specified."""
-
-    STATUS = 400
-
-
-class NoSuchAttachment(ImmoBitMessage):
-    """Indicates that the requested attachment does not exist."""
-
-    STATUS = 404
-
-
-class AttachmentCreated(ImmoBitMessage):
-    """Indicates that the attachment was successfully created."""
-
-    STATUS = 201
-
-
-class AttachmentDeleted(ImmoBitMessage):
-    """Indicates that the attachment has been deleted."""
-
-    STATUS = 200
-
-
-class NoDataForAttachment(ImmoBitMessage):
-    """Indicates that the requested attachment
-    does not yet have data stored.
-    """
-
-    STATUS = 412
-
-
-class AttachmentExists(ImmoBitMessage):
-    """Indicates that the respective attachment already exists."""
-
-    STATUS = 409
-
-
-class AttachmentLimitExceeded(ImmoBitMessage):
-    """Indicates that the limit for attachments has been exceeded."""
-
-    STATUS = 403
-
-
-class ForeignAttachmentAccess(ImmoBitMessage):
-    """Indicates an attempted access of a foreign attachment."""
-
-    STATUS = 403
+IMMOBIT_MESSAGE_DOMAIN = HIS_MESSAGE_FACILITY.domain('immobit')
+IMMOBIT_MESSAGE = IMMOBIT_MESSAGE_DOMAIN.message
+INVALID_REAL_ESTATE_ID = IMMOBIT_MESSAGE('Invalid real estate ID.', status=422)
+NO_SUCH_REAL_ESTATE = IMMOBIT_MESSAGE(
+    'The requested real estate does not exist.', status=404)
+REAL_ESTATE_CREATED = IMMOBIT_MESSAGE(
+    'The real estate has been created.', status=201)
+CANNOT_ADD_REAL_ESTATE = IMMOBIT_MESSAGE(
+    'Could not add the real estate.', status=500)
+REAL_ESTATE_EXISTS = IMMOBIT_MESSAGE(
+    'The real estate already exists.', status=409)
+CANNOT_DELETE_REAL_ESTATE = IMMOBIT_MESSAGE(
+    'The real estate could not be delted.', status=500)
+REAL_ESTATE_UPDATED = IMMOBIT_MESSAGE(
+    'The real estate has been updated.', status=200)
+REAL_ESTATE_DELETED = IMMOBIT_MESSAGE(
+    'The real estate has been deleted.', status=200)
+NO_SUCH_ATTACHMENT = IMMOBIT_MESSAGE(
+    'The requested attachment does not exist.', status=404)
+ATTACHMENT_CREATED = IMMOBIT_MESSAGE(
+    'The attachment has been created.', status=201)
+ATTACHMENT_DELETED = IMMOBIT_MESSAGE(
+    'The attachment has been deleted.', status=200)
+ATTACHMENT_EXISTS = IMMOBIT_MESSAGE(
+    'The attachment already exists.', status=409)
+ATTACHMENT_LIMIT_EXCEEDED = IMMOBIT_MESSAGE(
+    'You have reached your attachment quota.', status=403)

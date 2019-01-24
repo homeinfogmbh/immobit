@@ -5,6 +5,7 @@ from wsgilib import JSON
 
 from immobit.orm import CustomerPortal
 
+
 __all__ = ['ROUTES']
 
 

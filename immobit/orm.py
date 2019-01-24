@@ -30,7 +30,7 @@ class Action(Enum):
 class ImmoBitModel(Model):
     """Basic immobit model."""
 
-    class Meta:
+    class Meta:     # pylint: disable=C0111,R0903
         database = DATABASE
         schema = database.database
 
@@ -38,7 +38,7 @@ class ImmoBitModel(Model):
 class TransactionLog(ImmoBitModel):
     """Stores real estate transactions."""
 
-    class Meta:
+    class Meta:     # pylint: disable=C0111,R0903
         table_name = 'transaction_log'
 
     account = ForeignKeyField(Account, column_name='account')
@@ -71,7 +71,7 @@ class TransactionLog(ImmoBitModel):
 class CustomerPortal(ImmoBitModel):
     """Configures customer-portal mappings."""
 
-    class Meta:
+    class Meta:     # pylint: disable=C0111,R0903
         table_name = 'customer_portal'
 
     customer = ForeignKeyField(Customer, column_name='customer')

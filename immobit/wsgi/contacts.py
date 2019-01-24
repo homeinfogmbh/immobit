@@ -4,7 +4,8 @@ from his import authenticated, authorized
 from openimmodb import Kontakt
 from wsgilib import JSON
 
-from immobit.wsgi.realestates import _get_real_estates
+from immobit.wsgi.realestates import get_real_estates
+
 
 __all__ = ['ROUTES']
 
@@ -12,7 +13,7 @@ __all__ = ['ROUTES']
 def _get_contacts():
     """Yields appropriate contacts."""
 
-    for immobilie in _get_real_estates():
+    for immobilie in get_real_estates():
         for kontakt in Kontakt.select().where(Kontakt.immobilie == immobilie):
             yield kontakt
 
