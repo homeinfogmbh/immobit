@@ -1284,10 +1284,9 @@ function saveMetaDataForImages(id, counter = 0) { // null means all the old imag
 			count = _imagesTitles.length;
 		else if (_openImmo_json != null && _openImmo_json.hasOwnProperty("anhaenge"))
 			position =  _openImmo_json.anhaenge.anhang.length;
-
 		for (var i = 0; i < count; i++) {
-			title = $('#imagetitle' + (position+counter)).val();
-			group = $('#imagegroup' + (position+counter) + ' option:selected').val();
+			title = $('#imagetitle' + (position+counter+i)).val();
+			group = $('#imagegroup' + (position+counter+i) + ' option:selected').val();
 			metadata = {};
 			//console.log(i + ' // ' + id + ' // ' + position + ' // ' + _imagesTitles.length + ' // ' + title + ' // ' + group);
 			if (id == null)
