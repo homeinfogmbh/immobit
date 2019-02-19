@@ -1294,6 +1294,7 @@ function saveMetaDataForImages(id, counter = 0) { // null means all the old imag
 			else if (title.trim() != "") {
 				metadata.anhangtitel = title;
 			}
+			metadata.index = i;
 			if (id == null)
 				(group.trim() == "0") ?(_openImmo_json.anhaenge.anhang[i].hasOwnProperty("gruppe")) ?metadata.gruppe = null :false :(hasChanged(true,"anhaenge.anhang","gruppe", group, i)) ?metadata.gruppe = group :false;
 			else if (group.trim() != "0")
