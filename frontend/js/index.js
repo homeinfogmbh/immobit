@@ -1288,15 +1288,15 @@ function saveMetaDataForImages(id, counter = 0) { // null means all the old imag
 			title = $('#imagetitle' + (position+counter+i)).val();
 			group = $('#imagegroup' + (position+counter+i) + ' option:selected').val();
 			metadata = {};
-			//console.log(i + ' // ' + id + ' // ' + position + ' // ' + _imagesTitles.length + ' // ' + title + ' // ' + group);
+			metadata.index = counter;
+			//console.log(i + ' // ' + id + ' // ' + position + ' // ' + _imagesTitles.length + ' // ' + title + ' // ' + group + ' // ' + counter);
 			if (id == null)
-				(title.trim() == "") ?(_openImmo_json.anhaenge.anhang[i].hasOwnProperty("anhangtitel")) ?metadata.anhangtitel = null :false :(hasChanged(true,"anhaenge.anhang","anhangtitel", title, i)) ?metadata.anhangtitel = title :false;
+				(title.trim() == "") ?(_openImmo_json.hasOwnProperty("anhaenge") && _openImmo_json.anhaenge.anhang[i].hasOwnProperty("anhangtitel")) ?metadata.anhangtitel = null :false :(hasChanged(true,"anhaenge.anhang","anhangtitel", title, i)) ?metadata.anhangtitel = title :false;
 			else if (title.trim() != "") {
 				metadata.anhangtitel = title;
 			}
-			metadata.index = i;
 			if (id == null)
-				(group.trim() == "0") ?(_openImmo_json.anhaenge.anhang[i].hasOwnProperty("gruppe")) ?metadata.gruppe = null :false :(hasChanged(true,"anhaenge.anhang","gruppe", group, i)) ?metadata.gruppe = group :false;
+				(group.trim() == "0") ?(_openImmo_json.hasOwnProperty("anhaenge") && _openImmo_json.anhaenge.anhang[i].hasOwnProperty("gruppe")) ?metadata.gruppe = null :false :(hasChanged(true,"anhaenge.anhang","gruppe", group, i)) ?metadata.gruppe = group :false;
 			else if (group.trim() != "0")
 				metadata.gruppe = group;
 			if (metadata.hasOwnProperty('anhangtitel') || metadata.hasOwnProperty('gruppe')) {
