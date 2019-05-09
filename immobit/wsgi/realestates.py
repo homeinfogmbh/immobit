@@ -21,7 +21,7 @@ from immobit.messages import REAL_ESTATE_CREATED
 from immobit.messages import REAL_ESTATE_DELETED
 from immobit.messages import REAL_ESTATE_EXISTS
 from immobit.messages import REAL_ESTATE_UPDATED
-from immobit.orm import TransactionLog
+from immobit.orm import Action, TransactionLog
 
 
 __all__ = ['ROUTES', 'get_real_estate', 'get_real_estates']
@@ -130,7 +130,7 @@ def add():
     except (KeyError, TypeError):
         objektnr_extern = None
 
-    with _transaction('CREATE', objektnr_extern) as log:
+    with _transaction(Action.CREATE, objektnr_extern) as log:
         transaction, ident = _add_real_estate(request.json)
 
         if transaction:
@@ -149,7 +149,7 @@ def delete(ident):
 
     real_estate = get_real_estate(ident)
 
-    with _transaction('DELETE', real_estate.objektnr_extern) as log:
+    with _transaction(Action.DELETE, real_estate.objektnr_extern) as log:
         try:
             real_estate.delete_instance()
         except OpenImmoDBError:
