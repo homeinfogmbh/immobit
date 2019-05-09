@@ -170,7 +170,7 @@ def patch(ident):
 
     real_estate = get_real_estate(ident)
 
-    with _transaction('UPDATE', real_estate.objektnr_extern) as log:
+    with _transaction(Action.UPDATE, real_estate.objektnr_extern) as log:
         if _patch_real_estate(real_estate, request.json):
             log.success = True
 
