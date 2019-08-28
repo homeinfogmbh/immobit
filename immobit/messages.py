@@ -1,6 +1,6 @@
 """Error message definitions."""
 
-from his import HIS_MESSAGE_FACILITY
+from wsgilib import JSONMessage
 
 
 __all__ = [
@@ -19,30 +19,27 @@ __all__ = [
     'ATTACHMENT_LIMIT_EXCEEDED']
 
 
-IMMOBIT_MESSAGE_DOMAIN = HIS_MESSAGE_FACILITY.domain('immobit')
-IMMOBIT_MESSAGE = IMMOBIT_MESSAGE_DOMAIN.message
-INVALID_REAL_ESTATE_ID = IMMOBIT_MESSAGE('Invalid real estate ID.', status=422)
-NO_SUCH_REAL_ESTATE = IMMOBIT_MESSAGE(
+INVALID_REAL_ESTATE_ID = JSONMessage('Invalid real estate ID.', status=422)
+NO_SUCH_REAL_ESTATE = JSONMessage(
     'The requested real estate does not exist.', status=404)
-REAL_ESTATE_CREATED = IMMOBIT_MESSAGE(
+REAL_ESTATE_CREATED = JSONMessage(
     'The real estate has been created.', status=201)
-CANNOT_ADD_REAL_ESTATE = IMMOBIT_MESSAGE(
+CANNOT_ADD_REAL_ESTATE = JSONMessage(
     'Could not add the real estate.', status=500)
-REAL_ESTATE_EXISTS = IMMOBIT_MESSAGE(
+REAL_ESTATE_EXISTS = JSONMessage(
     'The real estate already exists.', status=409)
-CANNOT_DELETE_REAL_ESTATE = IMMOBIT_MESSAGE(
+CANNOT_DELETE_REAL_ESTATE = JSONMessage(
     'The real estate could not be deleted.', status=500)
-REAL_ESTATE_UPDATED = IMMOBIT_MESSAGE(
+REAL_ESTATE_UPDATED = JSONMessage(
     'The real estate has been updated.', status=200)
-REAL_ESTATE_DELETED = IMMOBIT_MESSAGE(
+REAL_ESTATE_DELETED = JSONMessage(
     'The real estate has been deleted.', status=200)
-NO_SUCH_ATTACHMENT = IMMOBIT_MESSAGE(
+NO_SUCH_ATTACHMENT = JSONMessage(
     'The requested attachment does not exist.', status=404)
-ATTACHMENT_CREATED = IMMOBIT_MESSAGE(
+ATTACHMENT_CREATED = JSONMessage(
     'The attachment has been created.', status=201)
-ATTACHMENT_DELETED = IMMOBIT_MESSAGE(
+ATTACHMENT_DELETED = JSONMessage(
     'The attachment has been deleted.', status=200)
-ATTACHMENT_EXISTS = IMMOBIT_MESSAGE(
-    'The attachment already exists.', status=409)
-ATTACHMENT_LIMIT_EXCEEDED = IMMOBIT_MESSAGE(
+ATTACHMENT_EXISTS = JSONMessage('The attachment already exists.', status=409)
+ATTACHMENT_LIMIT_EXCEEDED = JSONMessage(
     'You have reached your attachment quota.', status=403)
