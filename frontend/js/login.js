@@ -1,3 +1,7 @@
+$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+	options.crossDomain = {crossDomain: true};
+	options.xhrFields = {withCredentials: true};
+});
 checkSession();
 $(document).ready(function(){
 	$("#warning").hide();
@@ -89,7 +93,7 @@ function checkSession() {
 		$('#pageloader').show();
 		$.ajax({
 			timeout: 3000,
-			url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token"),
+			url: "https://his.homeinfo.de/session/!",
 			type: "GET",
 			success: function (msg) {
 				//console.log("Success " + msg);

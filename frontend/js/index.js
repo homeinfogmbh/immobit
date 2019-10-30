@@ -1,3 +1,7 @@
+$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+	options.crossDomain = {crossDomain: true};
+	options.xhrFields = {withCredentials: true};
+});
 checkSession(); // Disable for testing without login
 var _openImmo_json = null;
 var _page = 0;
@@ -70,7 +74,6 @@ $(document).ready(function() {
 				var aktive = 0;
 				var inaktive = 0;
 				for (var i = 0; i < msg.length; i++) {
-					//if (isOnDate(msg[i].verwaltung_techn["aktiv_von"], msg[i].verwaltung_techn["aktiv_bis"]))
 					if (msg[i].verwaltung_techn.hasOwnProperty('weitergabe_positiv')) {
 						if (msg[i].verwaltung_techn.weitergabe_positiv.length > 0)
 							aktive++;
@@ -622,18 +625,7 @@ function createRealEstateJSON(check = true) {
 				openimmo.verwaltung_techn.weitergabe_positiv.push('breba');
 			(hasChanged(check,"verwaltung_objekt","denkmalgeschuetzt", $("#energy_type").val())) ?($("#energy_type").val() != "true") ?(openimmo.verwaltung_objekt["denkmalgeschuetzt"] = null) :openimmo.verwaltung_objekt["denkmalgeschuetzt"] = true :false;
 			openimmo.verwaltung_techn["aktiv_von"] = null;
-			openimmo.verwaltung_techn["aktiv_bis"] = null;
-
-			/*
-			if (openimmo.verwaltung_techn.weitergabe_positiv.length > 0) {
-				openimmo.verwaltung_techn["aktiv_von"] = "1970-01-01";
-				openimmo.verwaltung_techn["aktiv_bis"] = "1970-01-01";
-			} else {
-				openimmo.verwaltung_techn["aktiv_von"] = null;
-				openimmo.verwaltung_techn["aktiv_bis"] = null;
-			}
-			*/
-
+			openimmo.verwaltung_techn["aktiv_bis"] = null
 	openimmo["barrier_freeness"] = {};
 		($("#barrier_freeness_stairs").val() == "-1") ?(isNull("barrier_freeness.stairs")) ?false :openimmo.barrier_freeness["stairs"] = null :(hasChanged(check,"barrier_freeness","stairs", $("#barrier_freeness_stairs").val())) ?openimmo.barrier_freeness["stairs"] = $("#barrier_freeness_stairs").val() :false;
 		openimmo.barrier_freeness["entry"] = {};
@@ -831,7 +823,7 @@ function getAllRealEstates(page = 0, sorting = "normal", reverse = false) {
 		url: "https://backend.immobit.de/realestates?session=" +localStorage.getItem("token"),
 		type: "GET",
 		success: function (msg) {
-			//console.log(JSON.stringify(msg));
+			//console.log(msg);
 			_openImmo_json = msg;
 			loadRealEstates(page, sorting, reverse);
 		},
@@ -952,8 +944,6 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 				vermarktungsart = "Mietobjekt";
 			else
 				vermarktungsart = "Unbekannt";
-			//if (!isOnDate(msg[i].verwaltung_techn["aktiv_von"], msg[i].verwaltung_techn["aktiv_bis"]))
-				//checked = "";
 			if (msg[i].verwaltung_techn.hasOwnProperty('weitergabe_positiv')) {
 				for (var positivcounter = 0; positivcounter < msg[i].verwaltung_techn.weitergabe_positiv.length; positivcounter++) {
 					if (msg[i].verwaltung_techn.weitergabe_positiv[positivcounter] === 'immobrowse')
