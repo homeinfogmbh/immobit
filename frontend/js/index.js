@@ -822,9 +822,6 @@ function getAllRealEstates(page = 0, sorting = "normal", reverse = false) {
 	$.ajax({
 		url: "https://backend.immobit.de/realestates?session=" +localStorage.getItem("token"),
 		type: "GET",
-        beforeSend: function(xhr){
-           xhr.withCredentials = true;
-        },
 		success: function (msg) {
 			//console.log(msg);
 			_openImmo_json = msg;
