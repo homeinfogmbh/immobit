@@ -27,4 +27,4 @@ def get():
     return JSON(list(_get_portals()))
 
 
-ROUTES = (('GET', '/portals', get, 'get_portals'),)
+ROUTES = (('GET', '/portals', get),)

@@ -184,8 +184,9 @@ def patch(ident):
 
 
 ROUTES = (
-    ('GET', '/realestates', lst, 'list_real_estates'),
-    ('GET', '/realestates/<int:ident>', get, 'get_real_estate'),
-    ('POST', '/realestates', add, 'add_real_estate'),
-    ('DELETE', '/realestates/<int:ident>', delete, 'delete_real_estate'),
-    ('PATCH', '/realestates/<int:ident>', patch, 'patch_real_estate'))
+    ('GET', '/realestates', lst),
+    ('GET', '/realestates/<int:ident>', get),
+    ('POST', '/realestates', add),
+    ('DELETE', '/realestates/<int:ident>', delete),
+    ('PATCH', '/realestates/<int:ident>', patch)
+)

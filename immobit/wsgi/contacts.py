@@ -26,4 +26,4 @@ def get():
     return JSON([contact.to_dict() for contact in _get_contacts()])
 
 
-ROUTES = (('GET', '/contacts', get, 'get_contacts'),)
+ROUTES = (('GET', '/contacts', get),)

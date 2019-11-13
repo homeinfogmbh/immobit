@@ -3,14 +3,18 @@
 from datetime import datetime
 from enum import Enum
 
-from peewee import Model, ForeignKeyField, CharField, DateTimeField, \
-    BooleanField
+from peewee import BooleanField
+from peewee import CharField
+from peewee import DateTimeField
+from peewee import ForeignKeyField
+from peewee import Model
 
 from his import Account
 from mdb import Customer
 from peeweeplus import MySQLDatabase, EnumField
 
 from immobit.config import CONFIG
+
 
 __all__ = ['TransactionLog', 'CustomerPortal']
 

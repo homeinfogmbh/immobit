@@ -82,7 +82,8 @@ def delete(ident):
 
 
 ROUTES = (
-    ('GET', '/attachments/<int:ident>', get, 'get_attachment'),
-    ('POST', '/attachments/<int:ident>', add, 'add_attachment'),
-    (['PATCH', 'PUT'], '/attachments/<int:ident>', patch, 'patch_attachment'),
-    ('DELETE', '/attachments/<int:ident>', delete, 'delete_attachment'))
+    ('GET', '/attachments/<int:ident>', get),
+    ('POST', '/attachments/<int:ident>', add),
+    (['PATCH', 'PUT'], '/attachments/<int:ident>', patch),
+    ('DELETE', '/attachments/<int:ident>', delete)
+)
