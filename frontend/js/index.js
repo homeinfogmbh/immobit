@@ -1,8 +1,10 @@
 $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
 	options.crossDomain = {crossDomain: true};
 	options.xhrFields = {withCredentials: true};
+	if (!originalOptions.hasOwnProperty('headers') || !originalOptions.headers.hasOwnProperty('Accept') || !originalOptions.headers.Accept === "text/csv")
+		options.headers = {"session-duration":30}; // max 5min - 30min; default: 15min	
 });
-checkSession(); // Disable for testing without login
+holdSession(); //checkSession(); // Disable for testing without login
 var _openImmo_json = null;
 var _page = 0;
 var _imagesTitles = [];
@@ -41,11 +43,10 @@ $(document).ready(function() {
 	$('.logout').click(function() {
 		$('#pageloader').show();
 		$.ajax({
-			url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token"),
+			url: "https://his.homeinfo.de/session/!",
 			type: "DELETE",
 			complete: function (msg) {
 				$('#pageloader').hide();
-				localStorage.removeItem("token");
 				window.location.href = "login.html";
 			}
 		});
@@ -67,7 +68,7 @@ $(document).ready(function() {
 		$("#nav_startpage").show();
 
 		$.ajax({
-			url: "https://backend.homeinfo.de/immobit/realestates?session=" +localStorage.getItem("token"),
+			url: "https://backend.immobit.de/realestates",
 			type: "GET",
 			success: function (msg) {
 				var startpage_info = "</div><font size='4'><label>Es befinden sich zur Zeit <font size='6' color='#159f18'>" +  msg.length + "</font> Immobilien auf dieser Plattform.<label></font>"
@@ -315,7 +316,7 @@ $(document).ready(function() {
 				typeString = "POST";
 			var openImmo = createRealEstateJSON();
 			$.ajax({
-				url: "https://backend.homeinfo.de/immobit/realestates" + urlString + "?session=" + localStorage.getItem("token"),
+				url: "https://backend.immobit.de/realestates" + urlString,
 				type: typeString,
 				data: JSON.stringify(openImmo),
 				contentType: 'application/json',
@@ -403,7 +404,7 @@ $(document).ready(function() {
 				$("#loader_manage").show();
 				//for (i=0; i < msg.length; i++) { // delete all
 				$.ajax({
-					url: "https://backend.homeinfo.de/immobit/realestates/" + _openImmo_json.id + "?session=" +  localStorage.getItem("token"),
+					url: "https://backend.immobit.de/realestates/" + _openImmo_json.id,
 					type: "DELETE",
 					success: function (msg) {
 						$("#manage_exposes").trigger( "click" );
@@ -436,7 +437,7 @@ $(document).ready(function() {
 				$("#loader_manage").show();
 				for (i = 0; i < _deleteRealEstates.length; i++) {
 					$.ajax({
-						url: "https://backend.homeinfo.de/immobit/realestates/" + _openImmo_json[_deleteRealEstates[i]].id + "?session=" +  localStorage.getItem("token"),
+						url: "https://backend.immobit.de/realestates/" + _openImmo_json[_deleteRealEstates[i]].id,
 						type: "DELETE",
 						success: function (msg) {
 							$("#manage_title").html('<h1>Immobilien verwalten</h1><font size="4" color="#000">Immobilien wurden erfolgreich gelöscht.</font>');
@@ -457,7 +458,7 @@ $(document).ready(function() {
 
 function getAccountData() {
 	$.ajax({
-		url: "https://backend.homeinfo.de/immobit/portals?session=" + localStorage.getItem("token"),
+		url: "https://backend.immobit.de/portals",
 		type: "GET",
 		complete: function (msg) {
 			_portals = msg.responseJSON;
@@ -466,32 +467,6 @@ function getAccountData() {
 			console.log(msg);
 		}
 	});
-	/*
-	$.ajax({
-		url: "https://his.homeinfo.de/account/!?session=" + localStorage.getItem("token"),
-		type: "GET",
-		complete: function (msg) {
-			var i;
-			for (i = 0; i < _customerWithPortalHBA.length; i++) {
-				if (msg.responseJSON.customer == _customerWithPortalHBA[i]) {
-					_hasHBA = true;
-					$('#hba').show();
-					break;
-				}
-			}
-			for (i = 0; i < _customerWithPortalBREBA.length; i++) {
-				if (msg.responseJSON.customer == _customerWithPortalBREBA[i]) {
-					_hasBREBA = true;
-					$('#breba').show();
-					break;
-				}
-			}
-		},
-		error: function (msg) {
-			console.log(msg);
-		}
-	});
-	*/
 }
 
 function createRealEstateJSON(check = true) {
@@ -716,22 +691,22 @@ function setSpeech(speech) {
 
 
 }
-
+/*
 function checkSession() {
 	$('#pageloader').show();
 	$.ajax({
 		timeout: 5000,
-		url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token"),
+		url: "https://his.homeinfo.de/session/!",
 		type: "GET",
 		success: function (msg) {
 			//console.log("Success " + msg);
 			//console.log("Success " + msg.token)
-			if (msg.token != localStorage.getItem("token")) {
+			//if (msg.token != localStorage.getItem("token")) {
 				window.location.href = "login.html";
-			} else {
-				$("#page").show();
-				$("#sessiontime").html('<font size="2" color="#bbb">Sitzung läuft ab <br>um ' + msg.end.substring(11,16) + '</font>');
-			}
+			//} else {
+				//$("#page").show();
+				//$("#sessiontime").html('<font size="2" color="#bbb">Sitzung läuft ab <br>um ' + msg.end.substring(11,16) + '</font>');
+			//}
 		},
 		complete: function (msg) {
 			$('#pageloader').hide();
@@ -741,16 +716,19 @@ function checkSession() {
 		}
 	});
 }
-
+*/
 
 // Recreate/Stay Session
 function holdSession() {
 	$('#pageloader').show();
 	$.ajax({
-		url: "https://his.homeinfo.de/session/!?session=" +  localStorage.getItem("token") + '&duration=30', //?duration=5 // max 5min - 30min; default: 15min
+		url: "https://his.homeinfo.de/session/!",
 		type: "PUT",
 		success: function (msg) {
-			localStorage.setItem("token", msg.token);
+			//localStorage.setItem("token", msg.token);
+			if ((new Date(msg.end) - new Date()) < 0) {
+				window.location.href = "index.html";
+			};
 			$("#sessiontime").html('<font size="2" color="#bbb">Sitzung läuft ab <br>um ' + msg.end.substring(11, 16) + '</font>');
 		},
 		complete: function(msg) {
@@ -766,7 +744,7 @@ function holdSession() {
 
 function getAllContacts() {
 	$.ajax({
-		url: "https://backend.homeinfo.de/immobit/contacts?session=" + localStorage.getItem("token"),
+		url: "https://backend.immobit.de/contacts?",
 		type: "GET",
 		success: function (msg) {
 			//console.log(JSON.stringify(msg));
@@ -820,7 +798,7 @@ function getAllRealEstates(page = 0, sorting = "normal", reverse = false) {
 	$("#loader_manage").show();
 	$("#realestates").html("");
 	$.ajax({
-		url: "https://backend.homeinfo.de/immobit/realestates?session=" +localStorage.getItem("token"),
+		url: "https://backend.immobit.de/realestates",
 		type: "GET",
 		success: function (msg) {
 			//console.log(msg);
@@ -1062,7 +1040,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 			}
 			var id = msg[$(this).data("id")].id;
 			$.ajax({
-				url: "https://backend.homeinfo.de/immobit/realestates/" + id + "?session=" +  localStorage.getItem("token"),
+				url: "https://backend.immobit.de/realestates/" + id,
 				type: "GET",
 				success: function (msg) {
 					//console.log(msg);
@@ -1090,7 +1068,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 			var sorting = $(this).data("sorting");
 			var reverse = $(this).data("reverse");
 			$.ajax({
-				url: "https://backend.homeinfo.de/immobit/realestates/" + id + "?session=" +  localStorage.getItem("token"),
+				url: "https://backend.immobit.de/realestates/" + id,
 				type: "GET",
 				success: function (msg) {
 					_openImmo_json = msg;
@@ -1098,7 +1076,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 					_openImmo_json.verwaltung_techn.objektnr_extern = getUuid();
 					_openImmo_json.verwaltung_techn.stand_vom = date.getFullYear() + '-' + ('0'+(date.getMonth()+1)).substr(-2,2) + '-' + ('0'+date.getDate()).substr(-2,2);
 					$.ajax({
-						url: "https://backend.homeinfo.de/immobit/realestates?session=" + localStorage.getItem("token"),
+						url: "https://backend.immobit.de/realestates",
 						type:  "POST",
 						data: JSON.stringify(_openImmo_json),
 				        contentType: 'application/json',
@@ -1145,7 +1123,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 					$("#loader_manage").show();
 					//for (i=0; i < msg.length; i++) { // delete all
 					$.ajax({
-						url: "https://backend.homeinfo.de/immobit/realestates/" + _openImmo_json.id + "?session=" +  localStorage.getItem("token"),
+						url: "https://backend.immobit.de/realestates/" + _openImmo_json.id,
 						type: "DELETE",
 						success: function (msg) {
 							$("#manage_title").html('<h1>Immobilien verwalten</h1><font size="4" color="#000">Die Immobilie <font size="4" color="#FF0000">' + _openImmo_json.verwaltung_techn.objektnr_extern + '</font> wurde gelöscht.');
@@ -1200,7 +1178,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 			}
 			//console.log(JSON.stringify(openImmo_json));
 			$.ajax({
-				url: "https://backend.homeinfo.de/immobit/realestates/" + id + "?session=" + localStorage.getItem("token"),
+				url: "https://backend.immobit.de/realestates/" + id,
 				type:  "PATCH",
 				data: JSON.stringify(openImmo_json),
 				contentType: 'application/json',
@@ -1225,7 +1203,7 @@ function getImages() {
 			var initialPreviewArray = new Array();
 			for (var i = 0; i < _openImmo_json.anhaenge.anhang.length; i++) {
 				initialPreviewConfigArray[i] = {caption: _openImmo_json.anhaenge.anhang[i].anhangtitel, size: "", width: "120px", key: i, showDrag: false, group: _openImmo_json.anhaenge.anhang[i].gruppe};
-				initialPreviewArray[i] = "https://backend.homeinfo.de/immobit/attachments/" + _openImmo_json.anhaenge.anhang[i].id + "?session=" + localStorage.getItem("token");
+				initialPreviewArray[i] = "https://backend.immobit.de/attachments/" + _openImmo_json.anhaenge.anhang[i].id;
 			}
 
 			//$("#files-upload-input").html('<input id="files-upload" name="filesupload[]" type="file" multiple class="file-loading">');
@@ -1233,16 +1211,15 @@ function getImages() {
 			// Source: http://plugins.krajee.com/file-advanced-usage-demo
 			_fileinput = $("#files-upload").fileinput({
 				language: "de",
-				uploadUrl: "https://backend.homeinfo.de/immobit/attachments/",
+				uploadUrl: "https://backend.immobit.de/attachments/",
 				//uploadUrl: "https://testing.homeinfo.de/wsgi/",
                                 ajaxSettings: {contentType: "application/octet-stream"},
-				token: "?session=",
 				maxFileSize: 15000,
 				allowedFileExtensions: ["jpg", "png", "gif", "jpeg"],
 				initialPreview: initialPreviewArray,
 				initialPreviewConfig: initialPreviewConfigArray,
 				initialPreviewAsData: true,
-				deleteUrl: "https://backend.homeinfo.de/immobit/attachments/",
+				deleteUrl: "https://backend.immobit.de/attachments/",
 				overwriteInitial: false
 			});
 		} else {
@@ -1252,10 +1229,9 @@ function getImages() {
 				$("#files-upload-input").html('<input id="files-upload" name="filesupload[]" type="file" multiple class="file-loading">');
 			_fileinput = $("#files-upload").fileinput({
 				language: "de",
-				uploadUrl: "https://backend.homeinfo.de/immobit/attachments/",
+				uploadUrl: "https://backend.immobit.de/attachments/",
 				//uploadUrl: "https://testing.homeinfo.de/wsgi/",
                                 ajaxSettings: {contentType: "application/octet-stream"},
-				token: "?session=",
 				maxFileSize: 15000,
 				allowedFileExtensions: ["jpg", "png", "gif", "jpeg"]
 			});
@@ -1291,7 +1267,7 @@ function saveMetaDataForImages(id, counter = 0) { // null means all the old imag
 				metadata.gruppe = group;
 			if (metadata.hasOwnProperty('anhangtitel') || metadata.hasOwnProperty('gruppe')) {
 				$.ajax({
-					url: 'https://backend.homeinfo.de/immobit/attachments/' + ((id === null) ?_openImmo_json.anhaenge.anhang[i].id :id) + '?session=' + localStorage.getItem("token"),
+					url: 'https://backend.immobit.de/attachments/' + ((id === null) ?_openImmo_json.anhaenge.anhang[i].id :id),
 					type: "PATCH",
 					data: JSON.stringify(metadata),
 					contentType: 'application/json',
@@ -1312,7 +1288,7 @@ function saveMetaDataForImages(id, counter = 0) { // null means all the old imag
 function showpreview(JSONdata) {
 	holdSession();
 	localStorage.setItem("immobrowse.preview", JSON.stringify(JSONdata));
-	var win = window.open('https://immobit.de/preview/expose.html?session=' + localStorage.getItem("token"), '_blank'); 	//var win = window.open('file:///C:/Users/Raphael-PC/Desktop/homeinfo/ImmoBIT/preview/expose.html?session=' + localStorage.getItem("token"), '_blank');
+	var win = window.open('https://immobit.de/preview/expose.html', '_blank'); 	//var win = window.open('file:///C:/Users/Raphael-PC/Desktop/homeinfo/ImmoBIT/preview/expose.html?session=' + localStorage.getItem("token"), '_blank');
 	if (win)
 		win.focus();
 }
