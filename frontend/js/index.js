@@ -726,6 +726,7 @@ function holdSession() {
 		type: "PUT",
 		success: function (msg) {
 			//localStorage.setItem("token", msg.token);
+			console.log();
 			if ((new Date(msg.end) - new Date()) < 0) {
 				window.location.href = "login.html";
 			} else {
@@ -737,6 +738,7 @@ function holdSession() {
 			$('#pageloader').hide();
 		},
 		error: function (msg) { // EXPIRED
+		console.log(msg)
 			if (msg.statusText == "Gone" ) {
 				window.location.href = "login.html"; // Disable for testing without login
 			}
