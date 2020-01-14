@@ -642,7 +642,7 @@
             self.dropZoneEnabled = hasDragDropSupport() && self.dropZoneEnabled;
             self.isDisabled = self.$element.attr('disabled') || self.$element.attr('readonly');
             self.isUploadable = hasFileUploadSupport() && !isEmpty(self.uploadUrl);
-			self.token = self.token;
+			//self.token = self.token;
             self.isClickable = self.browseOnZoneClick && self.showPreview &&
                 (self.isUploadable && self.dropZoneEnabled || !isEmpty(self.defaultPreviewContent));
             self.slug = typeof options.slugCallback === "function" ? options.slugCallback : self._slugDefault;
@@ -1382,7 +1382,7 @@
                 params = {id: $el.attr('id'), key: vKey, extra: extraData};
 				//console.log(vUrl + _openImmo_json.anhaenge.anhang[index].id + '/' + self.token);
                 settings = $.extend(true, {}, {
-                    url: vUrl + getID(index) + self.token + localStorage.getItem("token"),
+                    url: vUrl + getID(index),
                     type: 'DELETE',
                     beforeSend: function (jqXHR) {
 						_openImmo_json.anhaenge.anhang.splice(index, 1);
@@ -1644,7 +1644,7 @@
                     var xhrobj = $.ajaxSettings.xhr();
                     return self._initXhr(xhrobj, previewId, self.getFileStack().length);
                 },
-                url: self.uploadUrl + _id + self.token + localStorage.getItem("token"),
+                url: self.uploadUrl + _id,
                 type: 'POST',
                 data: file,
                 cache: false,
