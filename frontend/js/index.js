@@ -461,6 +461,7 @@ function getAccountData() {
 		url: "https://backend.immobit.de/portals",
 		type: "GET",
 		complete: function (msg) {
+			console.log(msg);
 			_portals = msg.responseJSON;
 		},
 		error: function (msg) {
