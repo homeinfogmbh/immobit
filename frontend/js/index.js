@@ -458,7 +458,7 @@ $(document).ready(function() {
 
 function getAccountData() {
 	$.ajax({
-		url: "https://backend.immobit.de/portals",
+		url: "https://backend.homeinfo.de/immobit/portals",
 		type: "GET",
 		complete: function (msg) {
 			console.log(msg);
