@@ -461,7 +461,6 @@ function getAccountData() {
 		url: "https://backend.homeinfo.de/immobit/portals",
 		type: "GET",
 		complete: function (msg) {
-			console.log(msg);
 			_portals = msg.responseJSON;
 		},
 		error: function (msg) {
@@ -728,9 +727,11 @@ function holdSession() {
 		success: function (msg) {
 			//localStorage.setItem("token", msg.token);
 			if ((new Date(msg.end) - new Date()) < 0) {
-				window.location.href = "index.html";
-			};
-			$("#sessiontime").html('<font size="2" color="#bbb">Sitzung läuft ab <br>um ' + msg.end.substring(11, 16) + '</font>');
+				window.location.href = "login.html";
+			} else {
+				$("#page").show();
+				$("#sessiontime").html('<font size="2" color="#bbb">Sitzung läuft ab <br>um ' + msg.end.substring(11, 16) + '</font>');
+			}
 		},
 		complete: function(msg) {
 			$('#pageloader').hide();
