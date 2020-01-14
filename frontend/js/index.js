@@ -738,7 +738,7 @@ function holdSession() {
 			$('#pageloader').hide();
 		},
 		error: function (msg) { // EXPIRED
-			if (msg.respponseJSON.message == "No session specified." ) {
+			if (msg.responseJSON.message == "No session specified.") {
 				window.location.href = "login.html"; // Disable for testing without login
 			}
 		},
