@@ -15,7 +15,6 @@ __all__ = [
     'NO_SUCH_ATTACHMENT',
     'ATTACHMENT_CREATED',
     'ATTACHMENT_DELETED',
-    'ATTACHMENT_EXISTS',
     'ATTACHMENT_LIMIT_EXCEEDED'
 ]
 
@@ -41,6 +40,5 @@ ATTACHMENT_CREATED = JSONMessage(
     'The attachment has been created.', status=201)
 ATTACHMENT_DELETED = JSONMessage(
     'The attachment has been deleted.', status=200)
-ATTACHMENT_EXISTS = JSONMessage('The attachment already exists.', status=409)
 ATTACHMENT_LIMIT_EXCEEDED = JSONMessage(
     'You have reached your attachment quota.', status=403)

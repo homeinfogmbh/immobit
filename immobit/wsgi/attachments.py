@@ -3,12 +3,11 @@
 from flask import request
 
 from his import CUSTOMER, authenticated, authorized
-from openimmodb import AttachmentExists, Anhang
+from openimmodb import Anhang
 from wsgilib import OK, Binary
 
 from immobit.messages import ATTACHMENT_CREATED
 from immobit.messages import ATTACHMENT_DELETED
-from immobit.messages import ATTACHMENT_EXISTS
 from immobit.messages import ATTACHMENT_LIMIT_EXCEEDED
 from immobit.messages import NO_SUCH_ATTACHMENT
 from immobit.wsgi.realestates import get_real_estate
@@ -52,11 +51,7 @@ def add(ident):
 
     if Anhang.count(immobilie=real_estate) < REAL_ESTATE_LIMIT:
         if Anhang.count(customer=CUSTOMER.id) < CUSTOMER_LIMIT:
-            try:
-                anhang = Anhang.from_bytes(request.data, real_estate)
-            except AttachmentExists:
-                raise ATTACHMENT_EXISTS
-
+            anhang = Anhang.from_bytes(request.data, real_estate)
             anhang.save()
             return ATTACHMENT_CREATED.update(id=anhang.id)
 
