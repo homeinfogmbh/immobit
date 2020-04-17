@@ -53,12 +53,12 @@ def _add_real_estate(json):
     return (transaction, ident)
 
 
-def _patch_real_estate(immobilie, dictionary):
-    """Adds the real estate represented by the dictionary."""
+def _patch_real_estate(immobilie, json):
+    """Adds the real estate represented by a JSON-ish dict."""
 
     try:
         with Transaction() as transaction:
-            transaction.patch(immobilie, dictionary=dictionary)
+            transaction.patch(immobilie, json)
     except IncompleteDataError as incomplete_data_error:
         raise JSON(incomplete_data_error.to_dict(), status=422)
     except InvalidDataError as invalid_data_error:
