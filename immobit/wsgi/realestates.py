@@ -9,7 +9,6 @@ from openimmodb import ConsistencyError
 from openimmodb import Immobilie
 from openimmodb import IncompleteDataError
 from openimmodb import InvalidDataError
-from openimmodb import OpenImmoDBError
 from openimmodb import RealEstateExists
 from openimmodb import Transaction
 from wsgilib import JSON, Browser, Error
@@ -50,10 +49,6 @@ def _add_real_estate(dictionary):
         raise JSON(incomplete_data_error.to_dict(), status=422)
     except ConsistencyError as consistency_error:
         raise Error(str(consistency_error), status=422)
-    except OpenImmoDBError:
-        raise JSON({
-            'message': 'Unspecified database error.',
-            'stacktrace': format_exc()}, status=500)
 
     return (transaction, ident)
 
@@ -72,10 +67,6 @@ def _patch_real_estate(immobilie, dictionary):
         raise REAL_ESTATE_EXISTS
     except ConsistencyError as consistency_error:
         raise Error(str(consistency_error), status=422)
-    except OpenImmoDBError:
-        raise JSON({
-            'message': 'Unspecified database error.',
-            'stacktrace': format_exc()}, status=500)
 
     return transaction
 
@@ -150,11 +141,7 @@ def delete(ident):
     real_estate = get_real_estate(ident)
 
     with _transaction(Action.DELETE, real_estate.objektnr_extern) as log:
-        try:
-            real_estate.delete_instance()
-        except OpenImmoDBError:
-            raise CANNOT_DELETE_REAL_ESTATE.update(stacktrace=format_exc())
-
+        real_estate.delete_instance()
         log.success = True
 
     if log.success:
