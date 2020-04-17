@@ -37,12 +37,12 @@ def _transaction(action, objektnr_extern):
         objektnr_extern=objektnr_extern, action=action)
 
 
-def _add_real_estate(dictionary):
-    """Adds the real estate represented by the dictionary."""
+def _add_real_estate(json):
+    """Adds the real estate represented by a JSON-ish dict."""
 
     try:
         with Transaction() as transaction:
-            ident = transaction.add(CUSTOMER.id, dictionary=dictionary)
+            ident = transaction.add(CUSTOMER.id, json=json)
     except RealEstateExists:
         raise REAL_ESTATE_EXISTS
     except IncompleteDataError as incomplete_data_error:
