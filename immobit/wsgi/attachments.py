@@ -39,7 +39,7 @@ def _get_attachment(ident):
 def get(ident):
     """Handles requests for ImmoBit."""
 
-    return Binary(_get_attachment(ident).data)
+    return Binary(_get_attachment(ident).bytes)
 
 
 @authenticated
