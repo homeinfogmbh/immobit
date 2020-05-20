@@ -56,6 +56,8 @@ def add(ident):
         if Anhang.count(customer=CUSTOMER.id) < CUSTOMER_LIMIT:
             print('Creating Anhang.', flush=True)
             anhang = Anhang.from_bytes(request.data, real_estate)
+            print('Saving Anhang file.', flush=True)
+            anhang.file.save()
             print('Saving Anhang.', flush=True)
             anhang.save()
             print('Returning success message.', flush=True)
