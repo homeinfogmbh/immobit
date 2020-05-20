@@ -47,14 +47,21 @@ def get(ident):
 def add(ident):
     """Adds a real estate for the respective attachment."""
 
+    print('Getting real estate.', flush=True)
     real_estate = get_real_estate(ident)
 
+    print('Checking real estate limit.', flush=True)
     if Anhang.count(immobilie=real_estate) < REAL_ESTATE_LIMIT:
+        print('Checking customer limit.', flush=True)
         if Anhang.count(customer=CUSTOMER.id) < CUSTOMER_LIMIT:
+            print('Creating Anhang.', flush=True)
             anhang = Anhang.from_bytes(request.data, real_estate)
+            print('Saving Anhang.', flush=True)
             anhang.save()
+            print('Returning success message.', flush=True)
             return ATTACHMENT_CREATED.update(id=anhang.id)
 
+    print('Returning error message.', flush=True)
     return ATTACHMENT_LIMIT_EXCEEDED
 
 
