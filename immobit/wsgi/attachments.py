@@ -55,7 +55,7 @@ def add(ident):
             anhang.save()
             return ATTACHMENT_CREATED.update(id=anhang.id)
 
-    raise ATTACHMENT_LIMIT_EXCEEDED
+    return ATTACHMENT_LIMIT_EXCEEDED
 
 
 @authenticated
