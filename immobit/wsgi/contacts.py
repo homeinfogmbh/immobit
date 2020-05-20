@@ -23,7 +23,7 @@ def _get_contacts():
 def get():
     """Returns appropriate contacts."""
 
-    return JSON([contact.to_dict() for contact in _get_contacts()])
+    return JSON([contact.to_json() for contact in _get_contacts()])
 
 
 ROUTES = (('GET', '/contacts', get),)

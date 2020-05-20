@@ -46,7 +46,7 @@ def _add_real_estate(json):
     except RealEstateExists:
         raise REAL_ESTATE_EXISTS
     except IncompleteDataError as incomplete_data_error:
-        raise JSON(incomplete_data_error.to_dict(), status=422)
+        raise JSON(incomplete_data_error.to_json(), status=422)
     except ConsistencyError as consistency_error:
         raise Error(str(consistency_error), status=422)
 
@@ -60,9 +60,9 @@ def _patch_real_estate(immobilie, json):
         with Transaction() as transaction:
             transaction.patch(immobilie, json)
     except IncompleteDataError as incomplete_data_error:
-        raise JSON(incomplete_data_error.to_dict(), status=422)
+        raise JSON(incomplete_data_error.to_json(), status=422)
     except InvalidDataError as invalid_data_error:
-        raise JSON(invalid_data_error.to_dict(), status=422)
+        raise JSON(invalid_data_error.to_json(), status=422)
     except RealEstateExists:
         raise REAL_ESTATE_EXISTS
     except ConsistencyError as consistency_error:
@@ -108,7 +108,7 @@ def lst():
 def get(ident):
     """Returns the respective real estate."""
 
-    return JSON(get_real_estate(ident).to_dict())
+    return JSON(get_real_estate(ident).to_json())
 
 
 @authenticated
