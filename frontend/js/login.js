@@ -18,9 +18,10 @@ $(document).keypress(function(e) {
 });
 
 function login() {
+	/*
 	$('#pageloader').show();
 	his.session.login($("#username").val(), $("#password").val()).then(loginSuccess, loginError);
-	/*
+	*/
 	$.ajax({
 		timeout: 3000,
 		url: "https://his.homeinfo.de/session", //&duration=5 // max 5min - 30min
@@ -54,7 +55,6 @@ function login() {
 			}
 		}
 	});
-	*/
 }
 function loginSuccess(msg) {
 	//console.log("Success " + msg.token)
