@@ -27,7 +27,8 @@ function login() {
 		url: "https://his.homeinfo.de/session", //&duration=5 // max 5min - 30min
 		type: "POST",
 		data: JSON.stringify({'account':$("#username").val(), "passwd":$("#password").val()}),
-		success: function (msg) {
+        contentType: "application/json; charset=utf-8",
+        success: function (msg) {
 			//console.log("Success " + msg.token)
 			if (typeof(Storage) !== "undefined") {
 				localStorage.setItem("token", msg.token);
