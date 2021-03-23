@@ -315,6 +315,7 @@ $(document).ready(function() {
 			} else
 				typeString = "POST";
 			var openImmo = createRealEstateJSON();
+			console.log(openImmo)
 			$.ajax({
 				url: "https://backend.homeinfo.de/immobit/realestates" + urlString,
 				type: typeString,
