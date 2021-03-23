@@ -315,7 +315,7 @@ $(document).ready(function() {
 			} else
 				typeString = "POST";
 			var openImmo = createRealEstateJSON();
-			console.log(openImmo)
+			//console.log(openImmo)
 			$.ajax({
 				url: "https://backend.homeinfo.de/immobit/realestates" + urlString,
 				type: typeString,
@@ -806,7 +806,7 @@ function getAllRealEstates(page = 0, sorting = "normal", reverse = false) {
 		url: "https://backend.homeinfo.de/immobit/realestates",
 		type: "GET",
 		success: function (msg) {
-			console.log(msg);
+			//console.log(msg);
 			_openImmo_json = msg;
 			loadRealEstates(page, sorting, reverse);
 		},
