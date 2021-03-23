@@ -533,6 +533,7 @@ function createRealEstateJSON(check = true) {
 			(hasChanged(check,"ausstattung.heizungsart", "FERN", ($("#appointments_away").is(':checked')) ?true :null)) ?(openimmo.ausstattung.heizungsart["FERN"] = ($("#appointments_away").is(':checked')) ?true :null) :false;
 			(hasChanged(check,"ausstattung.heizungsart", "FUSSBODEN", ($("#appointments_foot").is(':checked')) ?true :null)) ?(openimmo.ausstattung.heizungsart["FUSSBODEN"] = ($("#appointments_foot").is(':checked')) ?true :null) :false;
 	openimmo["geo"] = {};
+		openimmo.geo["iso_land"] = "DEU";
 		(hasChanged(check,"geo","strasse", $("#base_street").val())) ?openimmo.geo["strasse"] = $("#base_street").val() :false;
 		($("#base_housenumber").val().trim() == "") ?(isNull("geo.hausnummer")) ?false :openimmo.geo["hausnummer"] = null :(hasChanged(check,"geo","hausnummer", $("#base_housenumber").val())) ?openimmo.geo["hausnummer"] = $("#base_housenumber").val() :false;
 		(hasChanged(check,"geo","plz", $("#base_plz").val())) ?openimmo.geo["plz"] = Number($("#base_plz").val()) :false;
@@ -804,7 +805,7 @@ function getAllRealEstates(page = 0, sorting = "normal", reverse = false) {
 		url: "https://backend.homeinfo.de/immobit/realestates",
 		type: "GET",
 		success: function (msg) {
-			//console.log(msg);
+			console.log(msg);
 			_openImmo_json = msg;
 			loadRealEstates(page, sorting, reverse);
 		},
