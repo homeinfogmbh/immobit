@@ -45,8 +45,10 @@ class TransactionLog(ImmoBitModel):
     class Meta:     # pylint: disable=C0111,R0903
         table_name = 'transaction_log'
 
-    account = ForeignKeyField(Account, column_name='account')
-    customer = ForeignKeyField(Customer, column_name='customer')
+    account = ForeignKeyField(
+        Account, column_name='account', on_delete='CASCADE')
+    customer = ForeignKeyField(
+        Customer, column_name='customer', on_delete='CASCADE')
     objektnr_extern = CharField(255)
     action = EnumField(Action)
     success = BooleanField(default=False)
@@ -78,7 +80,8 @@ class CustomerPortal(ImmoBitModel):
     class Meta:     # pylint: disable=C0111,R0903
         table_name = 'customer_portal'
 
-    customer = ForeignKeyField(Customer, column_name='customer')
+    customer = ForeignKeyField(
+        Customer, column_name='customer', on_delete='CASCADE')
     portal = CharField(32)
 
     @classmethod
