@@ -11,15 +11,13 @@ from peewee import Model
 
 from his import Account
 from mdb import Customer
-from peeweeplus import MySQLDatabase, EnumField
-
-from immobit.config import CONFIG
+from peeweeplus import EnumField, MySQLDatabaseProxy
 
 
 __all__ = ['TransactionLog', 'CustomerPortal']
 
 
-DATABASE = MySQLDatabase.from_config(CONFIG['db'])
+DATABASE = MySQLDatabaseProxy('immobit')
 
 
 class Action(Enum):
