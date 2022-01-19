@@ -315,7 +315,6 @@ $(document).ready(function() {
 			} else
 				typeString = "POST";
 			var openImmo = createRealEstateJSON();
-			//console.log(openImmo)
 			$.ajax({
 				url: "https://backend.homeinfo.de/immobit/realestates" + urlString,
 				type: typeString,
@@ -586,8 +585,9 @@ function createRealEstateJSON(check = true) {
 		(hasChanged(check,"verwaltung_objekt","objektadresse_freigeben", $('input[name=address_show]:checked').val() == "true")) ?openimmo.verwaltung_objekt["objektadresse_freigeben"] = $('input[name=address_show]:checked').val() == "true" :false;
 		(hasChanged(check,"verwaltung_objekt","wbs_sozialwohnung", $("#appointments_allownote").is(':checked'))) ?openimmo.verwaltung_objekt["wbs_sozialwohnung"] = $("#appointments_allownote").is(':checked') :false;
 		(hasChanged(check,"verwaltung_objekt","haustiere", ($("#appointments_animals").is(':checked')) ?true :null)) ?(openimmo.verwaltung_objekt["haustiere"] = ($("#appointments_animals").is(':checked')) ?true:null) :false;
-	openimmo["verwaltung_techn"] = {};
+	openimmo["verwaltung_techn"] = {}
 		($("#base_objectnumber").val().trim() != "" && hasChanged(check,"verwaltung_techn","objektnr_extern", $("#base_objectnumber").val())) ?openimmo.verwaltung_techn["objektnr_extern"] = $("#base_objectnumber").val() :false;
+		($("#base_objectnumber").val().trim() != "" && hasChanged(check,"verwaltung_techn","objektnr_extern", $("#base_objectnumber").val())) ?_openImmo_json.verwaltung_techn.openimmo_obid = _openImmo_json.verwaltung_techn.objektnr_extern; :false;
 		openimmo.verwaltung_techn["stand_vom"] = date_str;
 		openimmo.verwaltung_techn["weitergabe_positiv"] = [];
 			if ($("#activation_homepage").is(':checked'))
@@ -1079,6 +1079,7 @@ function loadRealEstates(page = 0, sorting = "normal", reverse = false) {
 					_openImmo_json = msg;
 					var date = new Date();
 					_openImmo_json.verwaltung_techn.objektnr_extern = getUuid();
+					_openImmo_json.verwaltung_techn.openimmo_obid = _openImmo_json.verwaltung_techn.objektnr_extern;
 					_openImmo_json.verwaltung_techn.stand_vom = date.getFullYear() + '-' + ('0'+(date.getMonth()+1)).substr(-2,2) + '-' + ('0'+date.getDate()).substr(-2,2);
 					$.ajax({
 						url: "https://backend.homeinfo.de/immobit/realestates",
