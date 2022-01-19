@@ -587,7 +587,7 @@ function createRealEstateJSON(check = true) {
 		(hasChanged(check,"verwaltung_objekt","haustiere", ($("#appointments_animals").is(':checked')) ?true :null)) ?(openimmo.verwaltung_objekt["haustiere"] = ($("#appointments_animals").is(':checked')) ?true:null) :false;
 	openimmo["verwaltung_techn"] = {};
 		($("#base_objectnumber").val().trim() != "" && hasChanged(check,"verwaltung_techn","objektnr_extern", $("#base_objectnumber").val())) ?openimmo.verwaltung_techn["objektnr_extern"] = $("#base_objectnumber").val() :false;
-		($("#base_objectnumber").val().trim() != "" && hasChanged(check,"verwaltung_techn","objektnr_extern", $("#base_objectnumber").val())) ?_openImmo_json.verwaltung_techn.["openimmo_obid"] = _openImmo_json.verwaltung_techn.objektnr_extern :false;
+		($("#base_objectnumber").val().trim() != "" && hasChanged(check,"verwaltung_techn","objektnr_extern", $("#base_objectnumber").val())) ?_openImmo_json.verwaltung_techn["openimmo_obid"] = _openImmo_json.verwaltung_techn.objektnr_extern :false;
 		openimmo.verwaltung_techn["stand_vom"] = date_str;
 		openimmo.verwaltung_techn["weitergabe_positiv"] = [];
 			if ($("#activation_homepage").is(':checked'))
