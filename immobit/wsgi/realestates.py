@@ -13,6 +13,7 @@ from openimmodb import RealEstateExists
 from openimmodb import Transaction
 from wsgilib import JSON, Browser, Error
 
+from immobit.enumerations import Action
 from immobit.messages import CANNOT_ADD_REAL_ESTATE
 from immobit.messages import CANNOT_DELETE_REAL_ESTATE
 from immobit.messages import NO_SUCH_REAL_ESTATE
@@ -20,7 +21,7 @@ from immobit.messages import REAL_ESTATE_CREATED
 from immobit.messages import REAL_ESTATE_DELETED
 from immobit.messages import REAL_ESTATE_EXISTS
 from immobit.messages import REAL_ESTATE_UPDATED
-from immobit.orm import Action, TransactionLog
+from immobit.orm import TransactionLog
 
 
 __all__ = ['ROUTES', 'get_real_estate', 'get_real_estates']
@@ -34,7 +35,8 @@ def _transaction(action, objektnr_extern):
 
     return TransactionLog(
         account=ACCOUNT.id, customer=CUSTOMER.id,
-        objektnr_extern=objektnr_extern, action=action)
+        objektnr_extern=objektnr_extern, action=action
+    )
 
 
 def _add_real_estate(json):

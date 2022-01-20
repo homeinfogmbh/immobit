@@ -13,20 +13,13 @@ from his import Account
 from mdb import Customer
 from peeweeplus import EnumField, MySQLDatabaseProxy
 
+from immobit.enumerations import Action
+
 
 __all__ = ['TransactionLog', 'CustomerPortal']
 
 
 DATABASE = MySQLDatabaseProxy('immobit')
-
-
-class Action(Enum):
-    """Possible openimmo actions."""
-
-    CREATE = 'CREATE'
-    REPLACE = 'REPLACE'
-    UPDATE = 'UPDATE'
-    DELETE = 'DELETE'
 
 
 class ImmoBitModel(Model):
