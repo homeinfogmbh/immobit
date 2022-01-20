@@ -1,8 +1,10 @@
 """Real estates API."""
 
 from traceback import format_exc
+from typing import Any
 
 from flask import request
+from peewee import Select
 
 from his import ACCOUNT, CUSTOMER, authenticated, authorized
 from openimmodb import ConsistencyError
@@ -11,7 +13,7 @@ from openimmodb import IncompleteDataError
 from openimmodb import InvalidDataError
 from openimmodb import RealEstateExists
 from openimmodb import Transaction
-from wsgilib import JSON, Browser, Error
+from wsgilib import Browser, Error, JSON, JSONMessage
 
 from immobit.enumerations import Action
 from immobit.messages import CANNOT_ADD_REAL_ESTATE
@@ -30,7 +32,7 @@ __all__ = ['ROUTES', 'get_real_estate', 'get_real_estates']
 BROWSER = Browser()
 
 
-def _transaction(action, objektnr_extern):
+def _transaction(action: Action, objektnr_extern: str) -> TransactionLog:
     """Returns a new transaction log entry."""
 
     return TransactionLog(
@@ -39,7 +41,7 @@ def _transaction(action, objektnr_extern):
     )
 
 
-def _add_real_estate(json):
+def _add_real_estate(json: dict[str, Any]) -> tuple[Transaction, int]:
     """Adds the real estate represented by a JSON-ish dict."""
 
     try:
@@ -52,10 +54,12 @@ def _add_real_estate(json):
     except ConsistencyError as consistency_error:
         raise Error(str(consistency_error), status=422)
 
-    return (transaction, ident)
+    return transaction, ident
 
 
-def _patch_real_estate(immobilie, json):
+def _patch_real_estate(
+        immobilie: Immobilie, json: dict[str, Any]
+) -> Transaction:
     """Adds the real estate represented by a JSON-ish dict."""
 
     try:
@@ -73,7 +77,7 @@ def _patch_real_estate(immobilie, json):
     return transaction
 
 
-def get_real_estate(ident):
+def get_real_estate(ident: int) -> Immobilie:
     """Returns the specified real estate."""
 
     try:
@@ -83,7 +87,7 @@ def get_real_estate(ident):
         raise NO_SUCH_REAL_ESTATE
 
 
-def get_real_estates():
+def get_real_estates() -> Select:
     """Yields real estates of the current customer."""
 
     return Immobilie.select().where(Immobilie.customer == CUSTOMER.id)
@@ -91,7 +95,7 @@ def get_real_estates():
 
 @authenticated
 @authorized('immobit')
-def lst():
+def lst() -> JSON:
     """Returns available real estates."""
 
     real_estates = get_real_estates()
@@ -107,7 +111,7 @@ def lst():
 
 @authenticated
 @authorized('immobit')
-def get(ident):
+def get(ident: int) -> JSON:
     """Returns the respective real estate."""
 
     return JSON(get_real_estate(ident).to_json())
@@ -115,7 +119,7 @@ def get(ident):
 
 @authenticated
 @authorized('immobit')
-def add():
+def add() -> JSONMessage:
     """Adds a new real estate."""
 
     try:
@@ -137,7 +141,7 @@ def add():
 
 @authenticated
 @authorized('immobit')
-def delete(ident):
+def delete(ident: int) -> JSONMessage:
     """Removes a real estate."""
 
     real_estate = get_real_estate(ident)
@@ -154,7 +158,7 @@ def delete(ident):
 
 @authenticated
 @authorized('immobit')
-def patch(ident):
+def patch(ident: int) -> JSON | JSONMessage:
     """Partially updates real estates."""
 
     real_estate = get_real_estate(ident)
@@ -169,7 +173,8 @@ def patch(ident):
     raise JSON({
         'message': 'Could not patch real estate.',
         'stacktrace': format_exc(),
-        'patch': request.json}, status=500)
+        'patch': request.json
+    }, status=500)
 
 
 ROUTES = (

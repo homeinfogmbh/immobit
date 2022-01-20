@@ -3,8 +3,8 @@
 from flask import request
 
 from his import CUSTOMER, authenticated, authorized
-from openimmodb import Anhang
-from wsgilib import OK, Binary
+from openimmodb import Anhang, Immobilie
+from wsgilib import OK, Binary, JSONMessage
 
 from immobit.messages import ATTACHMENT_CREATED
 from immobit.messages import ATTACHMENT_DELETED
@@ -20,23 +20,20 @@ REAL_ESTATE_LIMIT = 15
 CUSTOMER_LIMIT = 2000
 
 
-def _get_attachment(ident):
+def _get_attachment(ident: int) -> Anhang:
     """Returns the respective Anhang ORM model."""
 
     try:
-        anhang = Anhang.get(Anhang.id == ident)
+        return Anhang.select().join(Immobilie).where(
+            (Anhang.id == ident) & (Immobilie.customer == CUSTOMER.id)
+        ).get()
     except Anhang.DoesNotExist:
         raise NO_SUCH_ATTACHMENT
-
-    if anhang.immobilie.customer.id == CUSTOMER.id:
-        return anhang
-
-    raise NO_SUCH_ATTACHMENT
 
 
 @authenticated
 @authorized('immobit')
-def get(ident):
+def get(ident: int) -> Binary:
     """Handles requests for ImmoBit."""
 
     return Binary(_get_attachment(ident).bytes)
@@ -44,7 +41,7 @@ def get(ident):
 
 @authenticated
 @authorized('immobit')
-def add(ident):
+def add(ident: int) -> JSONMessage:
     """Adds a real estate for the respective attachment."""
 
     real_estate = get_real_estate(ident)
@@ -61,7 +58,7 @@ def add(ident):
 
 @authenticated
 @authorized('immobit')
-def patch(ident):
+def patch(ident: int) -> OK:
     """Modifies metadata of an existing attachment."""
 
     _get_attachment(ident).patch(request.json).save()
@@ -70,16 +67,16 @@ def patch(ident):
 
 @authenticated
 @authorized('immobit')
-def delete(ident):
+def delete(ident: int) -> JSONMessage:
     """Deletes an attachment."""
 
     _get_attachment(ident).delete_instance()
     return ATTACHMENT_DELETED
 
 
-ROUTES = (
+ROUTES = [
     ('GET', '/attachments/<int:ident>', get),
     ('POST', '/attachments/<int:ident>', add),
     (['PATCH', 'PUT'], '/attachments/<int:ident>', patch),
     ('DELETE', '/attachments/<int:ident>', delete)
-)
+]
