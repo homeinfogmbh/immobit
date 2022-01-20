@@ -74,7 +74,8 @@ class CustomerPortal(ImmoBitModel):
         table_name = 'customer_portal'
 
     customer = ForeignKeyField(
-        Customer, column_name='customer', on_delete='CASCADE')
+        Customer, column_name='customer', on_delete='CASCADE'
+    )
     portal = CharField(32)
 
     @classmethod
