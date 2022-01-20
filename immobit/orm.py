@@ -37,9 +37,11 @@ class TransactionLog(ImmoBitModel):
         table_name = 'transaction_log'
 
     account = ForeignKeyField(
-        Account, column_name='account', on_delete='CASCADE')
+        Account, column_name='account', on_delete='CASCADE'
+    )
     customer = ForeignKeyField(
-        Customer, column_name='customer', on_delete='CASCADE')
+        Customer, column_name='customer', on_delete='CASCADE'
+    )
     objektnr_extern = CharField(255)
     action = EnumField(Action)
     success = BooleanField(default=False)
@@ -53,11 +55,11 @@ class TransactionLog(ImmoBitModel):
 
     def __exit__(self, *_):
         """Store transaction iff it is complete."""
-        if self.account is not None:
-            if self.objektnr_extern is not None:
-                if self.action is not None:
-                    self.end = datetime.now()
-                    self.save()
+        if all(item is not None for item in (
+                self.account, self.objektnr_extern, self.action
+        )):
+            self.end = datetime.now()
+            self.save()
 
     @property
     def duration(self):
