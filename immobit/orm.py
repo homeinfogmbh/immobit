@@ -1,6 +1,7 @@
 """ORM models."""
 
-from datetime import datetime
+from __future__ import annotations
+from datetime import datetime, timedelta
 from enum import Enum
 
 from peewee import BooleanField
@@ -62,7 +63,7 @@ class TransactionLog(ImmoBitModel):
             self.save()
 
     @property
-    def duration(self):
+    def duration(self) -> timedelta:
         """Calculates the duration."""
         return self.end - self.start
 
@@ -79,13 +80,11 @@ class CustomerPortal(ImmoBitModel):
     portal = CharField(32)
 
     @classmethod
-    def add(cls, customer, portal):
+    def add(cls, customer: Customer | int, portal: str) -> CustomerPortal:
         """Adds a customer-portal mapping."""
         try:
             return cls.get((cls.customer == customer) & (cls.portal == portal))
         except cls.DoesNotExist:
-            customer_portal = cls()
-            customer_portal.customer = customer
-            customer_portal.portal = portal
+            customer_portal = cls(customer=customer, portal=portal)
             customer_portal.save()
             return customer_portal
