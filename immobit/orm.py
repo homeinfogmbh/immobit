@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 from datetime import datetime, timedelta
-from enum import Enum
 
 from peewee import BooleanField
 from peewee import CharField
