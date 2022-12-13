@@ -826,7 +826,7 @@ function setFields() {
 		else
 			$("#description_state").val("0");
 		// Energy
-		if (_openImmo_json.zustand_angaben.hasOwnProperty('energiepass')) {
+		if (_openImmo_json.zustand_angaben.hasOwnProperty('energiepass') && _openImmo_json.zustand_angaben.energiepass.length > 0) {
 			if (_openImmo_json.zustand_angaben.energiepass[0].hasOwnProperty('epart'))
 				$("#energy_type").val(_openImmo_json.zustand_angaben.energiepass[0].epart);
 			else if (_openImmo_json.hasOwnProperty('verwaltung_objekt') && _openImmo_json.verwaltung_objekt.denkmalgeschuetzt == true) {
