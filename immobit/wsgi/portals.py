@@ -8,24 +8,24 @@ from wsgilib import JSON
 from immobit.orm import CustomerPortal
 
 
-__all__ = ['ROUTES']
+__all__ = ["ROUTES"]
 
 
 def _get_portals() -> Iterator[str]:
     """Yields appropriate portals."""
 
     for customer_portal in CustomerPortal.select().where(
-            CustomerPortal.customer == CUSTOMER.id
+        CustomerPortal.customer == CUSTOMER.id
     ):
         yield customer_portal.portal
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def get() -> JSON:
     """Returns the respective portals."""
 
     return JSON(list(_get_portals()))
 
 
-ROUTES = [('GET', '/portals', get)]
+ROUTES = [("GET", "/portals", get)]

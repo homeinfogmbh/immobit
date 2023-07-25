@@ -16,16 +16,16 @@ from peeweeplus import EnumField, MySQLDatabaseProxy
 from immobit.enumerations import Action
 
 
-__all__ = ['TransactionLog', 'CustomerPortal']
+__all__ = ["TransactionLog", "CustomerPortal"]
 
 
-DATABASE = MySQLDatabaseProxy('immobit')
+DATABASE = MySQLDatabaseProxy("immobit")
 
 
 class ImmoBitModel(Model):
     """Basic immobit model."""
 
-    class Meta:     # pylint: disable=C0111,R0903
+    class Meta:  # pylint: disable=C0111,R0903
         database = DATABASE
         schema = database.database
 
@@ -33,15 +33,11 @@ class ImmoBitModel(Model):
 class TransactionLog(ImmoBitModel):
     """Stores real estate transactions."""
 
-    class Meta:     # pylint: disable=C0111,R0903
-        table_name = 'transaction_log'
+    class Meta:  # pylint: disable=C0111,R0903
+        table_name = "transaction_log"
 
-    account = ForeignKeyField(
-        Account, column_name='account', on_delete='CASCADE'
-    )
-    customer = ForeignKeyField(
-        Customer, column_name='customer', on_delete='CASCADE'
-    )
+    account = ForeignKeyField(Account, column_name="account", on_delete="CASCADE")
+    customer = ForeignKeyField(Customer, column_name="customer", on_delete="CASCADE")
     objektnr_extern = CharField(255)
     action = EnumField(Action)
     success = BooleanField(default=False)
@@ -55,9 +51,10 @@ class TransactionLog(ImmoBitModel):
 
     def __exit__(self, *_):
         """Store transaction iff it is complete."""
-        if all(item is not None for item in (
-                self.account, self.objektnr_extern, self.action
-        )):
+        if all(
+            item is not None
+            for item in (self.account, self.objektnr_extern, self.action)
+        ):
             self.end = datetime.now()
             self.save()
 
@@ -70,12 +67,10 @@ class TransactionLog(ImmoBitModel):
 class CustomerPortal(ImmoBitModel):
     """Configures customer-portal mappings."""
 
-    class Meta:     # pylint: disable=C0111,R0903
-        table_name = 'customer_portal'
+    class Meta:  # pylint: disable=C0111,R0903
+        table_name = "customer_portal"
 
-    customer = ForeignKeyField(
-        Customer, column_name='customer', on_delete='CASCADE'
-    )
+    customer = ForeignKeyField(Customer, column_name="customer", on_delete="CASCADE")
     portal = CharField(32)
 
     @classmethod

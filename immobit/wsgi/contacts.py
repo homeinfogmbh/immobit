@@ -9,7 +9,7 @@ from wsgilib import JSON
 from immobit.wsgi.realestates import get_real_estates
 
 
-__all__ = ['ROUTES']
+__all__ = ["ROUTES"]
 
 
 def _get_contacts() -> Iterator[Kontakt]:
@@ -20,11 +20,11 @@ def _get_contacts() -> Iterator[Kontakt]:
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def get() -> JSON:
     """Returns appropriate contacts."""
 
     return JSON([contact.to_json() for contact in _get_contacts()])
 
 
-ROUTES = [('GET', '/contacts', get)]
+ROUTES = [("GET", "/contacts", get)]

@@ -26,7 +26,7 @@ from immobit.messages import REAL_ESTATE_UPDATED
 from immobit.orm import TransactionLog
 
 
-__all__ = ['ROUTES', 'get_real_estate', 'get_real_estates']
+__all__ = ["ROUTES", "get_real_estate", "get_real_estates"]
 
 
 BROWSER = Browser()
@@ -36,8 +36,10 @@ def _transaction(action: Action, objektnr_extern: str) -> TransactionLog:
     """Returns a new transaction log entry."""
 
     return TransactionLog(
-        account=ACCOUNT.id, customer=CUSTOMER.id,
-        objektnr_extern=objektnr_extern, action=action
+        account=ACCOUNT.id,
+        customer=CUSTOMER.id,
+        objektnr_extern=objektnr_extern,
+        action=action,
     )
 
 
@@ -57,9 +59,7 @@ def _add_real_estate(json: dict[str, Any]) -> tuple[Transaction, int]:
     return transaction, ident
 
 
-def _patch_real_estate(
-        immobilie: Immobilie, json: dict[str, Any]
-) -> Transaction:
+def _patch_real_estate(immobilie: Immobilie, json: dict[str, Any]) -> Transaction:
     """Adds the real estate represented by a JSON-ish dict."""
 
     try:
@@ -82,7 +82,8 @@ def get_real_estate(ident: int) -> Immobilie:
 
     try:
         return Immobilie.get(
-            (Immobilie.customer == CUSTOMER.id) & (Immobilie.id == ident))
+            (Immobilie.customer == CUSTOMER.id) & (Immobilie.id == ident)
+        )
     except Immobilie.DoesNotExist:
         raise NO_SUCH_REAL_ESTATE
 
@@ -94,7 +95,7 @@ def get_real_estates() -> Select:
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def lst() -> JSON:
     """Returns available real estates."""
 
@@ -110,7 +111,7 @@ def lst() -> JSON:
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def get(ident: int) -> JSON:
     """Returns the respective real estate."""
 
@@ -118,12 +119,12 @@ def get(ident: int) -> JSON:
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def add() -> JSONMessage:
     """Adds a new real estate."""
 
     try:
-        objektnr_extern = request.json['verwaltung_techn']['objektnr_extern']
+        objektnr_extern = request.json["verwaltung_techn"]["objektnr_extern"]
     except (KeyError, TypeError):
         objektnr_extern = None
 
@@ -140,7 +141,7 @@ def add() -> JSONMessage:
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def delete(ident: int) -> JSONMessage:
     """Removes a real estate."""
 
@@ -157,7 +158,7 @@ def delete(ident: int) -> JSONMessage:
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def patch(ident: int) -> JSON | JSONMessage:
     """Partially updates real estates."""
 
@@ -170,17 +171,20 @@ def patch(ident: int) -> JSON | JSONMessage:
     if log.success:
         return REAL_ESTATE_UPDATED
 
-    raise JSON({
-        'message': 'Could not patch real estate.',
-        'stacktrace': format_exc(),
-        'patch': request.json
-    }, status=500)
+    raise JSON(
+        {
+            "message": "Could not patch real estate.",
+            "stacktrace": format_exc(),
+            "patch": request.json,
+        },
+        status=500,
+    )
 
 
 ROUTES = (
-    ('GET', '/realestates', lst),
-    ('GET', '/realestates/<int:ident>', get),
-    ('POST', '/realestates', add),
-    ('DELETE', '/realestates/<int:ident>', delete),
-    ('PATCH', '/realestates/<int:ident>', patch)
+    ("GET", "/realestates", lst),
+    ("GET", "/realestates/<int:ident>", get),
+    ("POST", "/realestates", add),
+    ("DELETE", "/realestates/<int:ident>", delete),
+    ("PATCH", "/realestates/<int:ident>", patch),
 )

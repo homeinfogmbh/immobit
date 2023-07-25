@@ -13,7 +13,7 @@ from immobit.messages import NO_SUCH_ATTACHMENT
 from immobit.wsgi.realestates import get_real_estate
 
 
-__all__ = ['ROUTES']
+__all__ = ["ROUTES"]
 
 
 REAL_ESTATE_LIMIT = 15
@@ -24,15 +24,18 @@ def _get_attachment(ident: int) -> Anhang:
     """Returns the respective Anhang ORM model."""
 
     try:
-        return Anhang.select().join(Immobilie).where(
-            (Anhang.id == ident) & (Immobilie.customer == CUSTOMER.id)
-        ).get()
+        return (
+            Anhang.select()
+            .join(Immobilie)
+            .where((Anhang.id == ident) & (Immobilie.customer == CUSTOMER.id))
+            .get()
+        )
     except Anhang.DoesNotExist:
         raise NO_SUCH_ATTACHMENT
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def get(ident: int) -> Binary:
     """Handles requests for ImmoBit."""
 
@@ -40,7 +43,7 @@ def get(ident: int) -> Binary:
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def add(ident: int) -> JSONMessage:
     """Adds a real estate for the respective attachment."""
 
@@ -57,7 +60,7 @@ def add(ident: int) -> JSONMessage:
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def patch(ident: int) -> OK:
     """Modifies metadata of an existing attachment."""
 
@@ -66,7 +69,7 @@ def patch(ident: int) -> OK:
 
 
 @authenticated
-@authorized('immobit')
+@authorized("immobit")
 def delete(ident: int) -> JSONMessage:
     """Deletes an attachment."""
 
@@ -75,8 +78,8 @@ def delete(ident: int) -> JSONMessage:
 
 
 ROUTES = [
-    ('GET', '/attachments/<int:ident>', get),
-    ('POST', '/attachments/<int:ident>', add),
-    (['PATCH', 'PUT'], '/attachments/<int:ident>', patch),
-    ('DELETE', '/attachments/<int:ident>', delete)
+    ("GET", "/attachments/<int:ident>", get),
+    ("POST", "/attachments/<int:ident>", add),
+    (["PATCH", "PUT"], "/attachments/<int:ident>", patch),
+    ("DELETE", "/attachments/<int:ident>", delete),
 ]
