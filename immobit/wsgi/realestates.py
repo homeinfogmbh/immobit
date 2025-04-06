@@ -2,6 +2,7 @@
 
 from traceback import format_exc
 from typing import Any
+from functools import cache
 
 from flask import request
 from peewee import Select
@@ -96,6 +97,7 @@ def get_real_estates() -> Select:
 
 @authenticated
 @authorized("immobit")
+@cache
 def lst() -> JSON:
     """Returns available real estates."""
 
